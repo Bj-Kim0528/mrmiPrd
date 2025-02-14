@@ -8,6 +8,11 @@
     <%= f.text_field :email_domain, required: true, placeholder: "example.com" %>
   </div>
 
+  <div class="field">
+    <%= f.label :nickname %><br />
+    <%= f.text_field :nickname, value: resource.nickname %>
+  </div>
+
 
   <div class="field">
     <%= f.label :password %>

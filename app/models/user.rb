@@ -15,10 +15,8 @@ class User < ApplicationRecord
   # 이메일 형식 검증 (회원가입 시)
   validate :validate_email_format
   validates :encrypted_password, presence: true
-  validates :nickname, 
-            presence: true, 
-            uniqueness: { case_sensitive: false }, 
-            length: { in: 2..20 }
+  validates :nickname, presence: true, uniqueness: { case_sensitive: false }
+  validates :nickname, length: { in: 2..20 }, allow_blank: true
   validates :terms_of_service, acceptance: true
   validates :privacy_policy, acceptance: true
 
