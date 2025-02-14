@@ -14,6 +14,9 @@ class User < ApplicationRecord
 
   # 이메일 형식 검증 (회원가입 시)
   validate :validate_email_format
+  validate :password_complexity, if: -> { password.present? }
+
+  validates :password, length: { in: 8..16 }, if: -> { password.present? }
   validates :encrypted_password, presence: true
   validates :nickname, presence: true, uniqueness: { case_sensitive: false }
   validates :nickname, length: { in: 2..20 }, allow_blank: true
@@ -33,5 +36,16 @@ class User < ApplicationRecord
   # email_local + email_domain을 email로 저장
   def combine_email_parts
     self.email = "#{email_local}@#{email_domain}"
+  end
+
+
+  def password_complexity
+    letters = password.scan(/[A-Za-z]/).size
+    digits  = password.scan(/\d/).size
+    special = password.scan(/[^A-Za-z0-9]/).size
+
+    errors.add(:base, "최소 2개이상의 알파벳") if letters < 2
+    errors.add(:base, "최소 2개이상의 숫자") if digits < 2
+    errors.add(:base, "최소 2개이상의 기호") if special < 2
   end
 end
