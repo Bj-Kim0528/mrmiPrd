@@ -20,8 +20,8 @@ class User < ApplicationRecord
   validates :encrypted_password, presence: true
   validates :nickname, presence: true, uniqueness: { case_sensitive: false }
   validates :nickname, length: { in: 2..20 }, allow_blank: true
-  validates :terms_of_service, acceptance: true
-  validates :privacy_policy, acceptance: true
+  validates :terms_of_service, acceptance: { message: "must be accepted" }
+  validates :privacy_policy, acceptance: { message: "must be accepted" }
 
   def validate_email_format
     unless email =~ /\A[^@\s]+@[a-zA-Z]+(\.[a-zA-Z]{2,})+\z/

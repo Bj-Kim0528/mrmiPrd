@@ -27,6 +27,16 @@
     <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
   </div>
 
+  <div class="field">
+    <%= f.check_box :terms_of_service %>
+    <%= f.label :terms_of_service, "이용 약관에 동의합니다" %>
+  </div>
+
+  <div class="field">
+    <%= f.check_box :privacy_policy %>
+    <%= f.label :privacy_policy, "개인정보 처리방침에 동의합니다" %>
+  </div>
+
   <div class="actions">
     <%= f.submit "Sign up" %>
   </div>
