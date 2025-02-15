@@ -1,16 +1,12 @@
-<h2>Resend confirmation instructions</h2>
+<h1>이메일 인증</h1>
+<p>회원가입 시 발송된 이메일에서 인증번호를 확인하고, 아래에 입력해주세요.</p>
 
-<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-
+<%= form_with url: user_confirmation_path, method: :post do |f| %>
   <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+    <%= f.label :confirmation_token, "인증번호" %><br />
+    <%= f.text_field :confirmation_token, autofocus: true %>
   </div>
-
   <div class="actions">
-    <%= f.submit "Resend confirmation instructions" %>
+    <%= f.submit "인증하기" %>
   </div>
 <% end %>
-
-<%= render "devise/shared/links" %>

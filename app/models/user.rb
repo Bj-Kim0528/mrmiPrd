@@ -2,7 +2,8 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
+         :confirmable
 
   # email_local (이메일 아이디 부분)
   attr_accessor :email_local
@@ -16,7 +17,6 @@ class User < ApplicationRecord
   validate :validate_email_format
   validate :password_complexity, if: -> { password.present? }
 
-  validates :password, length: { in: 8..16 }, if: -> { password.present? }
   validates :encrypted_password, presence: true
   validates :nickname, presence: true, uniqueness: { case_sensitive: false }
   validates :nickname, length: { in: 2..20 }, allow_blank: true

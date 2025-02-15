@@ -58,3 +58,6 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'concurrent-ruby', '1.3.4'
 gem 'devise'
+
+gem 'letter_opener'
+gem 'letter_opener_web'

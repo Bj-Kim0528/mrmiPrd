@@ -1,30 +1,43 @@
 # frozen_string_literal: true
 
 class Users::ConfirmationsController < Devise::ConfirmationsController
-  # GET /resource/confirmation/new
-  # def new
-  #   super
-  # end
+  def new
+  end
 
-  # POST /resource/confirmation
-  # def create
-  #   super
-  # end
+  # 사용자가 입력한 인증번호를 검증하는 액션
+  def create
+    token = params[:confirmation_token]
+    user = User.confirm_by_token(token)
+    if user.errors.empty?
+      flash[:notice] = "이메일 인증이 완료되었습니다."
+      sign_in(user)
+      redirect_to root_path
+    else
+      flash.now[:alert] = "인증번호가 올바르지 않습니다. 다시 입력해주세요."
+      render :new
+    end
+  end
 
-  # GET /resource/confirmation?confirmation_token=abcdef
-  # def show
-  #   super
-  # end
+  # GET /users/confirmations/certification
+  def certification
+    # 인증번호 입력 폼을 렌더링합니다.
+    # (뷰 파일은 app/views/users/confirmations/certification.html.erb 로 생성)
+  end
 
-  # protected
+  def certificate
+    email = params[:email]
+    password = params[:password]
+    token = params[:confirmation_token]
 
-  # The path used after resending confirmation instructions.
-  # def after_resending_confirmation_instructions_path_for(resource_name)
-  #   super(resource_name)
-  # end
-
-  # The path used after confirmation.
-  # def after_confirmation_path_for(resource_name, resource)
-  #   super(resource_name, resource)
-  # end
+    user = User.find_by(email: email)
+    if user && user.valid_password?(password) && user.confirmation_token == token
+      user.update(confirmed_at: Time.current)
+      flash[:notice] = "이메일 인증이 완료되었습니다."
+      sign_in(user)
+      redirect_to root_path
+    else
+      flash.now[:alert] = "입력한 정보가 올바르지 않습니다. 다시 시도해주세요."
+      render :new
+    end
+  end
 end

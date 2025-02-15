@@ -1,5 +1,7 @@
-<p>Welcome <%= @email %>!</p>
+<p>안녕하세요, <%= @resource.email %>님!</p>
 
-<p>You can confirm your account email through the link below:</p>
+<p>회원가입을 완료하시려면 아래 인증번호를 회원가입 폼의 '이메일인증번호 확인' 란에 입력해주세요:</p>
 
-<p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %></p>
+<p><strong><%= @resource.confirmation_token %></strong></p>
+
+<p>만약 인증번호를 받지 못하셨다면, 회원가입 페이지에서 '이메일인증버튼'을 다시 눌러주세요.</p>
