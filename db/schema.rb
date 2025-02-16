@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_02_15_043442) do
+ActiveRecord::Schema.define(version: 2025_02_16_064408) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -40,6 +40,33 @@ ActiveRecord::Schema.define(version: 2025_02_15_043442) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "card_collection_hashtags", force: :cascade do |t|
+    t.integer "card_collection_id", null: false
+    t.integer "hashtag_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["card_collection_id", "hashtag_id"], name: "index_card_collection_hashtags_on_card_collection_and_hashtag", unique: true
+    t.index ["card_collection_id"], name: "index_card_collection_hashtags_on_card_collection_id"
+    t.index ["hashtag_id"], name: "index_card_collection_hashtags_on_hashtag_id"
+  end
+
+  create_table "card_collections", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.text "content"
+    t.string "layout"
+    t.string "theme"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_card_collections_on_user_id"
+  end
+
+  create_table "hashtags", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_hashtags_on_name", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -62,4 +89,7 @@ ActiveRecord::Schema.define(version: 2025_02_15_043442) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "card_collection_hashtags", "card_collections"
+  add_foreign_key "card_collection_hashtags", "hashtags"
+  add_foreign_key "card_collections", "users"
 end

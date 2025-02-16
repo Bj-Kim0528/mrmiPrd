@@ -1,0 +1,2 @@
+module CardCollectionsHelper
+end

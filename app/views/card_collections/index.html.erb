@@ -1,0 +1,20 @@
+<% @card_collections.each do |card_collection| %>
+  <div class="card-collection">
+    <div class="card-info">
+      <p><strong>내용:</strong> <%= card_collection.content %></p>
+      <p><strong>레이아웃:</strong> <%= card_collection.layout %></p>
+      <p><strong>테마:</strong> <%= card_collection.theme %></p>
+    </div>
+
+    <% if card_collection.photos.attached? %>
+      <div class="photos">
+        <% card_collection.photos.each do |photo| %>
+          <%= image_tag url_for(photo), alt: "투고 사진", class: "card-photo" %>
+        <% end %>
+      </div>
+    <% else %>
+      <p>사진이 업로드되지 않았습니다.</p>
+    <% end %>
+  </div>
+  <hr>
+<% end %>

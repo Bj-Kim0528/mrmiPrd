@@ -29,6 +29,11 @@ class User < ApplicationRecord
     end
   end
 
+  has_many :card_collections, dependent: :destroy
+
+
+
+
 
 
   private
