@@ -10,37 +10,40 @@
   
     <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-  <li>
-    <%= link_to "Top", root_path %>
-  </li>
 
-  <li>
-    <%= link_to "About"%>
-  </li>
-  <li>
-    <%= link_to "ピクチャー", card_collections_path %>
-  </li>
-  <li>
-    <%= link_to "リコメンド"%>
-  </li>
-  <li>
-    <%= link_to "ペット"%>
-  </li>
-  <li>
-    <%= link_to "プラントテリア"%>
-  </li>
-  <li>
-    <%= link_to "#チャンネル"%>
-  </li>
-  <li>
-    <%= link_to "投稿する", new_card_collection_path %>
-  </li>
-  <li>
-    <%= link_to "検索する"%>
-  </li>
-  <li>
-    <%= link_to "ゲストログイン"%>
-  </li>
+  </head>
+  <body>
+    <li>
+      <%= link_to "Top", root_path %>
+    </li>
+
+    <li>
+      <%= link_to "About"%>
+    </li>
+    <li>
+      <%= link_to "ピクチャー", card_collections_path %>
+    </li>
+    <li>
+      <%= link_to "リコメンド"%>
+    </li>
+    <li>
+      <%= link_to "ペット"%>
+    </li>
+    <li>
+      <%= link_to "プラントテリア"%>
+    </li>
+    <li>
+      <%= link_to "#チャンネル"%>
+    </li>
+    <li>
+      <%= link_to "投稿する", new_card_collection_path %>
+    </li>
+    <li>
+      <%= link_to "検索する"%>
+    </li>
+    <li>
+      <%= link_to "ゲストログイン"%>
+    </li>
     <% if user_signed_in? %>
       <li>
         <%= link_to "ログアウト", destroy_user_session_path, method: :delete %>
