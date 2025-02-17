@@ -1,5 +1,3 @@
-<h1>새 카드 컬렉션 작성</h1>
-
 <%= form_with model: @card_collection, local: true, html: { multipart: true } do |f| %>
   <% if @card_collection.errors.any? %>
     <div id="error_explanation">
@@ -13,13 +11,13 @@
   <% end %>
 
   <!-- 파일 입력 필드 영역: 10개 미리 생성, 초기에는 첫 번째만 보임 -->
-  <div class="field">
-    <label>사진 등록 (최대 10장 업로드 가능)</label><br>
+  <div>
+    <label>自分のPCから写真を投稿する（最大10枚）</label><br>
     <div id="file_fields_container">
       <% 10.times do |i| %>
-        <div class="file_field" data-index="<%= i %>" style="<%= i == 0 ? '' : 'display:none;' %>">
-          <%= file_field_tag "card_collection[photos][]", id: "card_collection_photos_#{i}", class: "photo_input" %>
-          <div class="preview" id="preview_<%= i %>"></div>
+        <div data-index="<%= i %>" style="<%= i == 0 ? '' : 'display:none;' %>">
+          <%= file_field_tag "card_collection[photos][]", id: "card_collection_photos_#{i}", accept: "image/*" %>
+          <div id="preview_<%= i %>"></div>
         </div>
       <% end %>
     </div>
@@ -29,139 +27,27 @@
   </div>
 
   <!-- 투고 내용 입력 -->
-  <div class="field">
-    <%= f.label :content, "투고 내용" %><br>
+  <div>
+    <%= f.label :content, "内容" %><br>
     <%= f.text_area :content %>
   </div>
 
   <!-- 레이아웃 입력 -->
-  <div class="field">
-    <%= f.label :layout, "레이아웃" %><br>
+  <div>
+    <%= f.label :layout, "レイアウト" %><br>
     <%= f.select :layout, options_for_select(["1R", "1K/1DK", "1LDK/2DK", "2LDK", "3LDK以上"]) %>
   </div>
 
   <!-- 테마 입력 -->
-  <div class="field">
-    <%= f.label :theme, "테마" %><br>
+  <div>
+    <%= f.label :theme, "テーマ" %><br>
     <%= f.select :theme, options_for_select(["お部屋写真", "収納TIP", "ペット", "プラントテリア", "その他"]) %>
   </div>
 
   <div class="actions">
-    <%= f.submit "투고하기", id: "submit_btn" %>
+    <%= f.submit "投稿する", id: "submit_btn" %>
   </div>
 <% end %>
 
-<!-- JavaScript: 파일 입력 필드 동적 관리, 미리보기 및 삭제 구현 -->
-<script>
-document.addEventListener("turbolinks:load", function() {
-  var container = document.getElementById("file_fields_container");
-  var addButton = document.getElementById("add_photo_field");
-  var removeButton = document.getElementById("remove_photo_field");
-  var maxFields = 10;
-
-  // 초기 버튼 상태 업데이트
-  updateButtons();
-
-  // + 버튼 클릭 시, 숨겨진 다음 입력 필드를 찾아 보이게 함
-  addButton.addEventListener("click", function(e) {
-    e.preventDefault();
-    var fileFields = container.querySelectorAll('.file_field');
-    var hiddenField = Array.from(fileFields).find(function(field) {
-      return field.style.display === "none";
-    });
-    if (hiddenField) {
-      hiddenField.style.display = "";
-    }
-    updateButtons();
-  });
-
-  // - 버튼 클릭 시, 가장 마지막에 보이는 입력 필드 (단, 첫 번째 제외)를 숨김 처리
-  removeButton.addEventListener("click", function(e) {
-    e.preventDefault();
-    var fileFields = Array.from(container.querySelectorAll('.file_field')).filter(function(field) {
-      return field.style.display !== "none";
-    });
-    // 최소 1개는 남아야 하므로, visible 파일 입력 필드가 2개 이상일 때만 제거
-    if (fileFields.length > 1) {
-      // 마지막 visible 파일 입력 필드 (배열의 마지막 요소)를 숨깁니다.
-      var lastVisible = fileFields[fileFields.length - 1];
-      // 해당 필드 내의 파일 입력 값 초기화
-      var input = lastVisible.querySelector('input[type="file"]');
-      if (input) { input.value = ""; }
-      lastVisible.style.display = "none";
-    }
-    updateButtons();
-  });
-
-  // 파일 입력 필드 change 이벤트 처리
-  var fileInputs = document.querySelectorAll('.photo_input');
-  fileInputs.forEach(function(input) {
-    input.addEventListener("change", function(e) {
-      var index = input.parentNode.getAttribute("data-index");
-      var previewDiv = document.getElementById("preview_" + index);
-      // 초기 미리보기 내용 제거
-      previewDiv.innerHTML = "";
-      
-      if (input.files && input.files.length > 0) {
-        var file = input.files[0];
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          var img = document.createElement("img");
-          img.src = e.target.result;
-          img.style.maxWidth = "200px";
-          img.style.display = "block";
-          
-          var deleteButton = document.createElement("button");
-          deleteButton.type = "button";
-          deleteButton.textContent = "삭제";
-          deleteButton.addEventListener("click", function() {
-            // 첫 번째 파일 입력 필드인 경우 (data-index == "0")
-            if (index === "0") {
-              input.value = "";
-              previewDiv.innerHTML = "";
-            } else {
-              // 두 번째 이후: 해당 입력 필드를 숨김 처리 및 값 초기화
-              input.value = "";
-              input.parentNode.style.display = "none";
-              previewDiv.innerHTML = "";
-            }
-            updateButtons();
-          });
-          
-          previewDiv.appendChild(img);
-          previewDiv.appendChild(deleteButton);
-        };
-        reader.readAsDataURL(file);
-        // 자동으로 다음 숨겨진 입력 필드가 보이도록 처리
-        var fileFields = container.querySelectorAll('.file_field');
-        var hiddenField = Array.from(fileFields).find(function(field) {
-          return field.style.display === "none";
-        });
-        if (hiddenField) {
-          hiddenField.style.display = "";
-        }
-        updateButtons();
-      }
-    });
-  });
-
-  function updateButtons() {
-    // + 버튼: 비활성화 조건 -> 모든 필드가 보이면 비활성화
-    var fileFields = container.querySelectorAll('.file_field');
-    if (Array.from(fileFields).every(function(field) { return field.style.display !== "none"; })) {
-      addButton.disabled = true;
-    } else {
-      addButton.disabled = false;
-    }
-    // - 버튼: 비활성화 조건 -> visible한 파일 입력 필드가 1개이면 비활성화
-    var visibleFields = Array.from(fileFields).filter(function(field) {
-      return field.style.display !== "none";
-    });
-    if (visibleFields.length <= 1) {
-      removeButton.disabled = true;
-    } else {
-      removeButton.disabled = false;
-    }
-  }
-});
-</script>
+<!-- 자바스크립트 팩을 포함 (Webpacker 사용 시) -->
+<%= javascript_pack_tag "card_collection" %>

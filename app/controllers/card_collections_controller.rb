@@ -26,6 +26,7 @@ class CardCollectionsController < ApplicationController
   end
 
   def show
+    @findCard = CardCollection.find(params[:id])
   end
 
 

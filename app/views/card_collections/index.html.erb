@@ -1,20 +1,49 @@
 <% @card_collections.each do |card_collection| %>
-  <div class="card-collection">
-    <div class="card-info">
-      <p><strong>내용:</strong> <%= card_collection.content %></p>
-      <p><strong>레이아웃:</strong> <%= card_collection.layout %></p>
-      <p><strong>테마:</strong> <%= card_collection.theme %></p>
+  <div class="d-flex flex-row mb-3">
+    <div class="p-2">
+      <%= image_tag url_for(card_collection.user.get_profile_image(100, 100)) %>
     </div>
 
+    <div class="p-2">
+      <%= card_collection.user.nickname %>
+    </div>
+
+    <button type="button" class="btn btn-primary">フォロー</button>
+
+    <div class="p-2">
+      <% if card_collection.user.introduction.present? %>
+        <%= card_collection.user.introduction %>
+      <% else %>
+        作成された自己紹介はありません
+      <% end %>
+    </div>
+  </div>
+
+
+  <div>
     <% if card_collection.photos.attached? %>
-      <div class="photos">
+      <div>
         <% card_collection.photos.each do |photo| %>
-          <%= image_tag url_for(photo), alt: "투고 사진", class: "card-photo" %>
+          <%= link_to card_collection_path(card_collection) do %>
+            <%= image_tag url_for(photo)%>
+          <% end %>
         <% end %>
       </div>
     <% else %>
       <p>사진이 업로드되지 않았습니다.</p>
     <% end %>
+
+    <button type="button">いいね</button>
+    <button type="button">お気に入り</button>
+    <button type="button">コメント</button>
+
+    <%= link_to card_collection_path(card_collection) do %>
+      <div>
+        <% lines = card_collection.content.to_s.split(/\r?\n/) %>
+        <%= simple_format(lines.first(2).join("\n") + (lines.size > 2 ? "\n..." : "")) %>
+      </div>
+    <% end %>
+  <h1>コメント</h1>
   </div>
   <hr>
 <% end %>

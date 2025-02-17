@@ -1,2 +1,67 @@
-<h1>CardCollections#show</h1>
-<p>Find me in app/views/card_collections/show.html.erb</p>
+<h2> 내부내용 </h2>
+  <div>
+  <% @findCard.photos.each do |photo| %>
+    <%= image_tag url_for(photo) %>
+  <% end %>
+  </div>
+
+  <div>
+  <%= simple_format(@findCard.content) %>
+  </div>
+
+
+
+
+  <table>
+    <tbody>
+      <tr>
+        <td>
+        <%= @findCard.created_at %>
+        </td>
+
+        <td>
+        좋아요
+        </td>
+
+        <td>
+        스크랩
+        </td>
+
+        <td>
+        조회수
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+      <div>
+        <%= image_tag url_for(@findCard.user.get_profile_image(100, 100)) %>
+      </div>
+
+      <div>
+        <%= @findCard.user.nickname %>
+      </div>
+
+      <div>
+        <% if @findCard.user.introduction.present? %>
+          <%= @findCard.user.introduction %>
+        <% else %>
+          작성된 자기소개가 없습니다.
+        <% end %>
+      </div>
+      <div>
+        <% @findCard.user.card_collections.limit(4).each do |post| %>
+          <div>
+          <%= link_to card_collection_path(post) do %>
+            <% if post.photos.attached? %>
+              <%= image_tag url_for(post.photos.first.variant(resize_to_fill: [30, 30])), alt: "게시물 사진" %>
+            <% end %>
+          <% end %>
+          </div>
+        <% end %>
+        <%= link_to "+"%>
+      </div>
+
+      <div>
+      댓글
+      </div>
