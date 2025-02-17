@@ -25,8 +25,8 @@ class CardCollection < ApplicationRecord
   def extract_hashtags
     return if content.blank?
   
-    # "#" 다음에 공백 없이 최대 15자까지의 문자와 숫자만 허용 (밑줄 제외)
-    hashtag_names = content.scan(/#([\p{L}\p{N}]{1,15})(?=[^\p{L}\p{N}]|$)/u).flatten
+    # "#" 다음에 공백 없이 문자와 숫자만 허용 (밑줄 제외, 글자수 제한 없음)
+    hashtag_names = content.scan(/#([\p{L}\p{N}]+)(?=[^\p{L}\p{N}]|$)/u).flatten
     hashtag_names.map!(&:downcase)
     hashtag_names.uniq!
   
@@ -36,7 +36,7 @@ class CardCollection < ApplicationRecord
     # 만약 해시태그와 쉼표 등 구두점 사이에 공백이 없이 연달아 나온 경우,
     # 예: "#111ㅇㅇ,#111122ㄴㄴ"처럼 콤마 바로 뒤에 공백이 없다면, 
     # 첫 번째 해시태그만 사용하도록 처리합니다.
-    if content =~ /#[\p{L}\p{N}]{1,15},(?!\s)/u
+    if content =~ /#[\p{L}\p{N}]+,(?!\s)/u
       hashtag_names = [hashtag_names.first].compact
     end
   
