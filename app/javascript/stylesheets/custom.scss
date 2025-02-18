@@ -1,0 +1,20 @@
+.fixed-card {
+  width: 289px;
+  height: 516px;
+}
+
+.fixed-image {
+  width: 269px;
+  height: 269px;
+  object-fit: cover;       /* 이미지 크기에 맞게 채우되 잘라냄 */
+  object-position: top;     /* 이미지 상단을 기준으로 표시 */
+}
+
+.three-lines {
+  display: -webkit-box;              /* Flexbox 유사 형태의 블록 컨테이너 */
+  -webkit-box-orient: vertical;      /* 수직 방향 정렬 */
+  -webkit-line-clamp: 3;             /* 최대 3줄로 제한 */
+  overflow: hidden;                  /* 넘치는 텍스트는 숨김 */
+  line-height: 1.5em;                /* 줄 높이 설정 */
+  height: 4.5em;                     /* 3줄(1.5em * 3) 만큼의 고정 높이 */
+}

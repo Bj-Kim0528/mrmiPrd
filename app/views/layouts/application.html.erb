@@ -13,52 +13,71 @@
 
   </head>
   <body>
-    <li>
-      <%= link_to "Top", root_path %>
-    </li>
-
-    <li>
-      <%= link_to "About"%>
-    </li>
-    <li>
-      <%= link_to "ピクチャー", card_collections_path %>
-    </li>
-    <li>
-      <%= link_to "リコメンド"%>
-    </li>
-    <li>
-      <%= link_to "ペット"%>
-    </li>
-    <li>
-      <%= link_to "プラントテリア"%>
-    </li>
-    <li>
-      <%= link_to "#チャンネル"%>
-    </li>
-    <li>
-      <%= link_to "投稿する", new_card_collection_path %>
-    </li>
-    <li>
-      <%= link_to "検索する"%>
-    </li>
-    <li>
-      <%= link_to "ゲストログイン"%>
-    </li>
-    <% if user_signed_in? %>
-      <li>
-        <%= link_to "ログアウト", destroy_user_session_path, method: :delete %>
-      </li>
-      <li>
-        <%= link_to "マイページ"%>
-      </li>
-    <% else %>
-      <li>
-        <%= link_to "ログイン", new_user_session_path %>
-      </li>
-      <li>
-        <%= link_to "会員登録", new_user_registration_path %>
-      </li>
-    <% end %>
-    <%= yield %>
+    <nav class="navbar">
+      <%= link_to "Top", root_path, class: "navbar-brand" %>
+      <div>
+      <% if user_signed_in? %>
+        <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "btn btn-outline-info" %>
+        <%= link_to "マイページ", root_path, class: "btn btn-info"%>
+      <% else %>
+        <%= link_to "ログイン", new_user_session_path, class: "btn btn-outline-info" %>
+        <%= link_to "会員登録", new_user_registration_path, class: "btn btn-info" %>
+      <% end %>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body"></div>
+          <%= yield %>
+      </div>
+    </div>
   </body>
 </html>
+
+
+    # <li>
+    #   <%= link_to "Top", root_path %>
+    # </li>
+
+    # <li>
+    #   <%= link_to "About"%>
+    # </li>
+    # <li>
+    #   <%= link_to "ピクチャー", card_collections_path %>
+    # </li>
+    # <li>
+    #   <%= link_to "リコメンド"%>
+    # </li>
+    # <li>
+    #   <%= link_to "ペット"%>
+    # </li>
+    # <li>
+    #   <%= link_to "プラントテリア"%>
+    # </li>
+    # <li>
+    #   <%= link_to "#チャンネル"%>
+    # </li>
+    # <li>
+    #   <%= link_to "投稿する", new_card_collection_path %>
+    # </li>
+    # <li>
+    #   <%= link_to "検索する"%>
+    # </li>
+    # <li>
+    #   <%= link_to "ゲストログイン"%>
+    # </li>
+    # <% if user_signed_in? %>
+    #   <li>
+    #     <%= link_to "ログアウト", destroy_user_session_path, method: :delete %>
+    #   </li>
+    #   <li>
+    #     <%= link_to "マイページ"%>
+    #   </li>
+    # <% else %>
+    #   <li>
+    #     <%= link_to "ログイン", new_user_session_path %>
+    #   </li>
+    #   <li>
+    #     <%= link_to "会員登録", new_user_registration_path %>
+    #   </li>
+    # <% end %>

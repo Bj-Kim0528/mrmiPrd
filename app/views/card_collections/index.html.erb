@@ -1,49 +1,65 @@
-<% @card_collections.each do |card_collection| %>
-  <div class="d-flex flex-row mb-3">
-    <div class="p-2">
-      <%= image_tag url_for(card_collection.user.get_profile_image(100, 100)) %>
-    </div>
+<div class="container">
+  <div class="row">
+    <% @card_collections.each do |card_collection| %>
+      <div class="col-3 mb-4 p-0">
+        <!-- 카드의 크기를 fixed-card 클래스로 고정 -->
+        <div class="card fixed-card">
+          <div class="card-body p-0">
+            <div class="d-flex">
+              <!-- 왼쪽: 프로필 이미지 -->
+              <div class="p-2">
+                <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "프로필 이미지" %>
+              </div>
+              <!-- 오른쪽: 닉네임, 팔로우 버튼, 자기소개 -->
+              <div class="p-2">
+                <div class="d-flex align-items-center">
+                  <h6 class="mb-0 d-inline" style="font-size: 15px;"><%= card_collection.user.nickname %></h6>
+                  <span class="mx-1">・</span>
+                  <button type="button" class="btn btn-link p-0 text-info " style="font-size: 15px;">フォロー</button>
+                </div>
+                <div style="font-size: 12px;">
+                  <% if card_collection.user.introduction.present? %>
+                    <%= card_collection.user.introduction %>
+                  <% else %>
+                    作成された自己紹介はありません
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
 
-    <div class="p-2">
-      <%= card_collection.user.nickname %>
-    </div>
-
-    <button type="button" class="btn btn-primary">フォロー</button>
-
-    <div class="p-2">
-      <% if card_collection.user.introduction.present? %>
-        <%= card_collection.user.introduction %>
-      <% else %>
-        作成された自己紹介はありません
-      <% end %>
-    </div>
-  </div>
-
-
-  <div>
-    <% if card_collection.photos.attached? %>
-      <div>
-        <% card_collection.photos.each do |photo| %>
-          <%= link_to card_collection_path(card_collection) do %>
-            <%= image_tag url_for(photo)%>
-          <% end %>
-        <% end %>
+          <div class="card-body p-10">
+            <!-- 게시물 이미지 영역 -->
+            <div>
+              <% if card_collection.photos.attached? %>
+                <%= link_to card_collection_path(card_collection) do %>
+                  <%= image_tag url_for(card_collection.photos.first.variant(resize_to_limit: [269, 269]).processed), alt: "투고 사진", class: "fixed-image img-fluid" %>
+                <% end %>
+              <% else %>
+                <p>사진이 업로드되지 않았습니다.</p>
+              <% end %>
+            </div>
+            <!-- 버튼 영역 -->
+            <div class="mt-2">
+              <button type="button" class="btn btn-sm btn-outline-primary">いいね</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary">お気に入り</button>
+              <button type="button" class="btn btn-sm btn-outline-success">コメント</button>
+            </div>
+            <!-- 게시글 내용 (최대 2줄 표시, 초과 시 "..." 추가) -->
+            <div class="mt-2" style="font-size: 15px;">
+              <%= link_to card_collection_path(card_collection) do %>
+                <div class="three-lines">
+                  <%= card_collection.content %>
+                </div>
+              <% end %>
+            </div>
+            <!-- 댓글 영역 (필요한 경우) -->
+            <div class="mt-2">
+              <h6>コメント</h6>
+            </div>
+          </div>
+        </div>
       </div>
-    <% else %>
-      <p>사진이 업로드되지 않았습니다.</p>
     <% end %>
-
-    <button type="button">いいね</button>
-    <button type="button">お気に入り</button>
-    <button type="button">コメント</button>
-
-    <%= link_to card_collection_path(card_collection) do %>
-      <div>
-        <% lines = card_collection.content.to_s.split(/\r?\n/) %>
-        <%= simple_format(lines.first(2).join("\n") + (lines.size > 2 ? "\n..." : "")) %>
-      </div>
-    <% end %>
-  <h1>コメント</h1>
   </div>
-  <hr>
-<% end %>
+</div>
