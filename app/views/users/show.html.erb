@@ -1,0 +1,10 @@
+<%= image_tag url_for(@userinfo.get_profile_image(36, 36)), alt: "프로필 이미지", size: "36x36" %>
+
+<%= @userinfo.nickname%>
+
+<div>팔로워</div>
+<div>팔로잉</div>
+
+<%=link_to "설정", edit_user_path %>
+
+<%= @userinfo.introduction%>

@@ -32,7 +32,7 @@
         <div>
           <% if user_signed_in? %>
             <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "btn btn-outline-info" %>
-            <%= link_to "マイページ", root_path, class: "btn btn-info"%>
+            <%= link_to "マイページ", user_path(current_user) , class: "btn btn-info"%>
           <% else %>
             <%= link_to "ゲストログイン", root_path, class: "btn btn-info"%>
             <%= link_to "ログイン", new_user_session_path, class: "btn btn-outline-info" %>

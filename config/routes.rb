@@ -9,11 +9,12 @@ Rails.application.routes.draw do
     get 'users/confirmations/certification', to: 'users/confirmations#certification', as: :certification
     post 'users/confirmations/certificate', to: 'users/confirmations#certificate', as: :certificate
   end
+  resources :card_collections
+  resources :users, only: [:show, :edit]
 
   root to: "homes#top"
   get '/about' => 'homes#about'
 
-  resources :card_collections
 
 
   if Rails.env.development?
