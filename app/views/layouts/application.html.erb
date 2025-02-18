@@ -10,21 +10,48 @@
   
     <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <script src="https://kit.fontawesome.com/a8c774f65f.js" crossorigin="anonymous"></script>
 
   </head>
   <body>
     <nav class="navbar">
-      <%= link_to "Top", root_path, class: "navbar-brand" %>
       <div>
-      <% if user_signed_in? %>
-        <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "btn btn-outline-info" %>
-        <%= link_to "マイページ", root_path, class: "btn btn-info"%>
-      <% else %>
-        <%= link_to "ログイン", new_user_session_path, class: "btn btn-outline-info" %>
-        <%= link_to "会員登録", new_user_registration_path, class: "btn btn-info" %>
-      <% end %>
+        <i class="fa-solid fa-house-chimney"></i>
+        <%= link_to "MRMI", root_path, class: "navbar-brand" %>
+        <%= link_to "About", root_path, class: "navbar-brand"%>
+      </div>
+
+      <div class="d-flex" >    
+        <div class="mx-2">
+          <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </div>
+      
+        <div>
+          <% if user_signed_in? %>
+            <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "btn btn-outline-info" %>
+            <%= link_to "マイページ", root_path, class: "btn btn-info"%>
+          <% else %>
+            <%= link_to "ゲストログイン", root_path, class: "btn btn-info"%>
+            <%= link_to "ログイン", new_user_session_path, class: "btn btn-outline-info" %>
+            <%= link_to "会員登録", new_user_registration_path, class: "btn btn-info" %>
+          <% end %>
+          <%= link_to "投稿する", new_card_collection_path, class: "btn btn-info"%>
+        </div>
       </div>
     </nav>
+
+    <div class="d-flex">
+      <%= link_to "ピクチャー", card_collections_path, class: "nav-link active" %>
+      <%= link_to "リコメンド", root_path, class: "nav-link active"%>
+      <%= link_to "収納TIP", root_path, class: "nav-link active"%>
+      <%= link_to "ペット", root_path, class: "nav-link active"%>
+      <%= link_to "プラントテリア", root_path, class: "nav-link active"%>
+      <%= link_to "#チャンネル", root_path, class: "nav-link active"%>
+    </div>
+
     <div class="container-fluid">
       <div class="card">
         <div class="card-body"></div>
@@ -33,51 +60,3 @@
     </div>
   </body>
 </html>
-
-
-    # <li>
-    #   <%= link_to "Top", root_path %>
-    # </li>
-
-    # <li>
-    #   <%= link_to "About"%>
-    # </li>
-    # <li>
-    #   <%= link_to "ピクチャー", card_collections_path %>
-    # </li>
-    # <li>
-    #   <%= link_to "リコメンド"%>
-    # </li>
-    # <li>
-    #   <%= link_to "ペット"%>
-    # </li>
-    # <li>
-    #   <%= link_to "プラントテリア"%>
-    # </li>
-    # <li>
-    #   <%= link_to "#チャンネル"%>
-    # </li>
-    # <li>
-    #   <%= link_to "投稿する", new_card_collection_path %>
-    # </li>
-    # <li>
-    #   <%= link_to "検索する"%>
-    # </li>
-    # <li>
-    #   <%= link_to "ゲストログイン"%>
-    # </li>
-    # <% if user_signed_in? %>
-    #   <li>
-    #     <%= link_to "ログアウト", destroy_user_session_path, method: :delete %>
-    #   </li>
-    #   <li>
-    #     <%= link_to "マイページ"%>
-    #   </li>
-    # <% else %>
-    #   <li>
-    #     <%= link_to "ログイン", new_user_session_path %>
-    #   </li>
-    #   <li>
-    #     <%= link_to "会員登録", new_user_registration_path %>
-    #   </li>
-    # <% end %>

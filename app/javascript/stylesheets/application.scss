@@ -1,1 +1,10 @@
 @use '~bootstrap/scss/bootstrap';
+
+
+body {
+  line-height: 1;
+  font-family: "Pretendard Variable", "Noto Sans KR", "Apple SD Gothic Neo", "맑은 고딕", "Malgun Gothic", sans-serif;
+  font-size: 13px;
+  max-width: 1256px;
+  margin: 0 auto;
+}
