@@ -8,12 +8,16 @@
             <div class="d-flex">
               <!-- 왼쪽: 프로필 이미지 -->
               <div class="p-2">
-                <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "프로필 이미지" %>
+                <%= link_to user_path(card_collection.user) do %>
+                  <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "프로필 이미지" %>
+                <% end %>
               </div>
               <!-- 오른쪽: 닉네임, 팔로우 버튼, 자기소개 -->
               <div class="p-2">
                 <div class="d-flex align-items-center">
-                  <h6 class="mb-0 d-inline" style="font-size: 15px;"><%= card_collection.user.nickname %></h6>
+                  <%= link_to user_path(card_collection.user) do %>
+                    <h6 class="mb-0 d-inline" style="font-size: 15px;"><%= card_collection.user.nickname %></h6>
+                  <% end %>
                   <span class="mx-1">・</span>
                   <button type="button" class="btn btn-link p-0 text-info" style="font-size: 15px;">フォロー</button>
                 </div>

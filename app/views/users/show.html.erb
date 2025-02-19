@@ -5,6 +5,92 @@
 <div>팔로워</div>
 <div>팔로잉</div>
 
-<%=link_to "설정", edit_user_path %>
 
-<%= @userinfo.introduction%>
+<div>
+  <% if current_user == @userinfo %>
+    <div>
+      <%= link_to "설정", edit_user_path(current_user), class: "btn btn-info" %>
+    </div>
+  <% end %>
+</div>
+
+<%= @userinfo.introduction %>
+<%= @userinfo.sns_link %>
+
+<div>
+  <% if current_user == @userinfo %>
+    <div>
+      <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;"><i class="fa-regular fa-heart"></i></button>
+      <span>좋아요 갯수</span>
+    </div>
+    <div>
+      <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;"><i class="fa-regular fa-bookmark"></i></button>
+      <span>스크랩 갯수</span>
+    </div>
+  <% end %>
+</div>
+
+
+
+
+
+
+<div>
+  <span>사진<%= @userinfo.card_collections.count%></span>
+
+  <div>
+    <% @userinfo.card_collections.limit(4).each do |post| %>
+      <div>
+      <%= link_to card_collection_path(post) do %>
+        <% if post.photos.attached? %>
+          <%= image_tag url_for(post.photos.first.variant(resize_to_fill: [50, 50])), alt: "게시물 사진" %>
+        <% end %>
+      <% end %>
+      </div>
+    <% end %>
+    <%= link_to "すべて見る"%>
+  </div>
+
+  <div>
+    <% if current_user == @userinfo %>
+      <%= link_to " + 사진 올리기", new_card_collection_path, class: "btn btn-info"%>
+    <% end %>
+  </div>
+</div>
+
+
+<div>
+  <% if current_user == @userinfo %>
+    <span>좋아요<%= @userinfo.card_collections.count%></span>
+
+    <div>
+      <% @userinfo.card_collections.limit(4).each do |post| %>
+        <div>
+        <%= link_to card_collection_path(post) do %>
+          <% if post.photos.attached? %>
+            <%= image_tag url_for(post.photos.first.variant(resize_to_fill: [50, 50])), alt: "게시물 사진" %>
+          <% end %>
+        <% end %>
+        </div>
+      <% end %>
+      <%= link_to "すべて見る"%>
+    </div>
+  <% end %>
+</div>
+
+<div>
+  <span>스크랩북<%= @userinfo.card_collections.count%></span>
+
+  <div>
+    <% @userinfo.card_collections.limit(4).each do |post| %>
+      <div>
+      <%= link_to card_collection_path(post) do %>
+        <% if post.photos.attached? %>
+          <%= image_tag url_for(post.photos.first.variant(resize_to_fill: [50, 50])), alt: "게시물 사진" %>
+        <% end %>
+      <% end %>
+      </div>
+    <% end %>
+    <%= link_to "すべて見る"%>
+  </div>
+</div>

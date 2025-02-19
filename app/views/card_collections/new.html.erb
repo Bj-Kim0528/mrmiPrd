@@ -1,53 +1,200 @@
-<%= form_with model: @card_collection, local: true, html: { multipart: true } do |f| %>
-  <% if @card_collection.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@card_collection.errors.count, "error") %> prevented this card collection from being saved:</h2>
-      <ul>
-        <% @card_collection.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <!-- 파일 입력 필드 영역: 10개 미리 생성, 초기에는 첫 번째만 보임 -->
-  <div>
-    <label>自分のPCから写真を投稿する（最大10枚）</label><br>
-    <div id="file_fields_container">
-      <% 10.times do |i| %>
-        <div data-index="<%= i %>" style="<%= i == 0 ? '' : 'display:none;' %>">
-          <%= file_field_tag "card_collection[photos][]", id: "card_collection_photos_#{i}", accept: "image/*" %>
-          <div id="preview_<%= i %>"></div>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>新しいカードコレクション作成</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <!-- 필요한 경우 FontAwesome 등 다른 자바스크립트 파일들도 포함 -->
+  </head>
+  <body data-turbolinks-cache="false">
+    <h1>新しいカードコレクションを作成する</h1>
+    <%= form_with model: @card_collection, local: true, html: { multipart: true } do |f| %>
+      <% if @card_collection.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@card_collection.errors.count, "error") %> prevented this card collection from being saved:</h2>
+          <ul>
+            <% @card_collection.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
         </div>
       <% end %>
-    </div>
-    <!-- +, - 버튼 -->
-    <button type="button" id="add_photo_field">+</button>
-    <button type="button" id="remove_photo_field">-</button>
-  </div>
 
-  <!-- 투고 내용 입력 -->
-  <div>
-    <%= f.label :content, "内容" %><br>
-    <%= f.text_area :content %>
-  </div>
+      <!-- 파일 입력 필드 영역: 10개 미리 생성, 초기에는 첫 번째만 보임 -->
+      <div>
+        <label>自分のPCから写真を投稿する（最大10枚）</label><br>
+        <div id="file_fields_container">
+          <% 10.times do |i| %>
+            <div data-index="<%= i %>" style="<%= i == 0 ? '' : 'display:none;' %>">
+              <%= file_field_tag "card_collection[photos][]", id: "card_collection_photos_#{i}", accept: "image/*" %>
+              <div id="preview_<%= i %>"></div>
+            </div>
+          <% end %>
+        </div>
+        <!-- +, - 버튼 -->
+        <button type="button" id="add_photo_field">+</button>
+        <button type="button" id="remove_photo_field">-</button>
+      </div>
 
-  <!-- 레이아웃 입력 -->
-  <div>
-    <%= f.label :layout, "レイアウト" %><br>
-    <%= f.select :layout, options_for_select(["1R", "1K/1DK", "1LDK/2DK", "2LDK", "3LDK以上"]) %>
-  </div>
+      <!-- 투고 내용 입력 -->
+      <div>
+        <%= f.label :content, "内容" %><br>
+        <%= f.text_area :content %>
+      </div>
 
-  <!-- 테마 입력 -->
-  <div>
-    <%= f.label :theme, "テーマ" %><br>
-    <%= f.select :theme, options_for_select(["お部屋写真", "収納TIP", "ペット", "プラントテリア", "その他"]) %>
-  </div>
+      <!-- 레이아웃 입력 -->
+      <div>
+        <%= f.label :layout, "レイアウト" %><br>
+        <%= f.select :layout, options_for_select(["1R", "1K/1DK", "1LDK/2DK", "2LDK", "3LDK以上"]) %>
+      </div>
 
-  <div class="actions">
-    <%= f.submit "投稿する", id: "submit_btn" %>
-  </div>
-<% end %>
+      <!-- 테마 입력 -->
+      <div>
+        <%= f.label :theme, "テーマ" %><br>
+        <%= f.select :theme, options_for_select(["お部屋写真", "収納TIP", "ペット", "プラントテリア", "その他"]) %>
+      </div>
 
-<!-- 자바스크립트 팩을 포함 (Webpacker 사용 시) -->
-<%= javascript_pack_tag "card_collection" %>
+      <div class="actions">
+        <%= f.submit "投稿する", id: "submit_btn" %>
+      </div>
+    <% end %>
+
+    <!-- 아래는 card_collections.js의 전체 코드를 인라인으로 포함 -->
+    <script>
+      // 전역 변수에 이벤트 핸들러 함수를 선언 (turbolinks:before-cache에서 제거하기 위함)
+      function handleAddClick(e) {
+        e.preventDefault();
+        var fileFields = container.querySelectorAll('div[data-index]');
+        var hiddenField = Array.from(fileFields).find(function(field) {
+          return window.getComputedStyle(field).display === "none";
+        });
+        if (hiddenField) {
+          hiddenField.style.display = "";
+        }
+        updateButtons();
+        updateSubmitButton();
+      }
+
+      function handleRemoveClick(e) {
+        e.preventDefault();
+        var fileFields = Array.from(container.querySelectorAll('div[data-index]')).filter(function(field) {
+          return window.getComputedStyle(field).display !== "none";
+        });
+        if (fileFields.length > 1) {
+          var lastVisible = fileFields[fileFields.length - 1];
+          var input = lastVisible.querySelector('input[type="file"]');
+          if (input) { input.value = ""; }
+          lastVisible.style.display = "none";
+        }
+        updateButtons();
+        updateSubmitButton();
+      }
+
+      function handleInputChange(e) {
+        var input = e.target;
+        var index = input.parentNode.getAttribute("data-index");
+        var previewDiv = document.getElementById("preview_" + index);
+        previewDiv.innerHTML = "";
+        
+        if (input.files && input.files.length > 0) {
+          var file = input.files[0];
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            var img = document.createElement("img");
+            img.src = e.target.result;
+            img.style.maxWidth = "200px";
+            img.style.display = "block";
+            
+            var deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.textContent = "삭제";
+            deleteButton.addEventListener("click", function() {
+              if (index === "0") {
+                input.value = "";
+                previewDiv.innerHTML = "";
+              } else {
+                input.value = "";
+                input.parentNode.style.display = "none";
+                previewDiv.innerHTML = "";
+                addButton.disabled = false;
+              }
+              updateSubmitButton();
+            });
+            
+            previewDiv.appendChild(img);
+            previewDiv.appendChild(deleteButton);
+          };
+          reader.readAsDataURL(file);
+          updateSubmitButton();
+        }
+      }
+
+      function updateButtons() {
+        var fileFields = container.querySelectorAll('div[data-index]');
+        if (Array.from(fileFields).every(function(field) { 
+          return window.getComputedStyle(field).display !== "none"; 
+        })) {
+          addButton.disabled = true;
+        } else {
+          addButton.disabled = false;
+        }
+        var visibleFields = Array.from(fileFields).filter(function(field) {
+          return window.getComputedStyle(field).display !== "none";
+        });
+        removeButton.disabled = (visibleFields.length <= 1);
+      }
+
+      function updateSubmitButton() {
+        var allInputs = container.querySelectorAll('input[type="file"][name="card_collection[photos][]"]');
+        var attached = Array.from(allInputs).some(function(input) {
+          return input.value && input.value.trim() !== "";
+        });
+        submitBtn.disabled = !attached;
+      }
+
+      // 전역 변수 선언
+      var container, addButton, removeButton, submitBtn;
+
+      document.addEventListener("turbolinks:load", function() {
+        container = document.getElementById("file_fields_container");
+        if (!container) return;
+        
+        addButton = document.getElementById("add_photo_field");
+        removeButton = document.getElementById("remove_photo_field");
+        submitBtn = document.getElementById("submit_btn");
+        
+        if (container.dataset.listenerAdded === "true") return;
+        container.dataset.listenerAdded = "true";
+        
+        updateButtons();
+        updateSubmitButton();
+
+        addButton.addEventListener("click", handleAddClick);
+        removeButton.addEventListener("click", handleRemoveClick);
+        
+        var fileInputs = container.querySelectorAll('input[type="file"][name="card_collection[photos][]"]');
+        fileInputs.forEach(function(input) {
+          input.addEventListener("change", handleInputChange);
+        });
+      });
+
+      document.addEventListener("turbolinks:before-cache", function() {
+        var container = document.getElementById("file_fields_container");
+        if (!container) return;
+        
+        var addButton = document.getElementById("add_photo_field");
+        var removeButton = document.getElementById("remove_photo_field");
+        var fileInputs = container.querySelectorAll('input[type="file"][name="card_collection[photos][]"]');
+        
+        addButton.removeEventListener("click", handleAddClick);
+        removeButton.removeEventListener("click", handleRemoveClick);
+        fileInputs.forEach(function(input) {
+          input.removeEventListener("change", handleInputChange);
+        });
+        
+        container.dataset.listenerAdded = "false";
+      });
+    </script>
+  </body>
+</html>

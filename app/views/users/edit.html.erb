@@ -1,0 +1,54 @@
+<%= form_with model: @userinfo, local: true do |f| %>
+  <% if @userinfo.errors.any? %>
+    <div id="error_explanation">
+      <h3><%= pluralize(@userinfo.errors.count, "error") %> prohibited this obj from being saved:</h3>
+      <ul>
+        <% @userinfo.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <div>
+    <%= f.label :profile_image, "Image" %>
+    <%= f.file_field :profile_image, accept: "image/*" %>
+  </div>
+ 
+  <div>
+    <%= f.label :nickname %>
+    <%= f.text_field :nickname%>
+  </div>
+
+  <div>
+    <%= f.label :email %>
+    <%= f.text_field :email%>
+  </div>
+
+  <div>
+    <%= f.label :phone_number %>
+    <%= f.text_field :phone_number%>
+  </div>
+
+  <div>
+    <%= f.label :gender %>
+    <%= f.select :gender, options_for_select(["선택하지않음", "여성", "남성"]) %>
+  </div>
+  <div>
+    <%= f.label :introduction, "Introduction" %>
+    <%= f.text_area :introduction %>
+  </div>
+  <div>
+    <%= f.label :sns_link %>
+    <%= f.text_field :sns_link%>
+  </div>
+
+
+
+
+
+  <div>
+    <%= f.submit "Update User" %>
+  </div>
+<% end %>
