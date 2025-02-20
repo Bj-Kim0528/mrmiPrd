@@ -5,7 +5,6 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <!-- 필요한 경우 FontAwesome 등 다른 자바스크립트 파일들도 포함 -->
   </head>
   <body data-turbolinks-cache="false">
     <h1>新しいカードコレクションを作成する</h1>
@@ -21,7 +20,7 @@
         </div>
       <% end %>
 
-      <!-- 파일 입력 필드 영역: 10개 미리 생성, 초기에는 첫 번째만 보임 -->
+      <!-- 파일 입력 필드 및 내용 입력 필드 영역: 10개 미리 생성, 초기에는 첫 번째만 보임 -->
       <div>
         <label>自分のPCから写真を投稿する（最大10枚）</label><br>
         <div id="file_fields_container">
@@ -29,18 +28,14 @@
             <div data-index="<%= i %>" style="<%= i == 0 ? '' : 'display:none;' %>">
               <%= file_field_tag "card_collection[photos][]", id: "card_collection_photos_#{i}", accept: "image/*" %>
               <div id="preview_<%= i %>"></div>
+              <!-- 각 파일에 대한 설명 입력 필드 -->
+              <%= text_area_tag "card_collection[contents][]", nil, placeholder: "写真の内容", id: "content_#{i}" %>
             </div>
           <% end %>
         </div>
         <!-- +, - 버튼 -->
         <button type="button" id="add_photo_field">+</button>
         <button type="button" id="remove_photo_field">-</button>
-      </div>
-
-      <!-- 투고 내용 입력 -->
-      <div>
-        <%= f.label :content, "内容" %><br>
-        <%= f.text_area :content %>
       </div>
 
       <!-- 레이아웃 입력 -->
@@ -60,7 +55,7 @@
       </div>
     <% end %>
 
-    <!-- 아래는 card_collections.js의 전체 코드를 인라인으로 포함 -->
+    <!-- 아래는 card_collection.js의 전체 코드를 인라인으로 포함 -->
     <script>
       // 전역 변수에 이벤트 핸들러 함수를 선언 (turbolinks:before-cache에서 제거하기 위함)
       function handleAddClick(e) {
@@ -108,7 +103,7 @@
             
             var deleteButton = document.createElement("button");
             deleteButton.type = "button";
-            deleteButton.textContent = "삭제";
+            deleteButton.textContent = "削除";
             deleteButton.addEventListener("click", function() {
               if (index === "0") {
                 input.value = "";
@@ -132,13 +127,9 @@
 
       function updateButtons() {
         var fileFields = container.querySelectorAll('div[data-index]');
-        if (Array.from(fileFields).every(function(field) { 
+        addButton.disabled = Array.from(fileFields).every(function(field) { 
           return window.getComputedStyle(field).display !== "none"; 
-        })) {
-          addButton.disabled = true;
-        } else {
-          addButton.disabled = false;
-        }
+        });
         var visibleFields = Array.from(fileFields).filter(function(field) {
           return window.getComputedStyle(field).display !== "none";
         });
@@ -170,13 +161,13 @@
         updateButtons();
         updateSubmitButton();
 
-        addButton.addEventListener("click", handleAddClick);
-        removeButton.addEventListener("click", handleRemoveClick);
-        
         var fileInputs = container.querySelectorAll('input[type="file"][name="card_collection[photos][]"]');
         fileInputs.forEach(function(input) {
           input.addEventListener("change", handleInputChange);
         });
+        
+        addButton.addEventListener("click", handleAddClick);
+        removeButton.addEventListener("click", handleRemoveClick);
       });
 
       document.addEventListener("turbolinks:before-cache", function() {

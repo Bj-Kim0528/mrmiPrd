@@ -26,13 +26,19 @@ class CardCollectionsController < ApplicationController
   end
 
   def show
-    @findCard = CardCollection.find(params[:id])
+    @card_collection = CardCollection.find_by(id: params[:id])
+    unless @card_collection
+      redirect_to card_collections_path, alert: "該当投稿を探せません"
+    end
   end
 
 
   private
 
   def card_collection_params
-    params.require(:card_collection).permit(:content, :layout, :theme, photos: [])
+    permitted = params.require(:card_collection).permit(:layout, :theme, photos: [], contents: [])
+    # 빈 문자열을 포함하는 배열로 강제 저장 (원한다면)
+    permitted[:contents] = permitted[:contents].map { |c| c.presence || "" }
+    permitted
   end
 end

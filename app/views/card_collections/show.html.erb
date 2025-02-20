@@ -1,67 +1,145 @@
-<h2> 내부내용 </h2>
-  <div>
-  <% @findCard.photos.each do |photo| %>
-    <%= image_tag url_for(photo) %>
-  <% end %>
-  </div>
-
-  <div>
-  <%= simple_format(@findCard.content) %>
-  </div>
-
-
-
-
-  <table>
-    <tbody>
-      <tr>
-        <td>
-        <%= @findCard.created_at %>
-        </td>
-
-        <td>
-        좋아요
-        </td>
-
-        <td>
-        스크랩
-        </td>
-
-        <td>
-        조회수
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
+<div>
+  <div><!-- 게시글내용 -->
+    <% @card_collection.photos.each_with_index do |photo, index| %>
+    <div class="container" style="max-width: 720px; margin: 0 auto 40px; padding: 0px; display: flex; flex-direction: column; gap: 24px; text-align: center;">
       <div>
-        <%= image_tag url_for(@findCard.user.get_profile_image(100, 100)) %>
-      </div>
-
-      <div>
-        <%= @findCard.user.nickname %>
-      </div>
-
-      <div>
-        <% if @findCard.user.introduction.present? %>
-          <%= @findCard.user.introduction %>
-        <% else %>
-          작성된 자기소개가 없습니다.
+        <%= link_to card_collection_path(@card_collection) do %>
+          <%= image_tag url_for(photo), alt: "투고 사진", class: "img-fluid" %>
         <% end %>
       </div>
+
+      <div style="text-align: left;">
+        태그사진
+      </div>
+
+      <div style="text-align: left;">
+        <% if @card_collection.contents.is_a?(Array) %>
+          <% content_text = @card_collection.contents[index].to_s.strip %>
+          <%= simple_format(content_text) %>
+        <% else %>
+          <%= simple_format(@card_collection.contents.to_s) %>
+        <% end %>
+      </div>
+    </div>
+
+    <% end %>
+
+
+  </div>
+
+  <div class="container d-flex justify-content-between" style="max-width: 720px; margin: 0 auto 40px; padding: 0px;">
+    <div class="d-flex">
+    <% time_diff = Time.current - @card_collection.created_at %>
+    <div class="ms-3 d-flex align-items-center">
+      <% if time_diff < 60.minutes %>
+        <%= (time_diff / 60).to_i %>분 전・
+      <% elsif time_diff < 24.hours %>
+        <%= (time_diff / 3600).to_i %>시간 전・
+      <% else %>
+        <%= (time_diff / 1.day).to_i %>일 전・
+      <% end %>
+    </div>
+      <div class="ms-3 d-flex align-items-center">
+        좋아요・
+      </div>
+      <div class="ms-3 d-flex align-items-center">
+        스크랩・
+      </div>
+      <div class="ms-3 d-flex align-items-center">
+        조회수
+      </div>
+    </div>
+    <div>
+      <button class="btn" style="padding: 0; font-size: 13px;">
+        신고하기
+      </button>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between" style="max-width: 720px; margin: 0 auto 40px; padding: 0px;">
+    <!-- 왼쪽 영역: 프로필 이미지와 사용자 정보 -->
+    <div class="d-flex align-items-center">
+      <!-- 프로필 이미지 -->
       <div>
-        <% @findCard.user.card_collections.limit(4).each do |post| %>
-          <div>
+        <%= link_to user_path(@card_collection.user) do %>
+          <%= image_tag url_for(@card_collection.user.get_profile_image(40, 40)), alt: "프로필 이미지", class: "rounded-circle" %>
+        <% end %>
+      </div>
+      <!-- 사용자 정보 (닉네임, 자기소개) -->
+      <div class="ms-3">
+        <div>
+          <%= link_to user_path(@card_collection.user) do %>
+            <div class="mb-0" style="font-size: 14px;"><%= @card_collection.user.nickname %></div>
+          <% end %>
+        </div>
+        <div>
+          <p class="mb-0" style="font-size: 13px;">
+            <% if @card_collection.user.introduction.present? %>
+              <%= @card_collection.user.introduction %>
+            <% else %>
+              작성된 자기소개가 없습니다.
+            <% end %>
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- 오른쪽 영역: 팔로우 버튼 -->
+    <div class="ms-auto">
+      <button class="btn btn-info p-2 d-flex align-items-center" style="font-size: 14px;">팔로우</button>
+    </div>
+  </div>
+
+  <div class="d-flex flex-wrap justify-content-between" style="max-width: 720px; margin: 0 auto 40px; padding: 0px;">
+    <% posts = @card_collection.user.card_collections.limit(3) %>
+      <% posts.each do |post| %>
+        <div style="width: 174px; height: 174px;">
           <%= link_to card_collection_path(post) do %>
             <% if post.photos.attached? %>
-              <%= image_tag url_for(post.photos.first.variant(resize_to_fill: [30, 30])), alt: "게시물 사진" %>
+              <%= image_tag url_for(post.photos.first.variant(resize_to_fill: [174, 174]).processed), alt: "게시물 사진", class: "rounded" %>
+            <% else %>
+              <!-- 사진이 없는 경우 빈 박스 -->
+              <div style="width: 174px; height: 174px; background-color: #f0f0f0;"></div>
             <% end %>
           <% end %>
-          </div>
-        <% end %>
-        <%= link_to "+"%>
-      </div>
+        </div>
+      <% end %>
 
+      <% (3 - posts.size).times do %>
+        <div style="width: 174px; height: 174px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
+          <%= link_to "+", card_collections_path, class: "btn btn-link" %>
+        </div>
+    <% end %>
+    <div style="width: 174px; height: 174px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
+      <%= link_to "더보기", card_collections_path, class: "btn btn-link" %>
+    </div>
+  </div>
+
+
+  <div style="max-width: 720px; margin: 0 auto 40px; padding: 0px;"><!-- 게시물댓글 -->
+    <div>
+      <p>
+        댓글
+      </p>
+    </div>
+
+    <div>
       <div>
-      댓글
+        <%= image_tag url_for(current_user.get_profile_image(100, 100)), alt: "프로필 이미지", class: "rounded-circle" %>
       </div>
+      <div>
+        <form role="search">
+          <input type="search" placeholder="좋은댓글!" aria-label="Search">
+          <button type="submit">입력</button>
+        </form>
+      </div>
+    </div>
+
+    <div>
+      댓글들
+    </div>
+
+    <div>
+      페이지네이션
+    </div>
+  </div>
+</div>
