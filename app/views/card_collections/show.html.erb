@@ -4,7 +4,7 @@
     <div class="container" style="max-width: 720px; margin: 0 auto 40px; padding: 0px; display: flex; flex-direction: column; gap: 24px; text-align: center;">
       <div>
         <%= link_to card_collection_path(@card_collection) do %>
-          <%= image_tag url_for(photo), alt: "투고 사진", class: "img-fluid" %>
+          <%= image_tag url_for(photo.variant(resize_to_fit: [720, nil]).processed), alt: "투고 사진", class: "img-fluid" %>
         <% end %>
       </div>
 
@@ -62,11 +62,11 @@
       <!-- 프로필 이미지 -->
       <div>
         <%= link_to user_path(@card_collection.user) do %>
-          <%= image_tag url_for(@card_collection.user.get_profile_image(40, 40)), alt: "프로필 이미지", class: "rounded-circle" %>
+          <%= image_tag url_for(@card_collection.user.get_profile_image(40, 40)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover;" %>
         <% end %>
       </div>
       <!-- 사용자 정보 (닉네임, 자기소개) -->
-      <div class="ms-3">
+      <div class="ms-3" style="margin-left: 8px;">
         <div>
           <%= link_to user_path(@card_collection.user) do %>
             <div class="mb-0" style="font-size: 14px;"><%= @card_collection.user.nickname %></div>
@@ -124,7 +124,7 @@
 
     <div>
       <div>
-        <%= image_tag url_for(current_user.get_profile_image(100, 100)), alt: "프로필 이미지", class: "rounded-circle" %>
+        <%= image_tag url_for(@card_collection.user.get_profile_image(30, 30)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 30px; height: 30px; object-fit: cover;" %>
       </div>
       <div>
         <form role="search">
