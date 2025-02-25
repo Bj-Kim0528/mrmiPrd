@@ -1,7 +1,7 @@
 <div class="d-flex" style="padding: 0 60px; position: relative;"><!-- 전체 -->
   <div style="width: 25%; padding-left: 10px; padding-right: 10px; padding-top: 30px;"><!-- 카드파트 -->
 
-    <div class="card sticky-container d-flex flex-column" style="position: sticky; top: 81px; transition: top 0.1s; text-align: center; padding: 30px 25px 18px;"><!-- 카드내부파트 -->
+    <div class="card sticky-container d-flex flex-column" style="top: 81px; transition: top 0.1s; text-align: center; padding: 30px 25px 18px;"><!-- 카드내부파트 -->
 
       <div><!-- 프로필~설정 -->
         <div style="margin: 0 auto 24px;"><!-- 프로필사진 -->
@@ -20,9 +20,11 @@
               <dt> | 팔로잉:</dt>
               <dd>숫자</dd>
             </dl>
+            <% if current_user == @userinfo%>
             <div><!-- 설정버튼 -->
               <%= link_to "설정", edit_user_path(current_user), class: "btn btn-outline-primary btn-sm" %>
             </div>
+            <% end %>
           </div>
         </div>
       </div>
@@ -40,18 +42,20 @@
         <% end %>
       </div>
 
-      <div><!-- 좋아요,북마크 -->
-        <button class="btn"><!-- 북마크 -->
-          <i class="fa-solid fa-bookmark"></i>
-          <div>좋아요</div>
-          <div>숫자</div>
-        </button>
-        <button class="btn"><!-- 좋아요 -->
-          <i class="fa-solid fa-heart"></i>
-          <div>좋아요</div>
-          <div>숫자</div>
-        </button>
-      </div>
+      <% if current_user == @userinfo%>
+        <div><!-- 좋아요,북마크 -->
+          <button class="btn"><!-- 북마크 -->
+            <i class="fa-solid fa-bookmark"></i>
+            <div>좋아요</div>
+            <div>숫자</div>
+          </button>
+          <button class="btn"><!-- 좋아요 -->
+            <i class="fa-solid fa-heart"></i>
+            <div>좋아요</div>
+            <div>숫자</div>
+          </button>
+        </div>
+      <% end %>
     </div>
 
     <div><!-- 카드하부파트(공백) -->
@@ -70,7 +74,7 @@
             <span>갯수</span>
           </h6>
           <div>
-            <%= link_to "전체보기"%>
+            <%= link_to "전체보기", card_collections_user_path(@userinfo)%>
           </div>
         </div>
 
@@ -90,9 +94,15 @@
               </div>
             <% end %>
             <% (3 - posts.size).times do %>
-              <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
-                <%= link_to "+", card_collections_path, class: "btn btn-link" %>
-              </div>
+              <% if current_user == @userinfo %>
+                <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
+                  <%= link_to "+", new_card_collection_path, class: "btn btn-link" %>
+                </div>
+              <%else%>
+                <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
+                  +
+                </div>
+              <% end %>
           <% end %>
           <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
             <%= link_to "더보기", card_collections_path, class: "btn btn-link" %>
@@ -109,7 +119,7 @@
             <span>갯수</span>
           </h6>
           <div>
-            <%= link_to "전체보기"%>
+            <%= link_to "전체보기", collections_user_path(@userinfo)%>
           </div>
         </div>
 
@@ -130,7 +140,7 @@
             <% end %>
             <% (3 - posts.size).times do %>
               <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
-                <%= link_to "+", card_collections_path, class: "btn btn-link" %>
+                +
               </div>
           <% end %>
           <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
@@ -140,41 +150,43 @@
       </div>
 
 
-      <div style="margin: 0 0 60px;"><!-- 좋아요 -->
-        <div class="d-flex justify-content-between"><!-- 좋아요갯수, 전체보기버튼 -->
-          <h6>좋아요
-            <span>갯수</span>
-          </h6>
-          <div>
-            <%= link_to "전체보기"%>
+      <% if current_user == @userinfo%>
+        <div style="margin: 0 0 60px;"><!-- 좋아요 -->
+          <div class="d-flex justify-content-between"><!-- 좋아요갯수, 전체보기버튼 -->
+            <h6>좋아요
+              <span>갯수</span>
+            </h6>
+            <div>
+              <%= link_to "전체보기", likes_user_path(@userinfo)%>
+            </div>
           </div>
-        </div>
 
-        <div class="d-flex justify-content-between"><!-- 사진 표시 -->
-        
-          <% posts = @userinfo.card_collections.limit(3) %>
-            <% posts.each do |post| %>
-              <div style="width: 160px; height: 160px;">
-                <%= link_to card_collection_path(post) do %>
-                  <% if post.photos.attached? %>
-                    <%= image_tag url_for(post.photos.first.variant(resize_to_fill: [160, 160]).processed), alt: "게시물 사진", class: "rounded" %>
-                  <% else %>
-                    <!-- 사진이 없는 경우 빈 박스 -->
-                    <div style="width: 160px; height: 160px; background-color: #f0f0f0;"></div>
+          <div class="d-flex justify-content-between"><!-- 사진 표시 -->
+          
+            <% posts = @userinfo.card_collections.limit(3) %>
+              <% posts.each do |post| %>
+                <div style="width: 160px; height: 160px;">
+                  <%= link_to card_collection_path(post) do %>
+                    <% if post.photos.attached? %>
+                      <%= image_tag url_for(post.photos.first.variant(resize_to_fill: [160, 160]).processed), alt: "게시물 사진", class: "rounded" %>
+                    <% else %>
+                      <!-- 사진이 없는 경우 빈 박스 -->
+                      <div style="width: 160px; height: 160px; background-color: #f0f0f0;"></div>
+                    <% end %>
                   <% end %>
-                <% end %>
-              </div>
+                </div>
+              <% end %>
+              <% (3 - posts.size).times do %>
+                <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
+                  
+                </div>
             <% end %>
-            <% (3 - posts.size).times do %>
-              <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
-                <%= link_to "+", card_collections_path, class: "btn btn-link" %>
-              </div>
-          <% end %>
-          <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
-            <%= link_to "더보기", card_collections_path, class: "btn btn-link" %>
+            <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
+              <%= link_to "더보기", card_collections_path, class: "btn btn-link" %>
+            </div>
           </div>
         </div>
-      </div>
+      <% end %>
     </div>
   </div>
 </div>

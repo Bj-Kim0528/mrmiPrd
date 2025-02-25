@@ -10,7 +10,14 @@ Rails.application.routes.draw do
     post 'users/confirmations/certificate', to: 'users/confirmations#certificate', as: :certificate
   end
   resources :card_collections
-  resources :users, only: [:show, :edit, :update]
+
+  resources :users, only: [:show, :edit, :update] do
+    member do
+      get :card_collections
+      get :collections
+      get :likes
+    end
+  end
 
   root to: "homes#top"
   get '/about' => 'homes#about'

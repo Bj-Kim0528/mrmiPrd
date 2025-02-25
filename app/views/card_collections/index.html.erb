@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" >
   <div class="row">
     <% @card_collections.each do |card_collection| %>
       <div style="padding: 0px 10px">
@@ -36,45 +36,57 @@
             <div class="card-body p-0">
               <!-- 게시물 이미지 영역 (첫 번째 사진만 표시) -->
               <div>
-                <% if card_collection.photos.attached? %>
-                  <%= link_to card_collection_path(card_collection) do %>
-                  <%= image_tag url_for(card_collection.photos.first.variant(resize_to_fill: [289, 289]).processed), alt: "투고 사진", class: "img-fluid", style: "width: 289px; height: 289px;" %>
+                <div>
+                  <% if card_collection.photos.attached? %>
+                    <%= link_to card_collection_path(card_collection) do %>
+                    <%= image_tag url_for(card_collection.photos.first.variant(resize_to_fill: [289, 289]).processed), alt: "투고 사진", class: "img-fluid", style: "width: 289px; height: 289px;" %>
+                    <% end %>
+                  <% else %>
+                    <p>사진이 업로드되지 않았습니다.</p>
                   <% end %>
-                <% else %>
-                  <p>사진이 업로드되지 않았습니다.</p>
-                <% end %>
-              </div>
-              <!-- 버튼 영역 -->
-              <div class="mt-2 d-flex justify-content-around">
-                <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;"><i class="fa-regular fa-heart"></i></button>
-                <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;"><i class="fa-regular fa-bookmark"></i></button>
-                <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;"><i class="fa-regular fa-comment"></i></button>
-              </div>
-              <!-- 게시글 내용 (최대 2줄 표시, 초과 시 "..." 추가) -->
-              <%
-                text = card_collection.contents.reject(&:blank?).join("\n\n")
-                lines = text.split(/\r?\n/)
-                displayed_text = lines[0..1].join("\n")
-                displayed_text += "\n..." if lines.size > 2
-              %>
-            <div class="mt-2" style="font-size: 15px;">
-              <%= link_to card_collection_path(card_collection) do %>
-                <div class="three-lines">
-                  <%= simple_format(displayed_text) %>
                 </div>
-              <% end %>
-            </div>
-              <!-- 댓글 영역 (필요한 경우) -->
-              <div class="mt-2">
-                <h6>コメント</h6>
+                <!-- 버튼 영역 -->
+
+                <div class="mt-2 d-flex justify-content-around">
+                  <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;"><i class="fa-regular fa-heart"></i></button>
+                  <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;"><i class="fa-regular fa-bookmark"></i></button>
+                  <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;"><i class="fa-regular fa-comment"></i></button>
+                </div>
+
+                <!-- 게시글 내용 (최대 2줄 표시, 초과 시 "..." 추가) -->
+                <div>
+                  <%
+                    text = card_collection.contents.reject(&:blank?).join("\n\n")
+                    lines = text.split(/\r?\n/)
+                    displayed_text = lines[0..1].join("\n")
+                    displayed_text += "\n..." if lines.size > 2
+                  %>
+                </div>
+
+                <div class="mt-2" style="font-size: 15px;">
+                  <%= link_to card_collection_path(card_collection) do %>
+                    <div class="three-lines">
+                      <%= simple_format(displayed_text) %>
+                    </div>
+                  <% end %>
+                </div>
+
+                <!-- 댓글 영역 (필요한 경우) -->
+                <div class="mt-2">
+                  <h6>コメント</h6>
+                </div>
               </div>
             </div>
-          </div>
+
         </div>
       </div>
     <% end %>
   </div>
 </div>
+
+
+
+
 
 
 
