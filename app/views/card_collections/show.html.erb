@@ -1,5 +1,7 @@
 <div>
   <div><!-- 게시글내용 -->
+    <div><%= link_to "Edit", edit_card_collection_path(@card_collection) %></div>
+    <div><%= link_to 'Destroy', card_collection_path(@card_collection), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger btn-sm' %></div>
     <% @card_collection.photos.each_with_index do |photo, index| %>
     <div class="container" style="max-width: 720px; margin: 0 auto 40px; padding: 0px; display: flex; flex-direction: column; gap: 24px; text-align: center;">
       <div>

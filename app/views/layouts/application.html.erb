@@ -89,10 +89,10 @@
             <div class="d-flex">
               <%= link_to "ピクチャー", card_collections_path, class: "nav-link active" %>
               <%= link_to "リコメンド", root_path, class: "nav-link active" %>
-              <%= link_to "収納TIP", root_path, class: "nav-link active" %>
-              <%= link_to "ペット", root_path, class: "nav-link active" %>
-              <%= link_to "プラントテリア", root_path, class: "nav-link active" %>
-              <%= link_to "#チャンネル", root_path, class: "nav-link active" %>
+              <%= link_to "収納TIP", topic_path('収納TIP'), class: "nav-link active" %>
+              <%= link_to "ペット", topic_path('ペット'), class: "nav-link active" %>
+              <%= link_to "プラントテリア", topic_path('プラントテリア'), class: "nav-link active" %>
+              <%= link_to "#チャンネル", hashtag_channel_path, class: "nav-link active" %>
             </div>
           <% end %>
         </div>
@@ -124,7 +124,7 @@
 
 
     <div class="container-fluid">
-      <div class="card">
+      <div class="card ">
         <div class="card-body">
           <%= yield %>
         </div>

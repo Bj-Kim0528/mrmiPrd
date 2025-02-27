@@ -1,191 +1,139 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>新しいカードコレクション作成</title>
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-  </head>
-  <body data-turbolinks-cache="false">
-    <h1>新しいカードコレクションを作成する</h1>
-    <%= form_with model: @card_collection, local: true, html: { multipart: true } do |f| %>
-      <% if @card_collection.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@card_collection.errors.count, "error") %> prevented this card collection from being saved:</h2>
-          <ul>
-            <% @card_collection.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
+<!-- 파일 입력 영역 -->
+<%= form_with model: @card_collection, local: true, html: { multipart: true } do |f| %>
+  <div>
+    <label>自分のPCから写真を投稿する（最大10枚）</label><br>
+    <div id="file_fields_container"></div>
+    <!-- + 버튼만 남김 -->
+    <button type="button" id="add_photo_field">+</button>
+  </div>
+  <div>
+    <%= f.label :layout, "レイアウト" %><br>
+    <%= f.select :layout, options_for_select(["1R", "1K/1DK", "1LDK/2DK", "2LDK", "3LDK以上"], @card_collection.layout) %>
+  </div>
 
-      <!-- 파일 입력 필드 및 내용 입력 필드 영역: 10개 미리 생성, 초기에는 첫 번째만 보임 -->
-      <div>
-        <label>自分のPCから写真を投稿する（最大10枚）</label><br>
-        <div id="file_fields_container">
-          <% 10.times do |i| %>
-            <div data-index="<%= i %>" style="<%= i == 0 ? '' : 'display:none;' %>">
-              <%= file_field_tag "card_collection[photos][]", id: "card_collection_photos_#{i}", accept: "image/*" %>
-              <div id="preview_<%= i %>"></div>
-              <!-- 각 파일에 대한 설명 입력 필드 -->
-              <%= text_area_tag "card_collection[contents][]", nil, placeholder: "写真の内容", id: "content_#{i}" %>
-            </div>
-          <% end %>
-        </div>
-        <!-- +, - 버튼 -->
-        <button type="button" id="add_photo_field">+</button>
-        <button type="button" id="remove_photo_field">-</button>
-      </div>
+  <!-- 테마 입력 (저장된 값 선택) -->
+  <div>
+    <%= f.label :theme, "テーマ" %><br>
+    <%= f.select :theme, options_for_select(["お部屋写真", "収納TIP", "ペット", "プラントテリア", "その他"], @card_collection.theme) %>
+  </div>
 
-      <!-- 레이아웃 입력 -->
-      <div>
-        <%= f.label :layout, "レイアウト" %><br>
-        <%= f.select :layout, options_for_select(["1R", "1K/1DK", "1LDK/2DK", "2LDK", "3LDK以上"]) %>
-      </div>
+  <div class="actions">
+    <%= f.submit "投稿する", id: "submit_btn" %>
+  </div>
+<% end %>
 
-      <!-- 테마 입력 -->
-      <div>
-        <%= f.label :theme, "テーマ" %><br>
-        <%= f.select :theme, options_for_select(["お部屋写真", "収納TIP", "ペット", "プラントテリア", "その他"]) %>
-      </div>
+<script>
+  // 최대 필드 개수 및 현재 필드 개수를 추적하는 변수
+  var maxFields = 10;
+  var fieldCount = 0;
 
-      <div class="actions">
-        <%= f.submit "投稿する", id: "submit_btn" %>
-      </div>
-    <% end %>
+  // 전역 변수 선언
+  var container, addButton, submitBtn;
 
-    <!-- 아래는 card_collection.js의 전체 코드를 인라인으로 포함 -->
-    <script>
-      // 전역 변수에 이벤트 핸들러 함수를 선언 (turbolinks:before-cache에서 제거하기 위함)
-      function handleAddClick(e) {
-        e.preventDefault();
-        var fileFields = container.querySelectorAll('div[data-index]');
-        var hiddenField = Array.from(fileFields).find(function(field) {
-          return window.getComputedStyle(field).display === "none";
-        });
-        if (hiddenField) {
-          hiddenField.style.display = "";
-        }
-        updateButtons();
-        updateSubmitButton();
-      }
+  // 새로운 파일 입력 필드(div)를 생성하는 함수
+  function createField(index) {
+    var div = document.createElement("div");
+    div.setAttribute("data-index", index);
+    // HTML 구조: 파일 입력, 미리보기 영역, 텍스트 영역, 삭제 버튼
+    div.innerHTML =
+      '<input type="file" name="card_collection[photos][]" id="card_collection_photos_' + index + '" accept="image/*">' +
+      '<div id="preview_' + index + '"></div>' +
+      '<textarea name="card_collection[contents][]" placeholder="写真の内容" id="content_' + index + '"></textarea>' +
+      '<button type="button" class="delete-field-button" data-index="' + index + '">削除</button>';
+    return div;
+  }
 
-      function handleRemoveClick(e) {
-        e.preventDefault();
-        var fileFields = Array.from(container.querySelectorAll('div[data-index]')).filter(function(field) {
-          return window.getComputedStyle(field).display !== "none";
-        });
-        if (fileFields.length > 1) {
-          var lastVisible = fileFields[fileFields.length - 1];
-          var input = lastVisible.querySelector('input[type="file"]');
-          if (input) { input.value = ""; }
-          lastVisible.style.display = "none";
-        }
-        updateButtons();
-        updateSubmitButton();
-      }
+  // 파일 입력 필드 변경 이벤트 핸들러: 미리보기 생성
+  function handleInputChange(e) {
+    var input = e.target;
+    var index = input.parentNode.getAttribute("data-index");
+    var previewDiv = document.getElementById("preview_" + index);
+    previewDiv.innerHTML = "";
+    if (input.files && input.files.length > 0) {
+      var file = input.files[0];
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = document.createElement("img");
+        img.src = e.target.result;
+        img.style.maxWidth = "200px";
+        img.style.display = "block";
+        previewDiv.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+      updateSubmitButton();
+    }
+  }
 
-      function handleInputChange(e) {
-        var input = e.target;
-        var index = input.parentNode.getAttribute("data-index");
-        var previewDiv = document.getElementById("preview_" + index);
-        previewDiv.innerHTML = "";
-        
-        if (input.files && input.files.length > 0) {
-          var file = input.files[0];
-          var reader = new FileReader();
-          reader.onload = function(e) {
-            var img = document.createElement("img");
-            img.src = e.target.result;
-            img.style.maxWidth = "200px";
-            img.style.display = "block";
-            
-            var deleteButton = document.createElement("button");
-            deleteButton.type = "button";
-            deleteButton.textContent = "削除";
-            deleteButton.addEventListener("click", function() {
-              if (index === "0") {
-                input.value = "";
-                previewDiv.innerHTML = "";
-              } else {
-                input.value = "";
-                input.parentNode.style.display = "none";
-                previewDiv.innerHTML = "";
-                addButton.disabled = false;
-              }
-              updateSubmitButton();
-            });
-            
-            previewDiv.appendChild(img);
-            previewDiv.appendChild(deleteButton);
-          };
-          reader.readAsDataURL(file);
-          updateSubmitButton();
-        }
-      }
+  // 삭제 버튼 이벤트: 해당 필드를 DOM에서 제거
+  function handleDeleteField(e) {
+    e.preventDefault();
+    var index = this.getAttribute("data-index");
+    var field = container.querySelector('div[data-index="' + index + '"]');
+    if (field) {
+      field.remove();
+      fieldCount--;  // 필드 개수 감소
+    }
+    updateButtons();
+    updateSubmitButton();
+  }
 
-      function updateButtons() {
-        var fileFields = container.querySelectorAll('div[data-index]');
-        addButton.disabled = Array.from(fileFields).every(function(field) { 
-          return window.getComputedStyle(field).display !== "none"; 
-        });
-        var visibleFields = Array.from(fileFields).filter(function(field) {
-          return window.getComputedStyle(field).display !== "none";
-        });
-        removeButton.disabled = (visibleFields.length <= 1);
-      }
+  // "+" 버튼 클릭 시 새 필드를 추가
+function handleAddClick(e) {
+  e.preventDefault();
+  if (fieldCount < maxFields) {
+    var newField = createField(fieldCount);
+    var fileInput = newField.querySelector('input[type="file"]');
+    fileInput.addEventListener("change", handleInputChange);
+    var deleteBtn = newField.querySelector(".delete-field-button");
+    deleteBtn.addEventListener("click", handleDeleteField);
+    container.appendChild(newField);
+    fieldCount++;
+    updateButtons();
+    updateSubmitButton();
+    // 추가된 파일 입력 필드를 자동으로 클릭하여 업로드 창을 열기
+    fileInput.click();
+  }
+}
 
-      function updateSubmitButton() {
-        var allInputs = container.querySelectorAll('input[type="file"][name="card_collection[photos][]"]');
-        var attached = Array.from(allInputs).some(function(input) {
-          return input.value && input.value.trim() !== "";
-        });
-        submitBtn.disabled = !attached;
-      }
+  // 버튼 활성화 상태 업데이트 (이제 "-" 버튼은 없으므로 + 버튼만 관리)
+  function updateButtons() {
+    var fields = container.querySelectorAll('div[data-index]');
+    addButton.disabled = (fields.length >= maxFields);
+  }
 
-      // 전역 변수 선언
-      var container, addButton, removeButton, submitBtn;
+  // 제출 버튼 활성화 상태 업데이트: 최소 하나의 파일이 선택되어야 활성화
+  function updateSubmitButton() {
+    var allInputs = container.querySelectorAll('input[type="file"][name="card_collection[photos][]"]');
+    var attached = Array.from(allInputs).some(function(input) {
+      return input.value && input.value.trim() !== "";
+    });
+    submitBtn.disabled = !attached;
+  }
 
-      document.addEventListener("turbolinks:load", function() {
-        container = document.getElementById("file_fields_container");
-        if (!container) return;
-        
-        addButton = document.getElementById("add_photo_field");
-        removeButton = document.getElementById("remove_photo_field");
-        submitBtn = document.getElementById("submit_btn");
-        
-        if (container.dataset.listenerAdded === "true") return;
-        container.dataset.listenerAdded = "true";
-        
-        updateButtons();
-        updateSubmitButton();
+  document.addEventListener("turbolinks:load", function() {
+    container = document.getElementById("file_fields_container");
+    addButton = document.getElementById("add_photo_field");
+    submitBtn = document.getElementById("submit_btn");
 
-        var fileInputs = container.querySelectorAll('input[type="file"][name="card_collection[photos][]"]');
-        fileInputs.forEach(function(input) {
-          input.addEventListener("change", handleInputChange);
-        });
-        
-        addButton.addEventListener("click", handleAddClick);
-        removeButton.addEventListener("click", handleRemoveClick);
-      });
+    // 초기 필드가 없으면 첫 번째 필드를 생성
+    if (!container.querySelector('div[data-index]')) {
+      var firstField = createField(fieldCount);
+      firstField.querySelector('input[type="file"]').addEventListener("change", handleInputChange);
+      firstField.querySelector(".delete-field-button").addEventListener("click", handleDeleteField);
+      container.appendChild(firstField);
+      fieldCount++;
+    }
+    addButton.addEventListener("click", handleAddClick);
+    updateButtons();
+    updateSubmitButton();
+  });
 
-      document.addEventListener("turbolinks:before-cache", function() {
-        var container = document.getElementById("file_fields_container");
-        if (!container) return;
-        
-        var addButton = document.getElementById("add_photo_field");
-        var removeButton = document.getElementById("remove_photo_field");
-        var fileInputs = container.querySelectorAll('input[type="file"][name="card_collection[photos][]"]');
-        
-        addButton.removeEventListener("click", handleAddClick);
-        removeButton.removeEventListener("click", handleRemoveClick);
-        fileInputs.forEach(function(input) {
-          input.removeEventListener("change", handleInputChange);
-        });
-        
-        container.dataset.listenerAdded = "false";
-      });
-    </script>
-  </body>
-</html>
+  document.addEventListener("turbolinks:before-cache", function() {
+    if (!container) return;
+    addButton.removeEventListener("click", handleAddClick);
+    var fileInputs = container.querySelectorAll('input[type="file"][name="card_collection[photos][]"]');
+    fileInputs.forEach(function(input) {
+      input.removeEventListener("change", handleInputChange);
+    });
+  });
+</script>

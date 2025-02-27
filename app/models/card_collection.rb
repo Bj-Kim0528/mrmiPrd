@@ -1,7 +1,7 @@
 class CardCollection < ApplicationRecord
   belongs_to :user
 
-  has_many_attached :photos
+  has_many_attached :photos, dependent: :destroy
   has_many :card_collection_hashtags, dependent: :destroy
   has_many :hashtags, through: :card_collection_hashtags
 

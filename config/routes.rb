@@ -22,7 +22,8 @@ Rails.application.routes.draw do
   root to: "homes#top"
   get '/about' => 'homes#about'
 
-
+  get '/topics/hashtag-channel', to: 'topics#hashtag_channel', as: 'hashtag_channel'
+  get '/topics/:theme', to: 'topics#show', as: 'topic'
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"

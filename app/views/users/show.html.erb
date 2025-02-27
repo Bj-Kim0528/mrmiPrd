@@ -1,7 +1,7 @@
 <div class="d-flex" style="padding: 0 60px; position: relative;"><!-- 전체 -->
   <div style="width: 25%; padding-left: 10px; padding-right: 10px; padding-top: 30px;"><!-- 카드파트 -->
 
-    <div class="card sticky-container d-flex flex-column" style="top: 81px; transition: top 0.1s; text-align: center; padding: 30px 25px 18px;"><!-- 카드내부파트 -->
+    <div class="card d-flex flex-column" style="top: 81px; transition: top 0.1s; text-align: center; padding: 30px 25px 18px;"><!-- 카드내부파트 -->
 
       <div><!-- 프로필~설정 -->
         <div style="margin: 0 auto 24px;"><!-- 프로필사진 -->
@@ -71,7 +71,7 @@
       <div style="margin: 0 0 60px;"><!-- 사진 -->
         <div class="d-flex justify-content-between"><!-- 사진갯수, 전체보기버튼 -->
           <h6>사진
-            <span>갯수</span>
+            <span>(갯수)</span>
           </h6>
           <div>
             <%= link_to "전체보기", card_collections_user_path(@userinfo)%>
@@ -116,7 +116,7 @@
       <div style="margin: 0 0 60px;"><!-- 북마크 -->
         <div class="d-flex justify-content-between"><!-- 북마크갯수, 전체보기버튼 -->
           <h6>북마크
-            <span>갯수</span>
+            <span>(갯수)</span>
           </h6>
           <div>
             <%= link_to "전체보기", collections_user_path(@userinfo)%>
@@ -154,7 +154,7 @@
         <div style="margin: 0 0 60px;"><!-- 좋아요 -->
           <div class="d-flex justify-content-between"><!-- 좋아요갯수, 전체보기버튼 -->
             <h6>좋아요
-              <span>갯수</span>
+              <span>(갯수)</span>
             </h6>
             <div>
               <%= link_to "전체보기", likes_user_path(@userinfo)%>
@@ -178,7 +178,7 @@
               <% end %>
               <% (3 - posts.size).times do %>
                 <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
-                  
+                  +
                 </div>
             <% end %>
             <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
