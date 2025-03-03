@@ -68,14 +68,18 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
+
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    address:              "smtp.gmail.com",
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.default_url_options = { host: 'aaa.com' }
+  
+  ActionMailer::Base.smtp_settings = {
+    address:              'smtp.gmail.com',
     port:                 587,
-    domain:               "54.249.33.89",
-    user_name:            ENV["GMAIL_USERNAME"],
-    password:             ENV["GMAIL_PASSWORD"],
-    authentication:       "plain",
+    domain:               'gmail.com',   # 서버 도메인이 aaa.com인 경우; 보통은 'gmail.com'을 사용하기도 함
+    user_name:            ENV['GMAIL_USERNAME'],
+    password:             ENV['GMAIL_PASSWORD'],
+    authentication:       'plain',
     enable_starttls_auto: true
   }
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
