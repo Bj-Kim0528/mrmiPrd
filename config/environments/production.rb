@@ -68,19 +68,6 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.perform_deliveries = true
-  
-  ActionMailer::Base.smtp_settings = {
-    address:              'smtp.gmail.com',
-    port:                 587,
-    domain:               'gmail.com',   # 서버 도메인이 aaa.com인 경우; 보통은 'gmail.com'을 사용하기도 함
-    user_name:            ENV['GMAIL_USERNAME'],
-    password:             ENV['GMAIL_PASSWORD'],
-    authentication:       'plain',
-    enable_starttls_auto: true
-  }
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
@@ -130,4 +117,17 @@ Rails.application.configure do
   # config.active_record.database_selector = { delay: 2.seconds }
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+
+  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+  config.action_mailer.delivery_method = :smtp
+  # config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.gmail.com',
+    port:                 587,
+    domain:               'gmail.com',   # 또는 별도의 도메인을 사용해도 됩니다.
+    user_name:            ENV['GMAIL_USERNAME'],   # 예: "yourname@gmail.com"
+    password:             ENV['GMAIL_PASSWORD'],   # 2단계 인증을 사용하는 경우 앱 비밀번호 사용
+    authentication:       'plain',
+    enable_starttls_auto: true
+  }
 end
