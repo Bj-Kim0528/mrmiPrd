@@ -34,9 +34,6 @@ class CardCollectionsController < ApplicationController
     final_contents    = []  # 최종적으로 저장할 내용 배열
     final_attachments = []  # 각 원소는 { type: :existing, blob: ... } 또는 { type: :new, file: ... }
   
-    # 신규 추가 파일들을 큐(queue)처럼 관리 (빈 값 제거)
-    new_photos_queue = submitted_photos.reject { |f| f.blank? }
-  
     total = flags.size
     (0...total).each do |i|
       flag = flags[i].to_i
@@ -51,21 +48,17 @@ class CardCollectionsController < ApplicationController
           end
         end
       when 1
-        # 신규 추가: 기존 id가 없으므로, 큐에서 다음 파일을 꺼내 사용
-        # (추가 필드는 기존 사진 id가 없으므로, 인덱스가 기존 배열보다 클 수도 있음)
-        if (i >= existing_photo_ids.size) || existing_photo_ids[i].blank?
-          if new_photos_queue.any?
-            file = new_photos_queue.shift
-            final_attachments << { type: :new, file: file }
-            final_contents << new_contents[i].to_s.strip
-          end
+        # 신규 추가: 기존 id가 없으므로, 제출된 i번째 파일과 내용을 그대로 사용
+        if submitted_photos[i].present?
+          final_attachments << { type: :new, file: submitted_photos[i] }
+          final_contents << new_contents[i].to_s.strip
         end
       when 3
-        # 수정: 기존 필드의 수정. 파일이 새로 업로드되면 교체, 그렇지 않으면 내용만 수정
+        # 수정: 기존 필드 수정. 파일이 선택되었으면 교체, 없으면 내용만 수정.
         if i < existing_photo_ids.size && existing_photo_ids[i].present?
           attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
           if submitted_photos[i].present?
-            # 새 파일 업로드 → 기존 첨부 교체
+            # 파일 선택이 있으면 기존 첨부 교체
             attachment.purge if attachment
             final_attachments << { type: :new, file: submitted_photos[i] }
             final_contents << new_contents[i].to_s.strip
@@ -78,12 +71,12 @@ class CardCollectionsController < ApplicationController
           end
         end
       when 2
-        # 삭제: 해당 필드는 최종 결과에 포함하지 않으며, 기존 첨부가 있으면 삭제
+        # 삭제: 해당 인덱스의 기존 첨부가 있으면 purge 처리하고, 최종 결과에는 포함하지 않음.
         if i < existing_photo_ids.size && existing_photo_ids[i].present?
           attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
           attachment.purge if attachment
         end
-        # 이 인덱스는 최종 배열에 추가하지 않음.
+        # 해당 인덱스는 최종 배열에 추가하지 않음.
       end
     end
   

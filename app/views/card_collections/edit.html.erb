@@ -41,35 +41,47 @@
   document.addEventListener("turbolinks:load", function() {
     var container = document.getElementById("file_fields_container");
 
-    // 기존 필드에 대해 파일 입력 이벤트 리스너 추가
-    container.querySelectorAll("div[data-index]").forEach(function(field) {
-      var fileInput = field.querySelector('input[type="file"]');
-      var flagInput = field.querySelector('.flag-input');
-
-      if(fileInput) {
-        fileInput.addEventListener("change", function() {
-          // 파일이 선택되었는지 files 배열로 확인
-          if (this.files && this.files.length > 0) {
-            flagInput.value = "3"; // 수정된 상태
-          } else {
-            flagInput.value = "0"; // 아무런 선택 없음
-          }
-        });
+    // 파일 입력 변경 이벤트 (이벤트 위임)
+    container.addEventListener("change", function(e) {
+      if (e.target && e.target.matches("input[type='file']")) {
+        var field = e.target.closest("div[data-index]");
+        var flagInput = field.querySelector(".flag-input");
+        // 파일이 선택되었으면 flag를 "3" (수정)로 설정, 그렇지 않으면 그대로
+        if (e.target.files && e.target.files.length > 0) {
+          flagInput.value = "3";
+        } else {
+          // 기존 필드의 경우는 수정하지 않은 것으로 유지하려면 flag를 그대로 두거나 "0"으로 재설정
+          // new 필드의 기본은 "1"
+          // 예: if(flagInput.value != "1") { flagInput.value = "0"; }
+          flagInput.value = flagInput.value === "1" ? "1" : "0";
+        }
       }
     });
 
-    // 삭제 버튼 이벤트는 그대로 유지: 삭제 시 flag를 "2"로 설정
-    container.querySelectorAll(".delete-field-button").forEach(function(btn) {
-      btn.addEventListener("click", function(e) {
+    // 텍스트 입력 이벤트 (수정 감지)
+    container.addEventListener("input", function(e) {
+      if (e.target && e.target.matches("textarea")) {
+        var field = e.target.closest("div[data-index]");
+        var flagInput = field.querySelector(".flag-input");
+        // 텍스트 변경 시 수정 flag를 적용 (단, 신규 필드면 그대로 "1")
+        if (flagInput.value !== "1") {
+          flagInput.value = "3";
+        }
+      }
+    });
+
+    // 삭제 버튼 이벤트: 삭제 시 flag를 "2"
+    container.addEventListener("click", function(e) {
+      if (e.target && e.target.matches(".delete-field-button")) {
         e.preventDefault();
-        var field = this.parentNode;
+        var field = e.target.closest("div[data-index]");
         var flagInput = field.querySelector(".flag-input");
         if (flagInput) { flagInput.value = "2"; }
         field.style.display = "none";
-      });
+      }
     });
 
-    // "+" 버튼 클릭 시 신규 필드 추가 (신규 필드는 기본 flag "1")
+    // 신규 필드 추가 ("+" 버튼)
     var addButton = document.getElementById("add_photo_field");
     addButton.addEventListener("click", function(e) {
       e.preventDefault();
@@ -83,26 +95,6 @@
         '<textarea name="card_collection[contents][]" placeholder="사진의 내용" id="content_' + index + '"></textarea>' +
         '<button type="button" class="delete-field-button" data-index="' + index + '">삭제</button>';
       container.appendChild(div);
-
-      // 신규 필드의 파일 입력에 대해 이벤트 리스너 추가
-      var newFileInput = div.querySelector('input[type="file"]');
-      var newFlagInput = div.querySelector('.flag-input');
-      newFileInput.addEventListener("change", function() {
-        if (this.files && this.files.length > 0) {
-          newFlagInput.value = "3";  // 파일이 선택되면 수정 상태
-        } else {
-          newFlagInput.value = "1";  // 신규 추가 상태로 유지 (기본값)
-        }
-      });
-
-      // 신규 필드의 삭제 버튼 이벤트 부착
-      div.querySelector(".delete-field-button").addEventListener("click", function(e) {
-        e.preventDefault();
-        var field = this.parentNode;
-        var flagInput = field.querySelector(".flag-input");
-        if (flagInput) { flagInput.value = "2"; }
-        field.style.display = "none";
-      });
     });
   });
 </script>
