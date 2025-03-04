@@ -87,27 +87,22 @@
   }
 
 
-  function handleDeleteField(e) {
-    e.preventDefault();
-    var index = this.getAttribute("data-index");
-    var field = container.querySelector('div[data-index="' + index + '"]');
-    if (field) {
-      // 파일 입력과 텍스트 영역 초기화
-      var input = field.querySelector('input[type="file"]');
-      if (input) { input.value = ""; }
-      var textarea = field.querySelector('textarea');
-      if (textarea) { textarea.value = ""; }
-      var previewDiv = document.getElementById("preview_" + index);
-      if (previewDiv) { previewDiv.innerHTML = ""; }
-      // 삭제 플래그 값을 "1"로 설정
-      var deleteFlag = document.getElementById("delete_flag_" + index);
-      if (deleteFlag) { deleteFlag.value = "1"; }
-      // 필드를 CSS로 숨김 처리 (DOM에는 남아 있어 제출 데이터에 포함)
-      field.style.display = "none";
+function handleDeleteField(e) {
+  e.preventDefault();
+  var index = this.getAttribute("data-index");
+  var field = container.querySelector('div[data-index="' + index + '"]');
+  if (field) {
+    // 삭제 플래그 설정 (필요하다면 서버에서 삭제 여부를 확인하기 위해)
+    var deleteFlag = document.getElementById("delete_flag_" + index);
+    if (deleteFlag) { 
+      deleteFlag.value = "1"; 
     }
-    updateButtons();
-    updateSubmitButton();
+    // DOM에서 해당 필드를 완전히 제거
+    field.parentNode.removeChild(field);
   }
+  updateButtons();
+  updateSubmitButton();
+}
 
   function handleAddClick(e) {
     e.preventDefault();
