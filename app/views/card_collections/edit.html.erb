@@ -2,15 +2,16 @@
   <div>
     <label>自分のPCから写真を投稿する（最大10枚）</label><br>
     <div id="file_fields_container">
-      <%# 편집 시 기존 파일이나 내용이 있다면 미리 렌더링 (필요에 따라 hidden 필드 등 추가) %>
       <% @card_collection.photos.each_with_index do |photo, index| %>
         <div data-index="<%= index %>">
+          <!-- 기존 첨부파일 id 전송 -->
+          <input type="hidden" name="card_collection[existing_photo_ids][]" value="<%= photo.id %>">
           <input type="file" name="card_collection[photos][]" id="card_collection_photos_<%= index %>" accept="image/*">
-            <div id="preview_<%= index %>">
-              <% if photo.present? %>
-                <%= image_tag url_for(photo), style: "max-width:200px; display:block;" %>
-              <% end %>
-            </div>
+          <div id="preview_<%= index %>">
+            <% if photo.present? %>
+              <%= image_tag url_for(photo), style: "max-width:200px; display:block;" %>
+            <% end %>
+          </div>
           <textarea name="card_collection[contents][]" placeholder="写真の内容" id="content_<%= index %>">
             <%= @card_collection.contents[index] %>
           </textarea>
@@ -32,6 +33,9 @@
     <%= f.submit "投稿する", id: "submit_btn" %>
   </div>
 <% end %>
+
+<!-- 기존의 자바스크립트 코드는 그대로 사용 -->
+
 
 <script>
   var maxFields = 10;
