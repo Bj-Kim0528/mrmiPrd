@@ -24,25 +24,28 @@ class CardCollectionsController < ApplicationController
   end
 
   def update
-    # 폼으로부터 전달된 새 파일, 내용, 기존 파일 id
-    new_photos          = params[:card_collection][:photos] || []
-    new_contents        = params[:card_collection][:contents] || []
-    existing_photo_ids  = params[:card_collection][:existing_photo_ids] || []
-    old_contents        = @card_collection.contents || []
-
-    # 새 내용이 비어 있으면 기존 내용을 유지하도록 병합
+    # 1. 새 파일 업로드 값은 변수에 저장합니다.
+    new_photos = params[:card_collection][:photos] || []
+  
+    # 2. photos 키를 params에서 삭제하여 자동으로 빈 배열이 할당되는 것을 방지합니다.
+    params[:card_collection].delete(:photos)
+    
+    # 3. contents 관련 처리 (수정하지 않은 필드는 기존 값 유지)
+    new_contents       = params[:card_collection][:contents] || []
+    existing_photo_ids = params[:card_collection][:existing_photo_ids] || []
+    old_contents       = @card_collection.contents || []
+    
     merged_contents = new_contents.each_with_index.map do |new_content, index|
       new_content.present? ? new_content : (old_contents[index] || "")
     end
-
+  
     if @card_collection.update(card_collection_params_without_photos.merge(contents: merged_contents))
+      # 4. 새 파일이 업로드된 필드만 처리합니다.
       new_photos.each_with_index do |uploaded_file, index|
-        # 기존 파일이 있었는지 여부 (hidden 필드가 있다면 기존 파일로 간주)
-        existing_photo_id = existing_photo_ids[index]
         if uploaded_file.present?
-          # 기존 파일이 존재하면 해당 첨부를 교체
-          if existing_photo_id.present?
-            attachment = @card_collection.photos.attachments.find_by(id: existing_photo_id)
+          # 해당 인덱스에 기존 첨부가 있다면 삭제 후 교체
+          if existing_photo_ids[index].present?
+            attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[index])
             attachment.purge if attachment
           end
           @card_collection.photos.attach(uploaded_file)
@@ -53,6 +56,7 @@ class CardCollectionsController < ApplicationController
       render :edit
     end
   end
+  
 
   def show
     unless @card_collection
