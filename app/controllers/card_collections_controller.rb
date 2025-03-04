@@ -31,10 +31,10 @@ class CardCollectionsController < ApplicationController
   
     current_contents = @card_collection.contents || []
   
-    final_contents = []
+    final_contents    = []  # 최종적으로 저장할 내용 배열
     final_attachments = []  # 각 원소는 { type: :existing, blob: ... } 또는 { type: :new, file: ... }
   
-    # 신규 추가 파일들을 큐처럼 관리 (빈 값 제거)
+    # 신규 추가 파일들을 큐(queue)처럼 관리 (빈 값 제거)
     new_photos_queue = submitted_photos.reject { |f| f.blank? }
   
     total = flags.size
@@ -42,57 +42,58 @@ class CardCollectionsController < ApplicationController
       flag = flags[i].to_i
       case flag
       when 0
-        # 변경 없음 → 기존 첨부와 내용을 그대로 유지
+        # 변경 없음: 기존 첨부와 내용을 그대로 유지
         if i < existing_photo_ids.size && existing_photo_ids[i].present?
           attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
           if attachment
             final_attachments << { type: :existing, blob: attachment.blob }
-            # 기존 내용 유지
             final_contents << current_contents[i]
           end
         end
       when 1
-        if i < existing_photo_ids.size && existing_photo_ids[i].present?
-          # 기존 필드의 수정: 만약 해당 인덱스에 파일 입력이 있다면 교체, 없으면 내용만 업데이트
-          attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
-          if submitted_photos[i].present?
-            # 새 파일이 업로드되었다면 기존 첨부 삭제 후 새 파일로 대체
-            attachment.purge if attachment
-            final_attachments << { type: :new, file: submitted_photos[i] }
-            # 수정된 내용(빈 문자열도 반영)
-            final_contents << new_contents[i].to_s.strip
-          else
-            # 파일은 그대로 두고, 내용만 업데이트 (빈 문자열도 업데이트)
-            if attachment
-              final_attachments << { type: :existing, blob: attachment.blob }
-              final_contents << new_contents[i].to_s.strip
-            end
-          end
-        else
-          # 신규 추가 필드: 기존 id가 없으므로 큐에서 다음 파일을 꺼냄
+        # 신규 추가: 기존 id가 없으므로, 큐에서 다음 파일을 꺼내 사용
+        # (추가 필드는 기존 사진 id가 없으므로, 인덱스가 기존 배열보다 클 수도 있음)
+        if (i >= existing_photo_ids.size) || existing_photo_ids[i].blank?
           if new_photos_queue.any?
             file = new_photos_queue.shift
             final_attachments << { type: :new, file: file }
             final_contents << new_contents[i].to_s.strip
           end
         end
+      when 3
+        # 수정: 기존 필드의 수정. 파일이 새로 업로드되면 교체, 그렇지 않으면 내용만 수정
+        if i < existing_photo_ids.size && existing_photo_ids[i].present?
+          attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
+          if submitted_photos[i].present?
+            # 새 파일 업로드 → 기존 첨부 교체
+            attachment.purge if attachment
+            final_attachments << { type: :new, file: submitted_photos[i] }
+            final_contents << new_contents[i].to_s.strip
+          else
+            # 파일 없이 내용만 수정 (빈 문자열도 반영)
+            if attachment
+              final_attachments << { type: :existing, blob: attachment.blob }
+              final_contents << new_contents[i].to_s.strip
+            end
+          end
+        end
       when 2
-        # 삭제 → 기존 첨부가 있으면 purge 처리; 해당 필드는 최종 결과에 포함하지 않음.
+        # 삭제: 해당 필드는 최종 결과에 포함하지 않으며, 기존 첨부가 있으면 삭제
         if i < existing_photo_ids.size && existing_photo_ids[i].present?
           attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
           attachment.purge if attachment
         end
-        # 이 인덱스는 최종 결과에 추가하지 않음.
+        # 이 인덱스는 최종 배열에 추가하지 않음.
       end
     end
   
-    # 업데이트할 contents 배열 재설정
+    # 모델에 최종 내용 배열 업데이트
     @card_collection.contents = final_contents
   
-    # 기존 첨부들을 전체 해제 (detach 메서드는 인수를 받지 않습니다)
+    # 기존 첨부를 모두 detach하여 순서를 재구성할 준비 (detach는 인수 없이 호출)
     @card_collection.photos.detach
   
-    # 최종 순서대로 첨부파일 재attach
+    # 최종 배열 순서대로 첨부파일 재attach
     final_attachments.each do |item|
       if item[:type] == :new
         @card_collection.photos.attach(item[:file])
@@ -107,6 +108,7 @@ class CardCollectionsController < ApplicationController
       render :edit
     end
   end
+  
   
   
   
