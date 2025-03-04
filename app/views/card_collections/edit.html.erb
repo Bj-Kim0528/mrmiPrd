@@ -4,8 +4,10 @@
     <div id="file_fields_container">
       <% @card_collection.photos.each_with_index do |photo, index| %>
         <div data-index="<%= index %>">
-          <!-- 기존 첨부파일 id 전송 -->
+          <!-- 기존 첨부 id와 현재 상태 flag (기본값 0: 변경없음) -->
           <input type="hidden" name="card_collection[existing_photo_ids][]" value="<%= photo.id %>">
+          <input type="hidden" name="card_collection[flags][]" value="0" class="flag-input">
+          
           <input type="file" name="card_collection[photos][]" id="card_collection_photos_<%= index %>" accept="image/*">
           <div id="preview_<%= index %>">
             <% if photo.present? %>
@@ -18,6 +20,7 @@
           <button type="button" class="delete-field-button" data-index="<%= index %>">削除</button>
         </div>
       <% end %>
+      <!-- 새 필드 추가 시 flag 입력은 별도로 1 (추가/수정)로 지정하도록 처리 -->
     </div>
     <button type="button" id="add_photo_field">+</button>
   </div>
@@ -34,139 +37,44 @@
   </div>
 <% end %>
 
-<!-- 기존의 자바스크립트 코드는 그대로 사용 -->
-
-
 <script>
-  var maxFields = 10;
-  var fieldCount = 0;
-  var container, addButton, submitBtn;
-
-  // 새 파일 입력 필드(div) 생성 (새로 추가하는 경우)
-  function createField(index) {
-    var div = document.createElement("div");
-    div.setAttribute("data-index", index);
-    div.innerHTML =
-      '<input type="file" name="card_collection[photos][]" id="card_collection_photos_' + index + '" accept="image/*">' +
-      '<div id="preview_' + index + '"></div>' +
-      '<textarea name="card_collection[contents][]" placeholder="写真の内容" id="content_' + index + '"></textarea>' +
-      '<button type="button" class="delete-field-button" data-index="' + index + '">削除</button>';
-    return div;
-  }
-
-  // 파일 입력 변경 시 미리보기 생성
-  function handleInputChange(e) {
-    var input = e.target;
-    var index = input.parentNode.getAttribute("data-index");
-    var previewDiv = document.getElementById("preview_" + index);
-    previewDiv.innerHTML = "";
-    if (input.files && input.files.length > 0) {
-      var file = input.files[0];
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        var img = document.createElement("img");
-        img.src = e.target.result;
-        img.style.maxWidth = "200px";
-        img.style.display = "block";
-        previewDiv.appendChild(img);
-      };
-      reader.readAsDataURL(file);
-      updateSubmitButton();
-    }
-  }
-
-  // 필드 삭제 후 재정렬: 배열의 인덱스가 연속되도록 업데이트
-  function reindexFields() {
-    var fields = container.querySelectorAll('div[data-index]');
-    fieldCount = 0;
-    fields.forEach(function(field) {
-      field.setAttribute("data-index", fieldCount);
-      // 파일 입력 필드 업데이트
-      var fileInput = field.querySelector('input[type="file"]');
-      fileInput.id = "card_collection_photos_" + fieldCount;
-      // textarea 업데이트
-      var textarea = field.querySelector('textarea');
-      textarea.id = "content_" + fieldCount;
-      // 미리보기 영역 업데이트
-      var previewDiv = field.querySelector('div[id^="preview_"]');
-      if (previewDiv) { previewDiv.id = "preview_" + fieldCount; }
-      // 삭제 버튼의 data-index 업데이트
-      var deleteBtn = field.querySelector(".delete-field-button");
-      if (deleteBtn) { deleteBtn.setAttribute("data-index", fieldCount); }
-      fieldCount++;
-    });
-    updateButtons();
-    updateSubmitButton();
-  }
-
-  // 삭제 버튼 이벤트: 해당 필드를 삭제 후 재정렬
-  function handleDeleteField(e) {
-    e.preventDefault();
-    var field = this.parentNode;
-    field.remove();
-    reindexFields();
-  }
-
-  // "+" 버튼 클릭 시 새 필드 추가 (최대 개수 체크)
-  function handleAddClick(e) {
-    e.preventDefault();
-    if (fieldCount < maxFields) {
-      var newField = createField(fieldCount);
-      var fileInput = newField.querySelector('input[type="file"]');
-      fileInput.addEventListener("change", handleInputChange);
-      var deleteBtn = newField.querySelector(".delete-field-button");
-      deleteBtn.addEventListener("click", handleDeleteField);
-      container.appendChild(newField);
-      fieldCount++;
-      updateButtons();
-      updateSubmitButton();
-      fileInput.click();  // 파일 선택 창 자동 호출
-    }
-  }
-
-  // 버튼 활성화 업데이트 (필드 개수 최대치 체크)
-  function updateButtons() {
-    var fields = container.querySelectorAll('div[data-index]');
-    addButton.disabled = (fields.length >= maxFields);
-  }
-
-  // 제출 버튼 활성화 업데이트: 최소 하나의 파일 선택되어야 함
-  function updateSubmitButton() {
-    var allInputs = container.querySelectorAll('input[type="file"][name="card_collection[photos][]"]');
-    var attached = Array.from(allInputs).some(function(input) {
-      return input.value && input.value.trim() !== "";
-    });
-    submitBtn.disabled = !attached;
-  }
-
+  // 예시: 삭제 버튼 클릭 시 해당 필드의 flag 값을 2로 변경하고 필드를 화면에서 숨기기
   document.addEventListener("turbolinks:load", function() {
-    container = document.getElementById("file_fields_container");
-    addButton = document.getElementById("add_photo_field");
-    submitBtn = document.getElementById("submit_btn");
-
-    // 편집 시 이미 렌더링된 필드가 있다면, fieldCount를 기존 개수로 설정
-    var initialFields = container.querySelectorAll('div[data-index]');
-    fieldCount = initialFields.length;
-
-    // 기존 필드에 이벤트 추가 (변경, 삭제)
-    initialFields.forEach(function(field) {
-      var fileInput = field.querySelector('input[type="file"]');
-      fileInput.addEventListener("change", handleInputChange);
-      var deleteBtn = field.querySelector(".delete-field-button");
-      deleteBtn.addEventListener("click", handleDeleteField);
+    var container = document.getElementById("file_fields_container");
+    container.querySelectorAll(".delete-field-button").forEach(function(btn) {
+      btn.addEventListener("click", function(e) {
+        e.preventDefault();
+        var field = this.parentNode;
+        // 해당 필드의 flag 입력값을 2 (삭제)로 설정
+        var flagInput = field.querySelector(".flag-input");
+        if (flagInput) { flagInput.value = "2"; }
+        // UI 상에서는 해당 필드를 숨깁니다.
+        field.style.display = "none";
+      });
     });
-
-    addButton.addEventListener("click", handleAddClick);
-    updateButtons();
-    updateSubmitButton();
-  });
-
-  document.addEventListener("turbolinks:before-cache", function() {
-    if (!container) return;
-    addButton.removeEventListener("click", handleAddClick);
-    var fileInputs = container.querySelectorAll('input[type="file"][name="card_collection[photos][]"]');
-    fileInputs.forEach(function(input) {
-      input.removeEventListener("change", handleInputChange);
+    // "+" 버튼 클릭 시 새 필드 생성 (flag 기본값은 1: 추가)
+    var addButton = document.getElementById("add_photo_field");
+    addButton.addEventListener("click", function(e) {
+      e.preventDefault();
+      var index = container.querySelectorAll('div[data-index]').length;
+      var div = document.createElement("div");
+      div.setAttribute("data-index", index);
+      div.innerHTML =
+        // 신규 필드는 기존 id가 없으므로 hidden id input 생략하고, flag는 1 (추가)로 설정
+        '<input type="hidden" name="card_collection[flags][]" value="1" class="flag-input">' +
+        '<input type="file" name="card_collection[photos][]" id="card_collection_photos_' + index + '" accept="image/*">' +
+        '<div id="preview_' + index + '"></div>' +
+        '<textarea name="card_collection[contents][]" placeholder="写真の内容" id="content_' + index + '"></textarea>' +
+        '<button type="button" class="delete-field-button" data-index="' + index + '">削除</button>';
+      container.appendChild(div);
+      // 신규 필드에도 삭제 이벤트를 부착
+      div.querySelector(".delete-field-button").addEventListener("click", function(e) {
+        e.preventDefault();
+        var field = this.parentNode;
+        var flagInput = field.querySelector(".flag-input");
+        if (flagInput) { flagInput.value = "2"; }
+        field.style.display = "none";
+      });
     });
   });
 </script>
