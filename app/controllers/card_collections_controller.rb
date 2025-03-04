@@ -46,29 +46,28 @@ class CardCollectionsController < ApplicationController
           attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
           if attachment
             final_attachments << { type: :existing, blob: attachment.blob }
-            # 내용은 새로 전달된 값이 있으면 사용하고, 없으면 기존 내용을 사용
+            # 새 내용이 있으면 업데이트, 없으면 기존 내용 사용
             final_contents << (new_contents[i].strip.presence || current_contents[i])
           end
         end
       when 1
         # 수정/추가
         if i < existing_photo_ids.size && existing_photo_ids[i].present?
-          # 기존 필드의 수정: 만약 새 파일이 업로드되었다면 기존 첨부를 교체
+          # 기존 필드의 수정: 새 파일이 있으면 교체
           attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
           if new_photos[i].present?
-            # 기존 첨부 교체: 기존 첨부는 purge (완전 삭제)
             attachment.purge if attachment
             final_attachments << { type: :new, file: new_photos[i] }
             final_contents << new_contents[i].strip.presence || ""
           else
-            # 파일은 그대로 두고 내용만 업데이트 (변경 없음처럼 처리)
+            # 파일은 그대로 두고 내용만 업데이트
             if attachment
               final_attachments << { type: :existing, blob: attachment.blob }
               final_contents << (new_contents[i].strip.presence || current_contents[i])
             end
           end
         else
-          # 신규 추가 필드 (기존 id 없음)
+          # 신규 추가 필드
           if new_photos[i].present?
             final_attachments << { type: :new, file: new_photos[i] }
             final_contents << new_contents[i].strip.presence || ""
@@ -80,17 +79,15 @@ class CardCollectionsController < ApplicationController
           attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
           attachment.purge if attachment
         end
-        # final_contents 에 추가하지 않음.
+        # 최종 배열에 추가하지 않음.
       end
     end
   
     # 업데이트할 contents 배열 재설정
     @card_collection.contents = final_contents
   
-    # detach(연관관계 해제) : 기존 첨부들을 모두 detach하여 순서를 재구성할 수 있도록 함.
-    @card_collection.photos.each do |att|
-      @card_collection.photos.detach(att)
-    end
+    # 기존 첨부들을 전체 해제합니다. (detach 메서드는 인수를 받지 않습니다.)
+    @card_collection.photos.detach
   
     # 최종 순서대로 첨부파일 재attach
     final_attachments.each do |item|
@@ -107,6 +104,7 @@ class CardCollectionsController < ApplicationController
       render :edit
     end
   end
+  
   
   
 
