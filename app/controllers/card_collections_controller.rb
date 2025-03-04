@@ -52,12 +52,11 @@ class CardCollectionsController < ApplicationController
         end
       when 1
         # 신규 추가: 기존 id가 없으므로, 큐에서 다음 파일을 꺼내 사용
-        # (추가 필드는 기존 사진 id가 없으므로, 인덱스가 기존 배열보다 클 수도 있음)
         if (i >= existing_photo_ids.size) || existing_photo_ids[i].blank?
           if new_photos_queue.any?
             file = new_photos_queue.shift
             final_attachments << { type: :new, file: file }
-            final_contents << new_contents[i].to_s.strip
+            final_contents << new_contents[i]  # 그대로 저장 (수정이 아니므로 별도 처리 없음)
           end
         end
       when 3
@@ -68,14 +67,12 @@ class CardCollectionsController < ApplicationController
             # 새 파일 업로드 → 기존 첨부 교체
             attachment.purge if attachment
             final_attachments << { type: :new, file: submitted_photos[i] }
-            final_contents << new_contents[i].to_s.strip
           else
-            # 파일 없이 내용만 수정 (빈 문자열도 반영)
-            if attachment
-              final_attachments << { type: :existing, blob: attachment.blob }
-              final_contents << new_contents[i].to_s.strip
-            end
+            # 파일은 그대로 두고, 텍스트 내용만 변경 (빈 문자열도 그대로 업데이트)
+            final_attachments << { type: :existing, blob: attachment.blob } if attachment
           end
+          # 수정된 텍스트 내용은 그대로 업데이트 (빈 문자열 포함)
+          final_contents << new_contents[i]
         end
       when 2
         # 삭제: 해당 필드는 최종 결과에 포함하지 않으며, 기존 첨부가 있으면 삭제
@@ -90,7 +87,7 @@ class CardCollectionsController < ApplicationController
     # 모델에 최종 내용 배열 업데이트
     @card_collection.contents = final_contents
   
-    # 기존 첨부를 모두 detach하여 순서를 재구성할 준비 (detach는 인수 없이 호출)
+    # 기존 첨부를 모두 detach (detach는 인수 없이 호출)
     @card_collection.photos.detach
   
     # 최종 배열 순서대로 첨부파일 재attach
@@ -108,6 +105,7 @@ class CardCollectionsController < ApplicationController
       render :edit
     end
   end
+  
   
   
   
