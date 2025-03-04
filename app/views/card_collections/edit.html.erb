@@ -38,21 +38,40 @@
 <% end %>
 
 <script>
-  // 예시: 삭제 버튼 클릭 시 해당 필드의 flag 값을 2로 변경하고 필드를 화면에서 숨기기
   document.addEventListener("turbolinks:load", function() {
+    // 기존 필드에 대해 파일 입력과 텍스트 영역의 변경 이벤트를 감지하여 플래그 값을 "3"으로 변경
+    document.querySelectorAll("div[data-index]").forEach(function(field) {
+      var fileInput = field.querySelector('input[type="file"]');
+      var textarea = field.querySelector('textarea');
+      var flagInput = field.querySelector('.flag-input');
+      
+      if(fileInput) {
+        fileInput.addEventListener("change", function() {
+          if(this.value) { // 파일이 선택되었으면
+            flagInput.value = "3";
+          }
+        });
+      }
+      
+      if(textarea) {
+        textarea.addEventListener("input", function() {
+          flagInput.value = "3";
+        });
+      }
+    });
+
+    // 기존 삭제와 신규 추가 이벤트는 그대로 유지
     var container = document.getElementById("file_fields_container");
     container.querySelectorAll(".delete-field-button").forEach(function(btn) {
       btn.addEventListener("click", function(e) {
         e.preventDefault();
         var field = this.parentNode;
-        // 해당 필드의 flag 입력값을 2 (삭제)로 설정
         var flagInput = field.querySelector(".flag-input");
         if (flagInput) { flagInput.value = "2"; }
-        // UI 상에서는 해당 필드를 숨깁니다.
         field.style.display = "none";
       });
     });
-    // "+" 버튼 클릭 시 새 필드 생성 (flag 기본값은 1: 추가)
+    
     var addButton = document.getElementById("add_photo_field");
     addButton.addEventListener("click", function(e) {
       e.preventDefault();
@@ -60,14 +79,13 @@
       var div = document.createElement("div");
       div.setAttribute("data-index", index);
       div.innerHTML =
-        // 신규 필드는 기존 id가 없으므로 hidden id input 생략하고, flag는 1 (추가)로 설정
         '<input type="hidden" name="card_collection[flags][]" value="1" class="flag-input">' +
         '<input type="file" name="card_collection[photos][]" id="card_collection_photos_' + index + '" accept="image/*">' +
         '<div id="preview_' + index + '"></div>' +
         '<textarea name="card_collection[contents][]" placeholder="写真の内容" id="content_' + index + '"></textarea>' +
         '<button type="button" class="delete-field-button" data-index="' + index + '">削除</button>';
       container.appendChild(div);
-      // 신규 필드에도 삭제 이벤트를 부착
+      // 신규 필드의 삭제 이벤트 부착
       div.querySelector(".delete-field-button").addEventListener("click", function(e) {
         e.preventDefault();
         var field = this.parentNode;
@@ -78,3 +96,4 @@
     });
   });
 </script>
+
