@@ -110,6 +110,7 @@ class CardCollectionsController < ApplicationController
   
   
   
+  
 
   def show
     unless @card_collection
