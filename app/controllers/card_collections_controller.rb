@@ -28,74 +28,79 @@ class CardCollectionsController < ApplicationController
     new_photos         = params[:card_collection][:photos] || []
     new_contents       = params[:card_collection][:contents] || []
     existing_photo_ids = params[:card_collection][:existing_photo_ids] || []
-    
-    # 기존의 contents 배열 (순서가 일치한다고 가정)
+  
     current_contents = @card_collection.contents || []
-    
-    final_contents = []   # 최종적으로 남을 contents 배열
-    final_blobs    = []   # 최종 순서대로 첨부할 ActiveStorage::Blob 또는 업로드 파일
-    
-    # 인덱스별 처리
-    flags.each_with_index do |flag, i|
-      case flag.to_i
+  
+    # 최종적으로 남길 내용과 첨부 순서를 담을 배열
+    final_contents = []
+    final_attachments = [] # 각 원소는 { type: :existing, blob: ... } 또는 { type: :new, file: ... }
+  
+    total = flags.size
+  
+    (0...total).each do |i|
+      flag = flags[i].to_i
+      case flag
       when 0
-        # 변경 없음 → 기존 필드 유지 (기존 첨부와 내용 그대로)
-        if existing_photo_ids[i].present?
+        # 변경 없음 → 기존 첨부와 내용을 그대로 유지
+        if i < existing_photo_ids.size && existing_photo_ids[i].present?
           attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
           if attachment
-            final_blobs << attachment.blob
-            # 기존 내용은 그대로 사용 (배열 순서 유지)
-            final_contents << current_contents[i]
+            final_attachments << { type: :existing, blob: attachment.blob }
+            # 내용은 새로 전달된 값이 있으면 사용하고, 없으면 기존 내용을 사용
+            final_contents << (new_contents[i].strip.presence || current_contents[i])
           end
         end
       when 1
-        # 수정/추가 → 새 파일이 있으면 해당 파일로 교체, 없으면 내용만 수정
-        if existing_photo_ids[i].present?
-          # 기존 필드의 수정인 경우
+        # 수정/추가
+        if i < existing_photo_ids.size && existing_photo_ids[i].present?
+          # 기존 필드의 수정: 만약 새 파일이 업로드되었다면 기존 첨부를 교체
+          attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
           if new_photos[i].present?
-            # 새 파일 업로드 → 새 파일로 대체
-            final_blobs << new_photos[i]  # 파일 객체 (나중에 attach)
-            final_contents << new_contents[i].presence || ""
+            # 기존 첨부 교체: 기존 첨부는 purge (완전 삭제)
+            attachment.purge if attachment
+            final_attachments << { type: :new, file: new_photos[i] }
+            final_contents << new_contents[i].strip.presence || ""
           else
-            # 파일 변경 없이 내용만 수정
-            attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
+            # 파일은 그대로 두고 내용만 업데이트 (변경 없음처럼 처리)
             if attachment
-              final_blobs << attachment.blob
-              final_contents << new_contents[i].presence || current_contents[i]
+              final_attachments << { type: :existing, blob: attachment.blob }
+              final_contents << (new_contents[i].strip.presence || current_contents[i])
             end
           end
         else
-          # 신규 추가 필드
+          # 신규 추가 필드 (기존 id 없음)
           if new_photos[i].present?
-            final_blobs << new_photos[i]
-            final_contents << new_contents[i].presence || ""
+            final_attachments << { type: :new, file: new_photos[i] }
+            final_contents << new_contents[i].strip.presence || ""
           end
         end
       when 2
-        # 삭제 → 아무것도 추가하지 않음; 기존 첨부가 있으면 삭제 처리
-        if existing_photo_ids[i].present?
+        # 삭제 → 기존 첨부가 있으면 purge 처리; 해당 필드는 최종 결과에 포함하지 않음.
+        if i < existing_photo_ids.size && existing_photo_ids[i].present?
           attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
           attachment.purge if attachment
         end
-        # 해당 인덱스는 최종 결과에 포함하지 않음.
+        # final_contents 에 추가하지 않음.
       end
     end
-    
+  
     # 업데이트할 contents 배열 재설정
     @card_collection.contents = final_contents
-    
-    # 기존의 모든 첨부파일을 제거한 후 최종 순서대로 재첨부
-    @card_collection.photos.purge
-    
-    final_blobs.each do |item|
-      # item이 업로드 파일 객체이면 그대로 attach, 그렇지 않으면 (기존 blob) attach
-      if item.respond_to?(:read)
-        @card_collection.photos.attach(item)
+  
+    # detach(연관관계 해제) : 기존 첨부들을 모두 detach하여 순서를 재구성할 수 있도록 함.
+    @card_collection.photos.each do |att|
+      @card_collection.photos.detach(att)
+    end
+  
+    # 최종 순서대로 첨부파일 재attach
+    final_attachments.each do |item|
+      if item[:type] == :new
+        @card_collection.photos.attach(item[:file])
       else
-        @card_collection.photos.attach(item)
+        @card_collection.photos.attach(item[:blob])
       end
     end
-    
+  
     if @card_collection.save
       redirect_to card_collection_path(@card_collection), notice: "카드 컬렉션이 성공적으로 업데이트되었습니다."
     else
