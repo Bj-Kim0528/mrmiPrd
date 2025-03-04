@@ -25,18 +25,19 @@ class CardCollectionsController < ApplicationController
 
   def update
     flags              = params[:card_collection][:flags] || []
-    new_photos         = params[:card_collection][:photos] || []
+    submitted_photos   = params[:card_collection][:photos] || []
     new_contents       = params[:card_collection][:contents] || []
     existing_photo_ids = params[:card_collection][:existing_photo_ids] || []
   
     current_contents = @card_collection.contents || []
   
-    # 최종적으로 남길 내용과 첨부 순서를 담을 배열
     final_contents = []
-    final_attachments = [] # 각 원소는 { type: :existing, blob: ... } 또는 { type: :new, file: ... }
+    final_attachments = []  # 각 원소는 { type: :existing, blob: ... } 또는 { type: :new, file: ... }
+  
+    # 신규 추가 파일들을 큐처럼 관리 (빈 값 제거)
+    new_photos_queue = submitted_photos.reject { |f| f.blank? }
   
     total = flags.size
-  
     (0...total).each do |i|
       flag = flags[i].to_i
       case flag
@@ -46,47 +47,48 @@ class CardCollectionsController < ApplicationController
           attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
           if attachment
             final_attachments << { type: :existing, blob: attachment.blob }
-            # 새 내용이 있으면 업데이트, 없으면 기존 내용 사용
-            final_contents << (new_contents[i].strip.presence || current_contents[i])
+            # 내용은 새 값이 있으면 사용, 없으면 기존 내용 사용
+            final_contents << (new_contents[i].to_s.strip.presence || current_contents[i])
           end
         end
       when 1
-        # 수정/추가
         if i < existing_photo_ids.size && existing_photo_ids[i].present?
-          # 기존 필드의 수정: 새 파일이 있으면 교체
+          # 기존 필드의 수정: 만약 해당 인덱스에 파일 입력이 있다면 교체, 없으면 내용만 업데이트
           attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
-          if new_photos[i].present?
+          if submitted_photos[i].present?
+            # 파일이 업로드되었다면 기존 첨부 삭제 후 새 파일로 대체
             attachment.purge if attachment
-            final_attachments << { type: :new, file: new_photos[i] }
-            final_contents << new_contents[i].strip.presence || ""
+            final_attachments << { type: :new, file: submitted_photos[i] }
+            final_contents << new_contents[i].to_s.strip.presence || ""
           else
-            # 파일은 그대로 두고 내용만 업데이트
+            # 파일은 그대로, 내용만 업데이트
             if attachment
               final_attachments << { type: :existing, blob: attachment.blob }
-              final_contents << (new_contents[i].strip.presence || current_contents[i])
+              final_contents << (new_contents[i].to_s.strip.presence || current_contents[i])
             end
           end
         else
-          # 신규 추가 필드
-          if new_photos[i].present?
-            final_attachments << { type: :new, file: new_photos[i] }
-            final_contents << new_contents[i].strip.presence || ""
+          # 신규 추가 필드: 기존 id가 없으므로 큐에서 다음 파일을 꺼냄
+          if new_photos_queue.any?
+            file = new_photos_queue.shift
+            final_attachments << { type: :new, file: file }
+            final_contents << new_contents[i].to_s.strip.presence || ""
           end
         end
       when 2
-        # 삭제 → 기존 첨부가 있으면 purge 처리; 해당 필드는 최종 결과에 포함하지 않음.
+        # 삭제 → 기존 첨부가 있다면 purge 처리; 최종 배열에는 포함하지 않음.
         if i < existing_photo_ids.size && existing_photo_ids[i].present?
           attachment = @card_collection.photos.attachments.find_by(id: existing_photo_ids[i])
           attachment.purge if attachment
         end
-        # 최종 배열에 추가하지 않음.
+        # 이 인덱스는 최종 결과에 추가하지 않음.
       end
     end
   
-    # 업데이트할 contents 배열 재설정
+    # contents 배열 업데이트
     @card_collection.contents = final_contents
   
-    # 기존 첨부들을 전체 해제합니다. (detach 메서드는 인수를 받지 않습니다.)
+    # 기존 첨부들을 전체 해제 (detach 메서드는 인수를 받지 않음)
     @card_collection.photos.detach
   
     # 최종 순서대로 첨부파일 재attach
@@ -104,6 +106,7 @@ class CardCollectionsController < ApplicationController
       render :edit
     end
   end
+  
   
   
   
