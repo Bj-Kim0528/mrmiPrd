@@ -1,5 +1,6 @@
 class CardCollectionsController < ApplicationController
-  before_action :authenticate_user! 
+  before_action :authenticate_user!
+  before_action :set_card_collection, only: [:edit, :update, :show, :destroy]
 
   def index
     @card_collections = CardCollection.all
@@ -9,7 +10,6 @@ class CardCollectionsController < ApplicationController
     @card_collection = CardCollection.new
   end
 
-  # POST /card_collections
   def create
     @card_collection = current_user.card_collections.build(card_collection_params)
     if @card_collection.save
@@ -20,63 +20,66 @@ class CardCollectionsController < ApplicationController
   end
 
   def edit
-    @card_collection = CardCollection.find_by(id: params[:id])
+    # 기존 데이터를 뷰에 렌더링 (사진은 url_for를 이용하여 미리보기)
   end
 
   def update
-    @card_collection = CardCollection.find(params[:id])
-    new_photos = params[:card_collection][:photos]      # 배열 형태의 새 파일들
-    delete_flags = params[:card_collection][:delete_flags]  # 각 필드에 대한 삭제 플래그 배열
-  
-    if @card_collection.update(card_collection_update_params)
-      if new_photos.present? && delete_flags.present?
-        new_photos.each_with_index do |new_file, i|
-          # 새 파일이 선택되었으면, 기존 파일을 교체합니다.
-          if new_file.present?
-            if @card_collection.photos.attached? && @card_collection.photos[i]
-              @card_collection.photos[i].purge   # 기존 파일 삭제
-            end
-            @card_collection.photos.attach(new_file)  # 새 파일 첨부
-          else
-            # 새 파일이 없고, 삭제 플래그가 "1"이면 기존 파일 삭제
-            if delete_flags[i] == "1" && @card_collection.photos.attached? && @card_collection.photos[i]
-              @card_collection.photos[i].purge
-            end
-          end
+    # 폼으로부터 전달된 새 배열 값들
+    new_photos   = params[:card_collection][:photos] || []
+    new_contents = params[:card_collection][:contents] || []
+    old_contents = @card_collection.contents || []
+
+    # 새 내용이 비어있으면 기존 내용을 유지
+    merged_contents = new_contents.each_with_index.map do |new_content, index|
+      new_content.present? ? new_content : (old_contents[index] || "")
+    end
+
+    # photos 관련 파라미터는 별도로 처리하기 위해 strong parameters에서 제외
+    if @card_collection.update(card_collection_params_without_photos.merge(contents: merged_contents))
+      # 사진 배열에 대해 각 인덱스별로 새 파일이 있으면 교체, 없으면 기존 첨부 유지
+      new_photos.each_with_index do |uploaded_file, index|
+        next if uploaded_file.blank?
+        # 기존 첨부가 있다면 해당 첨부를 교체
+        if @card_collection.photos.attachments[index]
+          @card_collection.photos.attachments[index].purge
         end
+        @card_collection.photos.attach(uploaded_file)
       end
-      redirect_to card_collections_path, notice: "Card collection was successfully updated."
+      redirect_to card_collections_path, notice: "카드 컬렉션이 성공적으로 업데이트되었습니다."
     else
       render :edit
     end
   end
 
   def show
-    @card_collection = CardCollection.find_by(id: params[:id])
     unless @card_collection
       redirect_to card_collections_path, alert: "該当投稿を探せません"
     end
   end
 
   def destroy
-    card_collection = CardCollection.find_by(id: params[:id])
-    card_collection.destroy
+    @card_collection.destroy
     redirect_to card_collections_path
   end
 
-
   private
 
-  def card_collection_params
-    permitted = params.require(:card_collection).permit(:layout, :theme, photos: [], contents: [])
-    # 빈 문자열을 포함하는 배열로 강제 저장 (원한다면)
-    permitted[:contents] = permitted[:contents].map { |c| c.presence || "" }
+  def set_card_collection
+    @card_collection = CardCollection.find_by(id: params[:id])
+  end
+
+  # 사진(ActiveStorage)와 내용을 동시에 업데이트하면 기존 첨부가 빈 배열로 덮어쓰여질 수 있으므로
+  # 사진 관련 파라미터는 제외한 strong parameters를 별도로 만듭니다.
+  def card_collection_params_without_photos
+    permitted = params.require(:card_collection).permit(:layout, :theme, contents: [])
+    permitted[:contents] = permitted[:contents].map { |c| c.presence || "" } if permitted[:contents].present?
     permitted
   end
 
-  def card_collection_update_params
-    permitted = params.require(:card_collection).permit(:layout, :theme, contents: [])
-    permitted[:contents] = permitted[:contents].map { |c| c.presence || "" }
+  # create 시 사용되는 strong parameters (업로드된 파일이 있다면 모두 저장)
+  def card_collection_params
+    permitted = params.require(:card_collection).permit(:layout, :theme, photos: [], contents: [])
+    permitted[:contents] = permitted[:contents].map { |c| c.presence || "" } if permitted[:contents].present?
     permitted
   end
 end
