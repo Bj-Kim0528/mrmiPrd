@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  card_collection: one
+  content: MyText
+  position: 1
+
+two:
+  card_collection: two
+  content: MyText
+  position: 1

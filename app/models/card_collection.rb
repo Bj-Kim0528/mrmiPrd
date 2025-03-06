@@ -1,54 +1,64 @@
 class CardCollection < ApplicationRecord
   belongs_to :user
-
-  has_many_attached :photos, dependent: :destroy
+  
+  # 기존 has_many_attached :photos 와 serialize :contents 제거
+  has_many :card_images, -> { order(Arel.sql("CASE WHEN position IS NULL THEN 1 ELSE 0 END, position ASC")) }, dependent: :destroy, inverse_of: :card_collection
+  accepts_nested_attributes_for :card_images, allow_destroy: true
+  before_save :update_card_images_positions
+  
   has_many :card_collection_hashtags, dependent: :destroy
   has_many :hashtags, through: :card_collection_hashtags
-
-  serialize :contents, Array
-  validate :photo_limit
-  after_save :extract_hashtags
-
-  before_save :remove_blank_contents
-
+  
+  # 최대 10개의 이미지 제한 (CardImage 기준)
+  validate :card_images_limit
+  
+  # 카드 컬렉션이 저장된 후, 카드 이미지의 내용에서 해시태그 추출
+  after_save :extract_hashtags_from_images
+  
   private
-
-  def photo_limit
-    if photos.attached? && photos.count > 10
-      errors.add(:photos, "can have at most 10 images")
+  
+  def card_images_limit
+    if card_images.size > 10
+      errors.add(:card_images, "can have at most 10 images")
     end
   end
-
-  def remove_blank_contents
-    # 빈 문자열을 제거해서, 실제 입력된 값들만 저장
-    self.contents = self.contents.reject(&:blank?) if contents.present?
-  end
-
-  def extract_hashtags
-    return if contents.blank?
-    
-    # 배열로 저장된 contents를 하나의 문자열로 결합 (각 항목 사이에 공백 추가)
-    text = contents.join(" ")
   
+  def extract_hashtags_from_images
+    # 각 CardImage의 content 값을 모아서 하나의 문자열로 결합
+    contents = card_images.map(&:content).reject(&:blank?)
+    return if contents.blank?
+  
+    text = contents.join(" ")
+    
     # "#" 다음에 공백 없이 글자와 숫자만 허용하는 해시태그 추출 (밑줄 제외)
     hashtag_names = text.scan(/#([\p{L}\p{N}]+)(?=[^\p{L}\p{N}]|$)/u).flatten
     hashtag_names.map!(&:downcase)
     hashtag_names.uniq!
-    
-    # 숫자만으로 구성된 해시태그는 제거 (예: "#12345" 무시)
     hashtag_names.reject! { |name| name.match?(/\A\d+\z/) }
     
-    # 만약 해시태그와 쉼표 등 구두점 사이에 공백 없이 연달아 나온 경우,
-    # 예: "#111ㅇㅇ,#111122ㄴㄴ"처럼 콤마 바로 뒤에 공백이 없다면, 
-    # 첫 번째 해시태그만 사용하도록 처리합니다.
+    # 예: "#abc,#def"처럼 콤마 바로 뒤에 공백이 없으면 첫 번째 해시태그만 사용하도록 처리
     if text =~ /#[\p{L}\p{N}]+,(?!\s)/u
       hashtag_names = [hashtag_names.first].compact
     end
   
+    # 기존 해시태그 연결 제거 후 재생성
     card_collection_hashtags.destroy_all
     hashtag_names.each do |name|
       hashtag = Hashtag.find_or_create_by(name: name)
       card_collection_hashtags.create(hashtag: hashtag)
+    end
+  end
+
+  def update_card_images_positions
+    count = 0
+    # 10개의 CardImage가 이미 존재한다고 가정합니다.
+    self.card_images.each do |ci|
+      if ci.image.attached? || ci.content.present?
+        count += 1
+        ci.position = count
+      else
+        ci.position = nil
+      end
     end
   end
 end

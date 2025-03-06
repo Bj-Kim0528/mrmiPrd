@@ -84,8 +84,8 @@
             <% posts.each do |post| %>
               <div style="width: 160px; height: 160px;">
                 <%= link_to card_collection_path(post) do %>
-                  <% if post.photos.attached? %>
-                    <%= image_tag url_for(post.photos.first.variant(resize_to_fill: [160, 160]).processed), alt: "게시물 사진", class: "rounded" %>
+                  <% if post.card_images.any? && post.card_images.first.image.attached? %>
+                    <%= image_tag url_for(post.card_images.first.image.variant(resize_to_fill: [160, 160]).processed), alt: "게시물 사진", class: "rounded" %>
                   <% else %>
                     <!-- 사진이 없는 경우 빈 박스 -->
                     <div style="width: 160px; height: 160px; background-color: #f0f0f0;"></div>
@@ -129,8 +129,8 @@
             <% posts.each do |post| %>
               <div style="width: 160px; height: 160px;">
                 <%= link_to card_collection_path(post) do %>
-                  <% if post.photos.attached? %>
-                    <%= image_tag url_for(post.photos.first.variant(resize_to_fill: [160, 160]).processed), alt: "게시물 사진", class: "rounded" %>
+                  <% if post.card_images.any? && post.card_images.first.image.attached? %>
+                    <%= image_tag url_for(post.card_images.first.image.variant(resize_to_fill: [160, 160]).processed), alt: "게시물 사진", class: "rounded" %>
                   <% else %>
                     <!-- 사진이 없는 경우 빈 박스 -->
                     <div style="width: 160px; height: 160px; background-color: #f0f0f0;"></div>
@@ -167,8 +167,8 @@
               <% posts.each do |post| %>
                 <div style="width: 160px; height: 160px;">
                   <%= link_to card_collection_path(post) do %>
-                    <% if post.photos.attached? %>
-                      <%= image_tag url_for(post.photos.first.variant(resize_to_fill: [160, 160]).processed), alt: "게시물 사진", class: "rounded" %>
+                    <% if post.card_images.any? && post.card_images.first.image.attached? %>
+                      <%= image_tag url_for(post.card_images.first.image.variant(resize_to_fill: [160, 160]).processed), alt: "게시물 사진", class: "rounded" %>
                     <% else %>
                       <!-- 사진이 없는 경우 빈 박스 -->
                       <div style="width: 160px; height: 160px; background-color: #f0f0f0;"></div>

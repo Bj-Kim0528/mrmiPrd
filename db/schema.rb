@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_02_20_010525) do
+ActiveRecord::Schema.define(version: 2025_03_05_073812) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -57,7 +57,17 @@ ActiveRecord::Schema.define(version: 2025_02_20_010525) do
     t.string "theme"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "photo_order"
     t.index ["user_id"], name: "index_card_collections_on_user_id"
+  end
+
+  create_table "card_images", force: :cascade do |t|
+    t.integer "card_collection_id", null: false
+    t.text "content"
+    t.integer "position"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["card_collection_id"], name: "index_card_images_on_card_collection_id"
   end
 
   create_table "hashtags", force: :cascade do |t|
@@ -97,4 +107,5 @@ ActiveRecord::Schema.define(version: 2025_02_20_010525) do
   add_foreign_key "card_collection_hashtags", "card_collections"
   add_foreign_key "card_collection_hashtags", "hashtags"
   add_foreign_key "card_collections", "users"
+  add_foreign_key "card_images", "card_collections"
 end

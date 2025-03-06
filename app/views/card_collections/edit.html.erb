@@ -1,29 +1,23 @@
-<%= form_with model: @card_collection, local: true, html: { multipart: true } do |f| %>
-  <div>
-    <label>自分のPCから写真を投稿する（最大10枚）</label><br>
-    <div id="file_fields_container">
-      <% @card_collection.photos.each_with_index do |photo, index| %>
-        <div data-index="<%= index %>">
-          <!-- 기존 첨부 id와 현재 상태 flag (기본값 0: 변경없음) -->
-          <input type="hidden" name="card_collection[existing_photo_ids][]" value="<%= photo.id %>">
-          <input type="hidden" name="card_collection[flags][]" value="0" class="flag-input">
-          
-          <input type="file" name="card_collection[photos][]" id="card_collection_photos_<%= index %>" accept="image/*">
-          <div id="preview_<%= index %>">
-            <% if photo.present? %>
-              <%= image_tag url_for(photo), style: "max-width:200px; display:block;" %>
-            <% end %>
-          </div>
-          <textarea name="card_collection[contents][]" placeholder="写真の内容" id="content_<%= index %>">
-            <%= @card_collection.contents[index] %>
-          </textarea>
-          <button type="button" class="delete-field-button" data-index="<%= index %>">削除</button>
-        </div>
+<% if @card_collection.errors.any? || @card_collection.card_images.any? { |ci| ci.errors.any? } %>
+  <div id="error_explanation" style="border: 1px solid red; padding: 10px; margin-bottom: 20px;">
+    <h2>
+      <%= pluralize(@card_collection.errors.count + @card_collection.card_images.map { |ci| ci.errors.count }.sum, "error") %> prohibited this card collection from being saved:
+    </h2>
+    <ul>
+      <% @card_collection.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
       <% end %>
-      <!-- 새 필드 추가 시 flag 입력은 별도로 1 (추가/수정)로 지정하도록 처리 -->
-    </div>
-    <button type="button" id="add_photo_field">+</button>
+      <% @card_collection.card_images.each do |ci| %>
+        <% ci.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      <% end %>
+    </ul>
   </div>
+<% end %>
+
+<%= form_with model: @card_collection, local: true, html: { multipart: true } do |f| %>
+  <!-- 기본 속성 입력 -->
   <div>
     <%= f.label :layout, "レイアウト" %><br>
     <%= f.select :layout, options_for_select(["1R", "1K/1DK", "1LDK/2DK", "2LDK", "3LDK以上"], @card_collection.layout) %>
@@ -32,49 +26,44 @@
     <%= f.label :theme, "テーマ" %><br>
     <%= f.select :theme, options_for_select(["お部屋写真", "収納TIP", "ペット", "プラントテリア", "その他"], @card_collection.theme) %>
   </div>
+
+  <!-- CardImage 입력 영역 (nested fields) -->
+  <div id="card_images_container">
+    <%= f.fields_for :card_images do |ci| %>
+      <div class="card-image-field" data-index="<%= ci.index %>">
+        <%= ci.file_field :image, accept: "image/*", onchange: "previewImage(this, 'preview_#{ci.index}')" %>
+        <div id="preview_<%= ci.index %>">
+          <% if ci.object.image.attached? %>
+            <%= image_tag url_for(ci.object.image), style: "max-width:200px; display:block;" %>
+          <% end %>
+        </div>
+        <%= ci.text_area :content, placeholder: "사진의 내용" %>
+        <div style="margin-top: 10px;">
+          <%= link_to "삭제", clear_card_image_path(ci.object), method: :patch, data: { confirm: "本当に削除しますか？(※삭제한 내용은 복구할 수 없습니다)" }, class: "btn btn-danger btn-sm" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
   <div class="actions">
-    <%= f.submit "投稿する", id: "submit_btn" %>
+    <%= f.submit "저장" %>
   </div>
 <% end %>
 
 <script>
-  // 예시: 삭제 버튼 클릭 시 해당 필드의 flag 값을 2로 변경하고 필드를 화면에서 숨기기
-  document.addEventListener("turbolinks:load", function() {
-    var container = document.getElementById("file_fields_container");
-    container.querySelectorAll(".delete-field-button").forEach(function(btn) {
-      btn.addEventListener("click", function(e) {
-        e.preventDefault();
-        var field = this.parentNode;
-        // 해당 필드의 flag 입력값을 2 (삭제)로 설정
-        var flagInput = field.querySelector(".flag-input");
-        if (flagInput) { flagInput.value = "2"; }
-        // UI 상에서는 해당 필드를 숨깁니다.
-        field.style.display = "none";
-      });
-    });
-    // "+" 버튼 클릭 시 새 필드 생성 (flag 기본값은 1: 추가)
-    var addButton = document.getElementById("add_photo_field");
-    addButton.addEventListener("click", function(e) {
-      e.preventDefault();
-      var index = container.querySelectorAll('div[data-index]').length;
-      var div = document.createElement("div");
-      div.setAttribute("data-index", index);
-      div.innerHTML =
-        // 신규 필드는 기존 id가 없으므로 hidden id input 생략하고, flag는 1 (추가)로 설정
-        '<input type="hidden" name="card_collection[flags][]" value="1" class="flag-input">' +
-        '<input type="file" name="card_collection[photos][]" id="card_collection_photos_' + index + '" accept="image/*">' +
-        '<div id="preview_' + index + '"></div>' +
-        '<textarea name="card_collection[contents][]" placeholder="写真の内容" id="content_' + index + '"></textarea>' +
-        '<button type="button" class="delete-field-button" data-index="' + index + '">削除</button>';
-      container.appendChild(div);
-      // 신규 필드에도 삭제 이벤트를 부착
-      div.querySelector(".delete-field-button").addEventListener("click", function(e) {
-        e.preventDefault();
-        var field = this.parentNode;
-        var flagInput = field.querySelector(".flag-input");
-        if (flagInput) { flagInput.value = "2"; }
-        field.style.display = "none";
-      });
-    });
-  });
+  function previewImage(input, previewId) {
+    var previewDiv = document.getElementById(previewId);
+    previewDiv.innerHTML = "";
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = document.createElement("img");
+        img.src = e.target.result;
+        img.style.maxWidth = "200px";
+        img.style.display = "block";
+        previewDiv.appendChild(img);
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
 </script>

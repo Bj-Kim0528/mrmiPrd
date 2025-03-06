@@ -1,46 +1,44 @@
 <div>
   <div><!-- 게시글내용 -->
-    <div><%= link_to "Edit", edit_card_collection_path(@card_collection) %></div>
-    <div><%= link_to 'Destroy', card_collection_path(@card_collection), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger btn-sm' %></div>
-    <% @card_collection.photos.each_with_index do |photo, index| %>
-    <div class="container" style="max-width: 720px; margin: 0 auto 40px; padding: 0px; display: flex; flex-direction: column; gap: 24px; text-align: center;">
-      <div>
-        <%= link_to card_collection_path(@card_collection) do %>
-          <%= image_tag url_for(photo.variant(resize_to_fit: [720, nil]).processed), alt: "투고 사진", class: "img-fluid" %>
-        <% end %>
-      </div>
-
-      <div style="text-align: left;">
-        태그사진
-      </div>
-
-      <div style="text-align: left;">
-        <% if @card_collection.contents.is_a?(Array) %>
-          <% content_text = @card_collection.contents[index].to_s.strip %>
-          <%= simple_format(content_text) %>
-        <% else %>
-          <%= simple_format(@card_collection.contents.to_s) %>
-        <% end %>
-      </div>
+    <div>
+      <%= link_to "Edit", edit_card_collection_path(@card_collection) %>
     </div>
-
+    <div>
+      <%= link_to 'Destroy', card_collection_path(@card_collection), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger btn-sm' %>
+    </div>
+    
+    <% @card_collection.card_images.where.not(position: nil).order(:position).each do |card_image| %>
+      <div class="container" style="max-width: 720px; margin: 0 auto 40px; padding: 0; display: flex; flex-direction: column; gap: 24px; text-align: center;">
+        <div>
+          <%= link_to card_collection_path(@card_collection) do %>
+            <% if card_image.image.attached? %>
+              <%= image_tag url_for(card_image.image.variant(resize_to_fit: [720, nil]).processed), alt: "투고 사진", class: "img-fluid" %>
+            <% end %>
+          <% end %>
+        </div>
+        <div style="text-align: left;">
+          태그사진
+        </div>
+        <div style="text-align: left;">
+          <%= simple_format(card_image.content.to_s.strip) %>
+        </div>
+      </div>
     <% end %>
-
-
+    
   </div>
 
-  <div class="container d-flex justify-content-between" style="max-width: 720px; margin: 0 auto 40px; padding: 0px;">
+  <div class="container d-flex justify-content-between" style="max-width: 720px; margin: 0 auto 40px; padding: 0;">
     <div class="d-flex">
-    <% time_diff = Time.current - @card_collection.created_at %>
-    <div class="ms-3 d-flex align-items-center">
-      <% if time_diff < 60.minutes %>
-        <%= (time_diff / 60).to_i %>분 전・
-      <% elsif time_diff < 24.hours %>
-        <%= (time_diff / 3600).to_i %>시간 전・
-      <% else %>
-        <%= (time_diff / 1.day).to_i %>일 전・
-      <% end %>
-    </div>
+      <% time_diff = Time.current - @card_collection.created_at %>
+      <div class="ms-3 d-flex align-items-center">
+        <% if time_diff < 60.minutes %>
+          <%= (time_diff / 60).to_i %>분 전・
+        <% elsif time_diff < 24.hours %>
+          <%= (time_diff / 3600).to_i %>시간 전・
+        <% else %>
+          <%= (time_diff / 1.day).to_i %>일 전・
+        <% end %>
+      </div>
       <div class="ms-3 d-flex align-items-center">
         좋아요・
       </div>
@@ -52,30 +50,26 @@
       </div>
     </div>
     <div>
-      <button class="btn" style="padding: 0; font-size: 13px;">
-        신고하기
-      </button>
+      <button class="btn" style="padding: 0; font-size: 13px;">신고하기</button>
     </div>
   </div>
 
-  <div class="d-flex justify-content-between" style="max-width: 720px; margin: 0 auto 40px; padding: 0px;">
+  <div class="d-flex justify-content-between" style="max-width: 720px; margin: 0 auto 40px; padding: 0;">
     <!-- 왼쪽 영역: 프로필 이미지와 사용자 정보 -->
     <div class="d-flex align-items-center">
-      <!-- 프로필 이미지 -->
       <div>
         <%= link_to user_path(@card_collection.user) do %>
           <%= image_tag url_for(@card_collection.user.get_profile_image(40, 40)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover;" %>
         <% end %>
       </div>
-      <!-- 사용자 정보 (닉네임, 자기소개) -->
-      <div class="ms-3" style="margin-left: 8px;">
+      <div class="ms-3">
         <div>
           <%= link_to user_path(@card_collection.user) do %>
-            <div class="mb-0" style="font-size: 14px;"><%= @card_collection.user.nickname %></div>
+            <div style="font-size: 14px;"><%= @card_collection.user.nickname %></div>
           <% end %>
         </div>
         <div>
-          <p class="mb-0" style="font-size: 13px;">
+          <p style="font-size: 13px;">
             <% if @card_collection.user.introduction.present? %>
               <%= @card_collection.user.introduction %>
             <% else %>
@@ -91,40 +85,34 @@
     </div>
   </div>
 
-  <div class="d-flex flex-wrap justify-content-between" style="max-width: 720px; margin: 0 auto 40px; padding: 0px;">
+  <div class="d-flex flex-wrap justify-content-between" style="max-width: 720px; margin: 0 auto 40px; padding: 0;">
     <% posts = @card_collection.user.card_collections.limit(3) %>
-      <% posts.each do |post| %>
-        <div style="width: 174px; height: 174px;">
-          <%= link_to card_collection_path(post) do %>
-            <% if post.photos.attached? %>
-              <%= image_tag url_for(post.photos.first.variant(resize_to_fill: [174, 174]).processed), alt: "게시물 사진", class: "rounded" %>
-            <% else %>
-              <!-- 사진이 없는 경우 빈 박스 -->
-              <div style="width: 174px; height: 174px; background-color: #f0f0f0;"></div>
-            <% end %>
+    <% posts.each do |post| %>
+      <div style="width: 174px; height: 174px;">
+        <%= link_to card_collection_path(post) do %>
+          <% if post.card_images.any? && post.card_images.first.image.attached? %>
+            <%= image_tag url_for(post.card_images.first.image.variant(resize_to_fill: [174, 174]).processed), alt: "게시물 사진", class: "rounded" %>
+          <% else %>
+            <div style="width: 174px; height: 174px; background-color: #f0f0f0;"></div>
           <% end %>
-        </div>
-      <% end %>
-
-      <% (3 - posts.size).times do %>
-        <div style="width: 174px; height: 174px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
-          <%= link_to "+", card_collections_path, class: "btn btn-link" %>
-        </div>
+        <% end %>
+      </div>
+    <% end %>
+    <% (3 - posts.size).times do %>
+      <div style="width: 174px; height: 174px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
+        <%= link_to "+", card_collections_path, class: "btn btn-link" %>
+      </div>
     <% end %>
     <div style="width: 174px; height: 174px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
       <%= link_to "더보기", card_collections_path, class: "btn btn-link" %>
     </div>
   </div>
 
-
-  <div style="max-width: 720px; margin: 0 auto 40px; padding: 0px;"><!-- 게시물댓글 -->
+  <div style="max-width: 720px; margin: 0 auto 40px; padding: 0;"><!-- 게시물 댓글 -->
     <div>
-      <p>
-        댓글
-      </p>
+      <p>댓글</p>
     </div>
-
-    <div>
+    <div class="d-flex">
       <div>
         <%= image_tag url_for(@card_collection.user.get_profile_image(30, 30)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 30px; height: 30px; object-fit: cover;" %>
       </div>
@@ -135,11 +123,9 @@
         </form>
       </div>
     </div>
-
     <div>
       댓글들
     </div>
-
     <div>
       페이지네이션
     </div>

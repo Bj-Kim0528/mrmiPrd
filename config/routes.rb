@@ -10,7 +10,14 @@ Rails.application.routes.draw do
     post 'users/confirmations/certificate', to: 'users/confirmations#certificate', as: :certificate
   end
   resources :card_collections
-
+  resources :card_images, only: [] do
+    member do
+      patch :clear
+      patch :move_up
+      patch :move_down
+    end
+  end
+  
   resources :users, only: [:show, :edit, :update] do
     member do
       get :card_collections
@@ -18,6 +25,8 @@ Rails.application.routes.draw do
       get :likes
     end
   end
+
+
 
   root to: "homes#top"
   get '/about' => 'homes#about'
