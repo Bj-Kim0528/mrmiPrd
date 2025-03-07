@@ -1,0 +1,25 @@
+<h1>검색 결과</h1>
+
+<% if @results.any? %>
+  <p><%= pluralize(@results.count, "result") %> found for "<%= @query %>"</p>
+  
+  <%# 테마별로 그룹화 %>
+  <% @results.group_by(&:theme).each do |theme, collections| %>
+    <h2><%= theme %></h2>
+    <div class="theme-results" style="display: flex; flex-wrap: wrap; gap: 10px;">
+      <% collections.each do |card_collection| %>
+        <div class="result-item" style="width: 160px; height: 160px;">
+          <%= link_to card_collection_path(card_collection) do %>
+            <% if card_collection.card_images.any? && card_collection.card_images.first.image.attached? %>
+              <%= image_tag url_for(card_collection.card_images.first.image.variant(resize_to_fill: [160, 160]).processed), alt: "게시물 사진", class: "rounded" %>
+            <% else %>
+              <div style="width: 160px; height: 160px; background-color: #f0f0f0;"></div>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+<% else %>
+  <p>No results found.</p>
+<% end %>

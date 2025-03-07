@@ -10,7 +10,7 @@
                 <!-- 왼쪽: 프로필 이미지 -->
                 <div class="p-2">
                   <%= link_to user_path(card_collection.user) do %>
-                    <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "프로필 이미지" %>
+                    <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover;" %>
                   <% end %>
                 </div>
                 <!-- 오른쪽: 닉네임, 팔로우 버튼, 자기소개 -->

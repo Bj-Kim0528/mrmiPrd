@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'search/index'
   devise_for :users, controllers: {
   registrations: 'users/registrations',
   confirmations: 'users/confirmations'
@@ -33,6 +34,8 @@ Rails.application.routes.draw do
 
   get '/topics/hashtag-channel', to: 'topics#hashtag_channel', as: 'hashtag_channel'
   get '/topics/:theme', to: 'topics#show', as: 'topic'
+
+  get 'search/index', to: 'search#index'
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"

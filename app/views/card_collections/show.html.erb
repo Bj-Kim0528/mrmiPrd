@@ -1,11 +1,13 @@
 <div>
   <div><!-- 게시글내용 -->
+  <% if @card_collection.user == current_user%>
     <div>
       <%= link_to "Edit", edit_card_collection_path(@card_collection) %>
     </div>
     <div>
       <%= link_to 'Destroy', card_collection_path(@card_collection), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger btn-sm' %>
     </div>
+  <% end %>
     
     <% @card_collection.card_images.where.not(position: nil).order(:position).each do |card_image| %>
       <div class="container" style="max-width: 720px; margin: 0 auto 40px; padding: 0; display: flex; flex-direction: column; gap: 24px; text-align: center;">
