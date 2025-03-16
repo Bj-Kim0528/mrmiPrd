@@ -69,9 +69,9 @@ Rails.application.configure do
 
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
-  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+  # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   config.action_mailer.delivery_method = :smtp
-  # config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
   config.action_mailer.smtp_settings = {
     address:              'smtp.gmail.com',
     port:                 587,
@@ -81,6 +81,15 @@ Rails.application.configure do
     authentication:       'plain',
     enable_starttls_auto: true
   }
+  # 이메일을 letter_opener로 발송 (gem 'letter_opener'를 Gemfile에 추가했어야 합니다)
+  # config.action_mailer.delivery_method = :letter_opener
+
+  # # 기본 URL 옵션 설정 (host와 port를 지정)
+  # config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+  # # 기타 메일 관련 설정 (필요한 경우)
+  # config.action_mailer.perform_deliveries = true
+
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 end

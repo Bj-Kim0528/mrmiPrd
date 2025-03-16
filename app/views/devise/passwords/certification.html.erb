@@ -1,0 +1,16 @@
+<h2>비밀번호 재설정 인증번호 입력</h2>
+<p>이메일로 받은 인증번호(Reset Token)를 입력하세요.</p>
+
+<%= form_with url: verify_password_token_path, local: true do |f| %>
+  <div>
+    <%= f.label :reset_password_token, "Reset Token" %>
+    <%= f.text_field :reset_password_token, required: true %>
+  </div>
+  <div>
+    <%= f.submit "인증번호 확인" %>
+  </div>
+<% end %>
+
+<% if flash[:alert] %>
+  <p style="color: red;"><%= flash[:alert] %></p>
+<% end %>
