@@ -113,7 +113,11 @@
   <div style="max-width: 720px; margin: 0 auto 40px; padding: 0;">
     <!-- 댓글 수 표시 (삭제되지 않은 최상위 댓글) -->
     <div>
-      <p>コメント件数：<%= @card_collection.card_collection_comments.where(deleted: false).count %></p>
+      <% total_comments = @card_collection.card_collection_comments.where(deleted: false).count +
+      CardCollectionReply.joins(:card_collection_comment)
+                        .where(card_collection_comments: { card_collection_id: @card_collection.id }, deleted: false)
+                        .count %>
+      <p>コメント件数： <%= total_comments %></p>
     </div>
 
     <!-- 최상위 댓글 목록 -->
