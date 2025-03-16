@@ -20,16 +20,14 @@ class Users::PasswordsController < Devise::PasswordsController
   # 사용자가 입력한 토큰을 검증하여 비밀번호 재설정 페이지(edit action)로 리다이렉트하는 액션
   def verify_token
     token = params[:reset_password_token]
-
-    # Devise 내부 메서드를 사용하여 토큰을 찾습니다.
-    self.resource = resource_class.reset_password_by_token(reset_password_token: token)
-
-    if resource.errors.empty?
+    # 토큰을 통해 사용자를 찾습니다. (업데이트는 하지 않고 단순 조회만)
+    self.resource = resource_class.with_reset_password_token(token)
+  
+    if resource.present? && resource.reset_password_period_valid?
       # 토큰이 유효하면 edit 페이지로 리다이렉트
       redirect_to edit_user_password_path(reset_password_token: token)
     else
-      # 유효하지 않으면 인증번호 입력 폼을 다시 렌더링하면서 에러 메시지를 표시
-      flash.now[:alert] = resource.errors.full_messages.join(", ")
+      flash.now[:alert] = "토큰이 유효하지 않거나 만료되었습니다."
       render :certification
     end
   end
