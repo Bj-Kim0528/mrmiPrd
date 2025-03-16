@@ -1,0 +1,2 @@
+module CardCollectionCommentsHelper
+end

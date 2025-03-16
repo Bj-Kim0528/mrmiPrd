@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get 'search/index'
+  
   devise_for :users, controllers: {
   registrations: 'users/registrations',
   confirmations: 'users/confirmations'
@@ -10,7 +10,13 @@ Rails.application.routes.draw do
     get 'users/confirmations/certification', to: 'users/confirmations#certification', as: :certification
     post 'users/confirmations/certificate', to: 'users/confirmations#certificate', as: :certificate
   end
-  resources :card_collections
+
+  resources :card_collections do
+    resources :card_collection_comments, only: [:create, :destroy] do
+      resources :card_collection_replies, only: [:create, :destroy]
+    end
+  end
+  
   resources :card_images, only: [] do
     member do
       patch :clear
@@ -36,6 +42,8 @@ Rails.application.routes.draw do
   get '/topics/:theme', to: 'topics#show', as: 'topic'
 
   get 'search/index', to: 'search#index'
+
+  get 'search/index'
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"

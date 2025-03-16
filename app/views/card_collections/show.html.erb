@@ -1,13 +1,13 @@
 <div>
   <div><!-- 게시글내용 -->
-  <% if @card_collection.user == current_user%>
-    <div>
-      <%= link_to "Edit", edit_card_collection_path(@card_collection) %>
-    </div>
-    <div>
-      <%= link_to 'Destroy', card_collection_path(@card_collection), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger btn-sm' %>
-    </div>
-  <% end %>
+    <% if @card_collection.user == current_user%>
+      <div>
+        <%= link_to "Edit", edit_card_collection_path(@card_collection) %>
+      </div>
+      <div>
+        <%= link_to 'Destroy', card_collection_path(@card_collection), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger btn-sm' %>
+      </div>
+    <% end %>
     
     <% @card_collection.card_images.where.not(position: nil).order(:position).each do |card_image| %>
       <div class="container" style="max-width: 720px; margin: 0 auto 40px; padding: 0; display: flex; flex-direction: column; gap: 24px; text-align: center;">
@@ -110,26 +110,160 @@
     </div>
   </div>
 
-  <div style="max-width: 720px; margin: 0 auto 40px; padding: 0;"><!-- 게시물 댓글 -->
+  <div style="max-width: 720px; margin: 0 auto 40px; padding: 0;">
+    <!-- 댓글 수 표시 (삭제되지 않은 최상위 댓글) -->
     <div>
-      <p>댓글</p>
+      <p>コメント件数：<%= @card_collection.card_collection_comments.where(deleted: false).count %></p>
     </div>
-    <div class="d-flex">
-      <div>
-        <%= image_tag url_for(@card_collection.user.get_profile_image(30, 30)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 30px; height: 30px; object-fit: cover;" %>
-      </div>
-      <div>
-        <form role="search">
-          <input type="search" placeholder="좋은댓글!" aria-label="Search">
-          <button type="submit">입력</button>
-        </form>
-      </div>
-    </div>
+
+    <!-- 최상위 댓글 목록 -->
     <div>
-      댓글들
+      <% @card_collection.card_collection_comments.order(created_at: :asc).each do |comment| %>
+        <div class="comment" style="margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+          <% if comment.deleted? %>
+            <p><strong>볼 수 없는 유저</strong></p>
+            <p>댓글이 삭제되었습니다</p>
+          <% else %>
+            <p>
+              <%= image_tag comment.user.get_profile_image(50, 50), alt: "프로필 이미지", class: "rounded-circle", 
+                            style: "width: 50px; height: 50px; object-fit: cover;" %>
+              <strong><%= comment.user.nickname %></strong>
+              <span style="color: #888; font-size: 0.8em;"><%= comment.created_at.strftime('%Y/%m/%d') %></span>
+            </p>
+            <p>
+              <%= simple_format(comment.comment) %>
+            </p>
+            <% if comment.user == current_user %>
+              <p>
+                <%= link_to "削除", card_collection_card_collection_comment_path(@card_collection, comment),
+                            method: :delete,
+                            data: { confirm: "정말 삭제하시겠습니까?" },
+                            class: "btn btn-danger btn-sm" %>
+              </p>
+            <% end %>
+          <% end %>
+
+          <% unless comment.deleted? %>
+            <!-- 답글달기 버튼 -->
+            <p>
+              <a href="#" class="reply-toggle btn btn-link btn-sm" data-comment-id="<%= comment.id %>">
+                답글달기
+              </a>
+            </p>
+          <% end %>
+        </div>
+
+        <!-- 답글 목록 (CardCollectionReply 모델 사용) -->
+        <% if comment.card_collection_replies.any? %>
+          <div class="child-replies" style="margin-left: 40px;">
+            <% comment.card_collection_replies.order(created_at: :asc).each do |reply| %>
+              <div class="reply" style="margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                <% if reply.deleted? %>
+                  <p><strong>볼 수 없는 유저</strong></p>
+                  <p>답글이 삭제되었습니다</p>
+                <% else %>
+                  <p>
+                    <%= image_tag reply.user.get_profile_image(40, 40), alt: "프로필 이미지", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover;" %>
+                    <strong><%= reply.user.nickname %></strong>
+                    <span style="color: #888; font-size: 0.8em;"><%= reply.created_at.strftime('%Y/%m/%d') %></span>
+                  </p>
+                  <p>
+                    <!-- 답글의 헤더: 만약 답글의 부모 답글이 존재하면 그 작성자, 없으면 최상위 댓글 작성자 -->
+                    @<%= reply.parent_reply.present? ? reply.parent_reply.user.nickname : comment.user.nickname %> <%= simple_format(reply.comment) %>
+                  </p>
+                  <% if reply.user == current_user %>
+                    <p>
+                      <%= link_to "削除", card_collection_card_collection_comment_card_collection_reply_path(@card_collection, comment, reply),
+                                  method: :delete,
+                                  data: { confirm: "정말 삭제하시겠습니까?" },
+                                  class: "btn btn-danger btn-sm" %>
+                    </p>
+                  <% end %>
+                  <% unless reply.deleted? %>
+                    <!-- 답글(자식 답글)에 대한 답글달기 버튼 -->
+                    <p>
+                      <a href="#" class="reply-toggle btn btn-link btn-sm" data-comment-id="<%= reply.id %>">
+                        답글달기
+                      </a>
+                    </p>
+                    <!-- 답글(자식 답글)에 대한 답글 작성 폼 -->
+                    <div id="reply-form-<%= reply.id %>" class="reply-form" style="display: none; margin-left: 20px;">
+                      <p>
+                        <% if reply.parent_reply_id.nil? %>
+                          @<%= reply.user.nickname %> 에 대한 답글:
+                        <% else %>
+                          @<%= reply.parent_reply.user.nickname %> 에 대한 답글:
+                        <% end %>
+                      </p>
+                      <%= form_with model: [@card_collection, reply.card_collection_comment, CardCollectionReply.new], local: true do |f| %>
+                        <%= f.hidden_field :card_collection_comment_id, value: reply.card_collection_comment.id %>
+                        <%= f.hidden_field :parent_reply_id, value: reply.id %>
+                        <div>
+                          <%= f.text_area :comment, rows: 2, placeholder: "답글을 입력하세요" %>
+                        </div>
+                        <div style="margin-top: 5px;">
+                          <%= f.submit "답글 작성", class: "btn btn-primary btn-sm" %>
+                        </div>
+                      <% end %>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+        
+        <!-- 최상위 댓글에 대한 답글 작성 폼 (부모가 CardCollectionComment인 경우) -->
+        <% unless comment.deleted? %>
+          <div id="reply-form-<%= comment.id %>" class="reply-form" style="display: none; margin-left: 20px;">
+            <p>@<%= comment.user.nickname %> 에 대한 답글:</p>
+            <%= form_with model: [@card_collection, comment, CardCollectionReply.new], local: true do |f| %>
+              <%= f.hidden_field :card_collection_comment_id, value: comment.id %>
+              <div>
+                <%= f.text_area :comment, rows: 2, placeholder: "답글을 입력하세요" %>
+              </div>
+              <div style="margin-top: 5px;">
+                <%= f.submit "답글 작성", class: "btn btn-primary btn-sm" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
     </div>
-    <div>
-      페이지네이션
+
+    <!-- 최상위 댓글 작성 폼 -->
+    <div style="margin-top: 20px;">
+      <%= form_with model: [@card_collection, @card_collection_comment], local: true do |f| %>
+        <div>
+          <%= f.text_area :comment, rows: 5, placeholder: "コメントをここに" %>
+        </div>
+        <div style="margin-top: 10px;">
+          <%= f.submit "送信する", class: "btn btn-primary" %>
+        </div>
+      <% end %>
     </div>
   </div>
-</div>
+
+
+
+
+
+
+
+  <script>
+    document.addEventListener("turbolinks:load", function() {
+      var replyToggles = document.querySelectorAll(".reply-toggle");
+      replyToggles.forEach(function(toggle) {
+        toggle.addEventListener("click", function(e) {
+          e.preventDefault();
+          var commentId = this.dataset.commentId;
+          var form = document.getElementById("reply-form-" + commentId);
+          if (form.style.display === "none" || form.style.display === "") {
+            form.style.display = "block";
+          } else {
+            form.style.display = "none";
+          }
+        });
+      });
+    });
+  </script>

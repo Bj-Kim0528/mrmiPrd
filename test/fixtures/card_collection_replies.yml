@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  comment: MyText
+  user_id: 1
+  card_collection_comment_id: 1
+  deleted: false
+
+two:
+  comment: MyText
+  user_id: 1
+  card_collection_comment_id: 1
+  deleted: false

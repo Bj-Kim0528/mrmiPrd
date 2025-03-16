@@ -30,6 +30,7 @@ class User < ApplicationRecord
   end
 
   has_many :card_collections, dependent: :destroy
+  has_many :card_collection_comments, dependent: :destroy
   has_one_attached :profile_image
 
 

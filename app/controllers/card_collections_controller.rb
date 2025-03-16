@@ -22,7 +22,6 @@ class CardCollectionsController < ApplicationController
   end
 
   def edit
-    @card_collection = CardCollection.find(params[:id])
     (10 - @card_collection.card_images.size).times { @card_collection.card_images.build }
   end
 
@@ -39,6 +38,8 @@ class CardCollectionsController < ApplicationController
     unless @card_collection
       redirect_to card_collections_path, alert: "該当投稿を探せません"
     end
+    @comments = @card_collection.card_collection_comments.order(created_at: :asc)
+    @card_collection_comment = @card_collection.card_collection_comments.build
   end
 
   def destroy
