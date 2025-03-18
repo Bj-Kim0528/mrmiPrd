@@ -10,6 +10,8 @@ class CardCollection < ApplicationRecord
   has_many :hashtags, through: :card_collection_hashtags
 
   has_many :card_collection_comments, dependent: :destroy
+
+  has_many :likes, as: :likeable, dependent: :destroy
   
   # 최대 10개의 이미지 제한 (CardImage 기준)
   validate :card_images_limit

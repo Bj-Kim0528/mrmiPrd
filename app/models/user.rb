@@ -32,6 +32,7 @@ class User < ApplicationRecord
   has_many :card_collections, dependent: :destroy
   has_many :card_collection_comments, dependent: :destroy
   has_one_attached :profile_image
+  has_many :likes, dependent: :destroy
 
 
   def get_profile_image(width, height)

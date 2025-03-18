@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_03_14_132457) do
+ActiveRecord::Schema.define(version: 2025_03_18_010804) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -99,6 +99,17 @@ ActiveRecord::Schema.define(version: 2025_03_14_132457) do
     t.index ["name"], name: "index_hashtags_on_name", unique: true
   end
 
+  create_table "likes", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "likeable_type", null: false
+    t.integer "likeable_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["likeable_type", "likeable_id"], name: "index_likes_on_likeable"
+    t.index ["user_id", "likeable_type", "likeable_id"], name: "index_likes_on_user_id_and_likeable_type_and_likeable_id", unique: true
+    t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -130,4 +141,5 @@ ActiveRecord::Schema.define(version: 2025_03_14_132457) do
   add_foreign_key "card_collection_hashtags", "hashtags"
   add_foreign_key "card_collections", "users"
   add_foreign_key "card_images", "card_collections"
+  add_foreign_key "likes", "users"
 end

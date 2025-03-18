@@ -39,6 +39,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :likes, only: [:create, :destroy]
+
 
 
   root to: "homes#top"

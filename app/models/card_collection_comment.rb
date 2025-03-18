@@ -4,6 +4,8 @@ class CardCollectionComment < ApplicationRecord
 
   has_many :card_collection_replies, dependent: :destroy
 
+  has_many :likes, as: :likeable, dependent: :destroy
+
   
   validates :comment, presence: true, unless: :deleted?
 

@@ -42,7 +42,7 @@
         <% end %>
       </div>
       <div class="ms-3 d-flex align-items-center">
-        좋아요・
+        좋아요<%= @card_collection.likes.count %>・
       </div>
       <div class="ms-3 d-flex align-items-center">
         스크랩・
@@ -144,7 +144,19 @@
                             data: { confirm: "정말 삭제하시겠습니까?" },
                             class: "btn btn-danger btn-sm" %>
               </p>
+              
             <% end %>
+
+                <!-- 댓글 좋아요 버튼 -->
+                <div>
+                  <p>좋아요: <%= comment.likes.count %></p>
+                  <% if current_user.likes.exists?(likeable: comment) %>
+                    <% like = current_user.likes.find_by(likeable: comment) %>
+                    <%= link_to "좋아요 취소", like_path(like), method: :delete, class: "btn btn-secondary btn-sm" %>
+                  <% else %>
+                    <%= link_to "좋아요", likes_path(likeable_type: "CardCollectionComment", likeable_id: comment.id), method: :post, class: "btn btn-primary btn-sm" %>
+                  <% end %>
+                </div>
           <% end %>
 
           <% unless comment.deleted? %>
@@ -183,6 +195,19 @@
                                   class: "btn btn-danger btn-sm" %>
                     </p>
                   <% end %>
+                  <!-- 리플라이 좋아요 버튼 -->
+                  <div>
+                    <p>좋아요: <%= reply.likes.count %></p>
+                    <% if current_user.likes.exists?(likeable: reply) %>
+                      <% like = current_user.likes.find_by(likeable: reply) %>
+                      <%= link_to "좋아요 취소", like_path(like), method: :delete, data: { confirm: "정말 삭제하시겠습니까?" }, class: "btn btn-secondary btn-sm" %>
+                    <% else %>
+                      <%= link_to "좋아요", likes_path(likeable_type: "CardCollectionReply", likeable_id: reply.id),
+                                  method: :post,
+                                  class: "btn btn-primary btn-sm" %>
+                    <% end %>
+                  </div>
+
                   <% unless reply.deleted? %>
                     <!-- 답글(자식 답글)에 대한 답글달기 버튼 -->
                     <p>
@@ -246,6 +271,16 @@
         </div>
       <% end %>
     </div>
+  </div>
+
+  <div>
+    <p>좋아요: <%= @card_collection.likes.count %></p>
+    <% if current_user.likes.exists?(likeable: @card_collection) %>
+      <% like = current_user.likes.find_by(likeable: @card_collection) %>
+      <%= link_to "좋아요 취소", like_path(like), method: :delete, class: "btn btn-secondary" %>
+    <% else %>
+      <%= link_to "좋아요", likes_path(likeable_type: "CardCollection", likeable_id: @card_collection.id), method: :post, class: "btn btn-primary" %>
+    <% end %>
   </div>
 
 
