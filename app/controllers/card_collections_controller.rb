@@ -26,8 +26,20 @@ class CardCollectionsController < ApplicationController
   end
 
   def update
+    deletion_occurred = false
+
+    if params[:clear_card_image].present?
+      card_image_id = params[:clear_card_image]
+      card_image = @card_collection.card_images.find(card_image_id)
+      deletion_occurred = card_image.update(image: nil, content: nil)
+    end
+  
     if @card_collection.update(card_collection_params)
-      redirect_to card_collection_path(@card_collection), notice: "카드 컬렉션이 성공적으로 업데이트되었습니다."
+      if deletion_occurred
+        redirect_to edit_card_collection_path(@card_collection), notice: "이미지가 삭제되었습니다."
+      else
+        redirect_to card_collection_path(@card_collection), notice: "카드 컬렉션이 성공적으로 업데이트되었습니다."
+      end
     else
       flash.now[:alert] = @card_collection.errors.full_messages.join(", ")
       render :edit

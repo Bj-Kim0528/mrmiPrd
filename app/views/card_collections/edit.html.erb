@@ -39,8 +39,11 @@
         </div>
         <%= ci.text_area :content, placeholder: "사진의 내용" %>
         <div style="margin-top: 10px;">
-          <%= link_to "삭제", clear_card_image_path(ci.object), method: :patch, data: { confirm: "本当に削除しますか？(※삭제한 내용은 복구할 수 없습니다)" }, class: "btn btn-danger btn-sm" %>
+          <%= button_tag "삭제", type: "submit", name: "clear_card_image", value: ci.object.id,
+                data: { confirm: "정말 삭제하시겠습니까? (삭제시 되돌릴수없습니다)" },
+                class: "btn btn-danger btn-sm" %>
         </div>
+
       </div>
     <% end %>
   </div>
