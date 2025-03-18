@@ -50,12 +50,19 @@
                 <div class="mt-2 d-flex justify-content-around">
                   <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;">
                     <i class="fa-regular fa-heart"></i>
+                    <%= card_collection.likes.count %>
                   </button>
                   <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;">
                     <i class="fa-regular fa-bookmark"></i>
+                    <%= card_collection.bookmarks.count %>
                   </button>
                   <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;">
                     <i class="fa-regular fa-comment"></i>
+                    <% total_comments = card_collection.card_collection_comments.where(deleted: false).count +
+                    CardCollectionReply.joins(:card_collection_comment)
+                                      .where(card_collection_comments: { card_collection_id: card_collection.id }, deleted: false)
+                                      .count %>
+                    <%= total_comments %>
                   </button>
                 </div>
                 

@@ -42,10 +42,10 @@
         <% end %>
       </div>
       <div class="ms-3 d-flex align-items-center">
-        좋아요<%= @card_collection.likes.count %>・
+        좋아요<%= @card_collection.likes.count %>・ 
       </div>
       <div class="ms-3 d-flex align-items-center">
-        스크랩・
+        스크랩<%= @card_collection.bookmarks.count %>・ 
       </div>
       <div class="ms-3 d-flex align-items-center">
         조회수
@@ -283,7 +283,15 @@
     <% end %>
   </div>
 
-
+  <div>
+    <p>북마크: <%= @card_collection.bookmarks.count %></p>
+    <% if current_user.bookmarks.exists?(card_collection: @card_collection) %>
+      <% bookmark = current_user.bookmarks.find_by(card_collection: @card_collection) %>
+      <%= link_to "북마크 취소", bookmark_path(bookmark), method: :delete, data: { confirm: "정말 북마크를 취소하시겠습니까?" }, class: "btn btn-secondary" %>
+    <% else %>
+      <%= link_to "북마크", bookmarks_path(card_collection_id: @card_collection.id, likeable_type: "CardCollection"), method: :post, class: "btn btn-primary" %>
+    <% end %>
+  </div>
 
 
 

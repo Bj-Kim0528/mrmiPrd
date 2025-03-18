@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   
+  get 'bookmarks/create'
+  get 'bookmarks/destroy'
   devise_for :users, controllers: {
   registrations: 'users/registrations',
   confirmations: 'users/confirmations',
@@ -41,7 +43,7 @@ Rails.application.routes.draw do
 
   resources :likes, only: [:create, :destroy]
 
-
+  resources :bookmarks, only: [:create, :destroy]
 
   root to: "homes#top"
   get '/about' => 'homes#about'
