@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
   
-  get 'bookmarks/create'
-  get 'bookmarks/destroy'
   devise_for :users, controllers: {
   registrations: 'users/registrations',
   confirmations: 'users/confirmations',
@@ -45,6 +43,8 @@ Rails.application.routes.draw do
 
   resources :bookmarks, only: [:create, :destroy]
 
+  resources :relationships, only: [:create, :destroy]
+
   root to: "homes#top"
   get '/about' => 'homes#about'
 
@@ -52,8 +52,6 @@ Rails.application.routes.draw do
   get '/topics/:theme', to: 'topics#show', as: 'topic'
 
   get 'search/index', to: 'search#index'
-
-  get 'search/index'
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"

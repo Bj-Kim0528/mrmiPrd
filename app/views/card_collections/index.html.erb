@@ -19,8 +19,23 @@
                     <%= link_to user_path(card_collection.user) do %>
                       <h6 class="mb-0 d-inline" style="font-size: 15px;"><%= card_collection.user.nickname %></h6>
                     <% end %>
-                    <span class="mx-1">・</span>
-                    <button type="button" class="btn btn-link p-0 text-info" style="font-size: 15px;">フォロー</button>
+                    <button type="button" class="btn btn-link p-0 text-info" style="font-size: 15px;">
+                      <% unless current_user == card_collection.user %>
+                      
+                        <div class="ms-auto">
+                          ・
+                          <% if current_user.following.include?(card_collection.user) %>
+                            <%= link_to "언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: card_collection.user.id)), 
+                                        method: :delete, 
+                                        class: "btn btn-link p-0 text-info" %>
+                          <% else %>
+                            <%= link_to "팔로우", relationships_path(followed_id: card_collection.user.id), 
+                                        method: :post, 
+                                        class: "btn btn-link p-0 text-info" %>
+                          <% end %>
+                        </div>
+                      <% end %>
+                    </button>
                   </div>
                   <div style="font-size: 12px;">
                     <% if card_collection.user.introduction.present? %>

@@ -32,11 +32,23 @@ class User < ApplicationRecord
   has_many :card_collections, dependent: :destroy
   has_many :card_collection_comments, dependent: :destroy
   has_one_attached :profile_image
-  
+
   has_many :likes, dependent: :destroy
 
   has_many :bookmarks, dependent: :destroy
   has_many :bookmarked_card_collections, through: :bookmarks, source: :card_collection
+
+  # 팔로우(활동적 관계): 내가 팔로우하는 관계 (follower_id가 나인 관계)
+  has_many :active_relationships, class_name: "Relationship",
+                                  foreign_key: "follower_id",
+                                  dependent: :destroy
+  has_many :following, through: :active_relationships, source: :followed
+
+  # 팔로워(수동적 관계): 다른 사용자가 나를 팔로우하는 관계 (followed_id가 나인 관계)
+  has_many :passive_relationships, class_name: "Relationship",
+                                   foreign_key: "followed_id",
+                                   dependent: :destroy
+  has_many :followers, through: :passive_relationships, source: :follower
 
 
   def get_profile_image(width, height)
