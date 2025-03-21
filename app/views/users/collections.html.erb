@@ -1,0 +1,203 @@
+<div class="d-flex" style="padding: 0 60px; position: relative;"><!-- 전체 -->
+  <div style="width: 25%; padding-left: 10px; padding-right: 10px; padding-top: 30px;"><!-- 카드파트 -->
+
+    <div class="card d-flex flex-column" style="top: 81px; transition: top 0.1s; text-align: center; padding: 30px 25px 18px;"><!-- 카드내부파트 -->
+
+      <div><!-- 프로필~설정 -->
+        <div style="margin: 0 auto 24px;"><!-- 프로필사진 -->
+            <%= image_tag url_for(@userinfo.get_profile_image(120, 120)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 120px; height: 120px; object-fit: cover;" %>
+        </div>
+        
+        <div><!-- 그외 -->
+          <div class="mb-1" style="font-size: 15px; margin: 0 0 10px;">
+            <%= @userinfo.nickname %>
+          </div>
+
+          <div>
+            <dl class="d-flex justify-content-center" style="margin: 0 0 13px;"><!-- 팔로워 팔로잉 -->
+              <dt>팔로워:</dt>
+              <%= link_to follower_user_path(@userinfo) do %>
+                <%= @userinfo.followers.count %>
+              <% end %>
+              <dt> | 팔로잉:</dt>
+              <%= link_to followee_user_path(@userinfo) do %>
+                <%= @userinfo.following.count %>
+              <% end %>
+            </dl>
+            <% if current_user == @userinfo%>
+              <div><!-- 설정버튼 -->
+                <%= link_to "설정", edit_user_path(current_user), class: "btn btn-outline-primary btn-sm" %>
+              </div>
+            <% else %>
+              <div class="ms-auto">
+                <% if current_user.following.include?(@userinfo) %>
+                  <%= link_to "언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: @userinfo)), 
+                              method: :delete,  
+                              class: "btn btn-link p-0 text-info" %>
+                <% else %>
+                  <%= link_to "팔로우", relationships_path(followed_id: @userinfo), 
+                              method: :post, 
+                              class: "btn btn-link p-0 text-info" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body" style="margin: 0 0 13px;"><!-- 자기소개~에스엔에스 -->
+        <p class="mb-1">
+          <%= @userinfo.introduction.presence%>
+        </p>
+        <% if @userinfo.sns_link.present? %>
+          <% url = @userinfo.sns_link =~ /\Ahttp(s)?:\/\// ? @userinfo.sns_link : "http://#{@userinfo.sns_link}" %>
+          <% display_text = url.sub(/\Ahttps?:\/\//, "") %>
+          <p>
+            <%= link_to display_text, url, target: "_blank", rel: "noopener noreferrer" %>
+          </p>
+        <% end %>
+      </div>
+
+      <% if current_user == @userinfo%>
+        <div><!-- 좋아요,북마크 -->
+          <%= link_to collections_user_path(@userinfo), class: "btn" do %>
+            <i class="fa-solid fa-bookmark"></i>
+            <div>북마크</div>
+            <div><%= @userinfo.bookmarks.count %></div>
+          <% end %>
+
+          <%= link_to likes_user_path(@userinfo), class: "btn" do %>
+            <i class="fa-solid fa-heart"></i>
+            <div>좋아요</div>
+            <div><%= Like.where(user_id: @userinfo.id, likeable_type: "CardCollection").count %></div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <div><!-- 카드하부파트(공백) -->
+    </div>
+
+  </div>
+
+  <div style="width: 8.333333333333332%; padding-left: 10px; padding-right: 10px;"><!-- 중간공간파트 -->
+  </div>
+
+  <div style="width: 66.66666666666666%; padding-left: 10px; padding-right: 10px;">
+    <div style="max-width: 700px; margin: 0 auto; padding: 50px 0 0;">
+      <div class="row">
+        <% @card_collections.each do |card_collection| %>
+          <div style="padding: 0px 10px">
+            <div class="col-12 col-lg-4 col-xl-3 mb-4 p-0">
+              <!-- 카드의 크기를 fixed-card 클래스로 고정하고, border-0으로 테두리 제거 -->
+              <div class="card fixed-card border-0">
+                <div class="card-body p-0">
+                  <div class="d-flex">
+                    <!-- 왼쪽: 프로필 이미지 -->
+                    <div class="p-2">
+                      <%= link_to user_path(card_collection.user) do %>
+                        <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover;" %>
+                      <% end %>
+                    </div>
+                    <!-- 오른쪽: 닉네임, 팔로우 버튼, 자기소개 -->
+                    <div class="p-2">
+                      <div class="d-flex align-items-center">
+                        <%= link_to user_path(card_collection.user) do %>
+                          <h6 class="mb-0 d-inline" style="font-size: 15px;"><%= card_collection.user.nickname %></h6>
+                        <% end %>
+                        <button type="button" class="btn btn-link p-0 text-info" style="font-size: 15px;">
+                          <% unless current_user == card_collection.user %>
+                          
+                            <div class="ms-auto">
+                              ・
+                              <% if current_user.following.include?(card_collection.user) %>
+                                <%= link_to "언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: card_collection.user.id)), 
+                                            method: :delete, 
+                                            class: "btn btn-link p-0 text-info" %>
+                              <% else %>
+                                <%= link_to "팔로우", relationships_path(followed_id: card_collection.user.id), 
+                                            method: :post, 
+                                            class: "btn btn-link p-0 text-info" %>
+                              <% end %>
+                            </div>
+                          <% end %>
+                        </button>
+                      </div>
+                      <div style="font-size: 12px;">
+                        <% if card_collection.user.introduction.present? %>
+                          <%= card_collection.user.introduction %>
+                        <% else %>
+                          作成された自己紹介はありません
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-body p-0">
+                  <!-- 게시물 이미지 영역 (첫 번째 이미지만 표시) -->
+                  <div>
+                    <div>
+                      <% if card_collection.card_images.any? && card_collection.card_images.first.image.attached? %>
+                        <%= link_to card_collection_path(card_collection) do %>
+                          <%= image_tag url_for(card_collection.card_images.first.image.variant(resize_to_fill: [289, 289]).processed), alt: "투고 사진", class: "img-fluid", style: "width: 289px; height: 289px;" %>
+                        <% end %>
+                      <% else %>
+                        <p>사진이 업로드되지 않았습니다.</p>
+                      <% end %>
+                    </div>
+                    
+                    <!-- 버튼 영역 -->
+                    <div class="mt-2 d-flex justify-content-around">
+                      <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;">
+                        <i class="fa-regular fa-heart"></i>
+                        <%= card_collection.likes.count %>
+                      </button>
+                      <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;">
+                        <i class="fa-regular fa-bookmark"></i>
+                        <%= card_collection.bookmarks.count %>
+                      </button>
+                      <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;">
+                        <i class="fa-regular fa-comment"></i>
+                        <% total_comments = card_collection.card_collection_comments.where(deleted: false).count +
+                        CardCollectionReply.joins(:card_collection_comment)
+                                          .where(card_collection_comments: { card_collection_id: card_collection.id }, deleted: false)
+                                          .count %>
+                        <%= total_comments %>
+                      </button>
+                    </div>
+                    
+                    <!-- 게시글 내용 (최대 2줄 표시, 초과 시 "..." 추가) -->
+                    <div>
+                      <%
+                        # 각 CardImage의 content를 모아서 하나의 문자열로 결합
+                        text = card_collection.card_images.map(&:content).reject(&:blank?).join("\n\n")
+                        lines = text.split(/\r?\n/)
+                        displayed_text = lines[0..1].join("\n")
+                        displayed_text += "\n..." if lines.size > 2
+                      %>
+                    </div>
+                    
+                    <div class="mt-2" style="font-size: 15px;">
+                      <%= link_to card_collection_path(card_collection) do %>
+                        <div class="three-lines">
+                          <%= simple_format(displayed_text) %>
+                        </div>
+                      <% end %>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div> 
+  </div>
+
+</div>
+
+
+
+

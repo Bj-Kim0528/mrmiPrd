@@ -34,6 +34,7 @@ class User < ApplicationRecord
   has_one_attached :profile_image
 
   has_many :likes, dependent: :destroy
+  has_many :liked_card_collections, through: :likes, source: :likeable, source_type: "CardCollection"
 
   has_many :bookmarks, dependent: :destroy
   has_many :bookmarked_card_collections, through: :bookmarks, source: :card_collection

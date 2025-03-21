@@ -70,19 +70,21 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
-  config.action_mailer.delivery_method = :smtp
+
+  # config.action_mailer.delivery_method = :smtp
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
-  config.action_mailer.smtp_settings = {
-    address:              'smtp.gmail.com',
-    port:                 587,
-    domain:               'gmail.com',   # 또는 별도의 도메인을 사용해도 됩니다.
-    user_name:            ENV['GMAIL_USERNAME'],   # 예: "yourname@gmail.com"
-    password:             ENV['GMAIL_PASSWORD'],   # 2단계 인증을 사용하는 경우 앱 비밀번호 사용
-    authentication:       'plain',
-    enable_starttls_auto: true
-  }
+  # config.action_mailer.smtp_settings = {
+  #   address:              'smtp.gmail.com',
+  #   port:                 587,
+  #   domain:               'gmail.com',   # 또는 별도의 도메인을 사용해도 됩니다.
+  #   user_name:            ENV['GMAIL_USERNAME'],   # 예: "yourname@gmail.com"
+  #   password:             ENV['GMAIL_PASSWORD'],   # 2단계 인증을 사용하는 경우 앱 비밀번호 사용
+  #   authentication:       'plain',
+  #   enable_starttls_auto: true
+  # }
+
   # 이메일을 letter_opener로 발송 (gem 'letter_opener'를 Gemfile에 추가했어야 합니다)
-  # config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.delivery_method = :letter_opener
 
   # # 기본 URL 옵션 설정 (host와 port를 지정)
   # config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }

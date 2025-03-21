@@ -1,0 +1,150 @@
+<div class="d-flex" style="padding: 0 60px; position: relative;"><!-- 전체 -->
+  <div style="width: 25%; padding-left: 10px; padding-right: 10px; padding-top: 30px;"><!-- 카드파트 -->
+
+    <div class="card d-flex flex-column" style="top: 81px; transition: top 0.1s; text-align: center; padding: 30px 25px 18px;"><!-- 카드내부파트 -->
+
+      <div><!-- 프로필~설정 -->
+        <div style="margin: 0 auto 24px;"><!-- 프로필사진 -->
+            <%= image_tag url_for(@userinfo.get_profile_image(120, 120)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 120px; height: 120px; object-fit: cover;" %>
+        </div>
+        
+        <div><!-- 그외 -->
+          <div class="mb-1" style="font-size: 15px; margin: 0 0 10px;">
+            <%= @userinfo.nickname %>
+          </div>
+
+          <div>
+            <dl class="d-flex justify-content-center" style="margin: 0 0 13px;"><!-- 팔로워 팔로잉 -->
+              <dt>팔로워:</dt>
+              <%= link_to follower_user_path(@userinfo) do %>
+                <%= @userinfo.followers.count %>
+              <% end %>
+              <dt> | 팔로잉:</dt>
+              <%= link_to followee_user_path(@userinfo) do %>
+                <%= @userinfo.following.count %>
+              <% end %>
+            </dl>
+            <% if current_user == @userinfo%>
+              <div><!-- 설정버튼 -->
+                <%= link_to "설정", edit_user_path(current_user), class: "btn btn-outline-primary btn-sm" %>
+              </div>
+            <% else %>
+              <div class="ms-auto">
+                <% if current_user.following.include?(@userinfo) %>
+                  <%= link_to "언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: @userinfo)), 
+                              method: :delete,  
+                              class: "btn btn-link p-0 text-info" %>
+                <% else %>
+                  <%= link_to "팔로우", relationships_path(followed_id: @userinfo), 
+                              method: :post, 
+                              class: "btn btn-link p-0 text-info" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body" style="margin: 0 0 13px;"><!-- 자기소개~에스엔에스 -->
+        <p class="mb-1">
+          <%= @userinfo.introduction.presence %>
+        </p>
+        <% if @userinfo.sns_link.present? %>
+          <% url = @userinfo.sns_link =~ /\Ahttp(s)?:\/\// ? @userinfo.sns_link : "http://#{@userinfo.sns_link}" %>
+          <% display_text = url.sub(/\Ahttps?:\/\//, "") %>
+          <p>
+            <%= link_to display_text, url, target: "_blank", rel: "noopener noreferrer" %>
+          </p>
+        <% end %>
+      </div>
+
+      <% if current_user == @userinfo%>
+        <div><!-- 좋아요,북마크 -->
+          <%= link_to collections_user_path(@userinfo), class: "btn" do %>
+            <i class="fa-solid fa-bookmark"></i>
+            <div>북마크</div>
+            <div><%= @userinfo.bookmarks.count %></div>
+          <% end %>
+
+          <%= link_to likes_user_path(@userinfo), class: "btn" do %>
+            <i class="fa-solid fa-heart"></i>
+            <div>좋아요</div>
+            <div><%= Like.where(user_id: @userinfo.id, likeable_type: "CardCollection").count %></div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <div><!-- 카드하부파트(공백) -->
+    </div>
+
+  </div>
+
+  <div style="width: 8.333333333333332%; padding-left: 10px; padding-right: 10px;"><!-- 중간공간파트 -->
+  </div>
+
+  <div style="max-width: 720px; margin: 0 auto 40px; padding: 0;">
+    <div class="row">
+      <% @followers.each do |follower| %>
+        <div style="padding: 0px 10px">
+          <div class="col-12 col-lg-4 col-xl-3 mb-4 p-0">
+            <!-- 카드 영역 -->
+            <div class="card fixed-card border-0">
+              <div class="card-body p-0">
+                <div class="d-flex">
+                  <!-- 왼쪽: 프로필 이미지 -->
+                  <div class="p-2">
+                    <%= link_to user_path(follower) do %>
+                      <%= image_tag url_for(follower.get_profile_image(36, 36)),
+                                    alt: "프로필 이미지",
+                                    class: "rounded-circle",
+                                    style: "width: 40px; height: 40px; object-fit: cover;" %>
+                    <% end %>
+                  </div>
+                  <!-- 오른쪽: 닉네임, 팔로우 버튼, 자기소개 -->
+                  <div class="p-2">
+                    <div class="d-flex align-items-center">
+                      <%= link_to user_path(follower) do %>
+                        <h6 class="mb-0 d-inline" style="font-size: 15px;"><%= follower.nickname %></h6>
+                      <% end %>
+                      <%# 현재 사용자와 표시 대상이 같지 않을 때만 팔로우/언팔로우 버튼 표시 %>
+                      <% unless current_user == follower %>
+                        <div class="ms-auto">
+                          ・
+                          <% if current_user.following.include?(follower) %>
+                            <%= link_to "언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: follower.id)),
+                                        method: :delete,
+                                        data: { confirm: "정말 언팔로우 하시겠습니까?" },
+                                        class: "btn btn-link p-0 text-info" %>
+                          <% else %>
+                            <%= link_to "팔로우", relationships_path(followed_id: follower.id),
+                                        method: :post,
+                                        class: "btn btn-link p-0 text-info" %>
+                          <% end %>
+                        </div>
+                      <% end %>
+                    </div>
+                    <div style="font-size: 12px;">
+                      <% if follower.introduction.present? %>
+                        <%= follower.introduction %>
+                      <% else %>
+                        作成された自己紹介はありません
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+
+
+</div>
+
+
+
+

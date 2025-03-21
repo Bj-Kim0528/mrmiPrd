@@ -102,7 +102,13 @@
       <%# --- 하위(서브) 네비게이션 --- %>
       <nav class="navbar p-0" style="max-width: 1256px;">
         <div style="margin: 0 auto; padding: 0 60px; width: 100%;">
-          <% if controller_name == 'users' && ['show', 'card_collections', 'likes', 'collections'].include?(action_name) %>
+          <% if controller_name == 'users' && ['edit', 'edit_password'].include?(action_name)%>
+            <!-- 여기에 표시할 내용을 작성합니다. 예: 기본설정, 비밀번호 변경 탭 등 -->
+            <div class="d-flex">
+              <%= link_to "프로필 수정", edit_user_path(current_user), class: "nav-link #{'active' if action_name == 'edit'}" %>
+              <%= link_to "비밀번호 변경", edit_password_user_path(current_user), class: "nav-link #{'active' if action_name == 'edit_password'}" %>
+            </div>
+          <% elsif controller_name == 'users' && ['show', 'card_collections', 'likes', 'collections', 'follower', 'followee'].include?(action_name) %>
             <% if user_signed_in? && current_user.id.to_s == params[:id] %>
               <div class="d-flex">
                 <%= link_to "모두보기", user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'all' || params[:sub].blank?}" %>
@@ -119,7 +125,8 @@
             <% end %>
           <% end %>
         </div>
-      </nav>   
+      </nav>
+         
     </header>
 
 

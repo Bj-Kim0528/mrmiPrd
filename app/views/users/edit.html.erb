@@ -12,10 +12,15 @@
 
 
   <div>
-    <%= f.label :profile_image, "Image" %>
-    <%= f.file_field :profile_image, accept: "image/*" %>
+    <%= f.label :profile_image, "프로필 이미지" %><br>
+    <%= f.file_field :profile_image, accept: "image/*", onchange: "previewUserImage(this, 'profile_image_preview')" %>
+    <div id="profile_image_preview" style="margin-top: 10px;">
+      <% if @userinfo.profile_image.attached? %>
+        <%= image_tag url_for(@userinfo.profile_image), style: "max-width:200px; display:block;" %>
+      <% end %>
+    </div>
   </div>
- 
+
   <div>
     <%= f.label :nickname %>
     <%= f.text_field :nickname%>
@@ -52,3 +57,22 @@
     <%= f.submit "Update User" %>
   </div>
 <% end %>
+
+<script>
+  function previewUserImage(input, previewId) {
+    var previewDiv = document.getElementById(previewId);
+    // 새 이미지가 선택되면 미리보기 영역을 초기화합니다.
+    previewDiv.innerHTML = "";
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = document.createElement("img");
+        img.src = e.target.result;
+        img.style.maxWidth = "200px";
+        img.style.display = "block";
+        previewDiv.appendChild(img);
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+</script>

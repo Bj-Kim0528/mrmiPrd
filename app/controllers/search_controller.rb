@@ -1,14 +1,31 @@
 class SearchController < ApplicationController
   def index
     @query = params[:query]
+
     if @query.present?
-      # MySQL에서는 ILIKE 대신 LIKE를 사용합니다.
-      @results = CardCollection
-                   .left_joins(:card_images)
-                   .where("card_collections.layout LIKE :q OR card_collections.theme LIKE :q OR card_images.content LIKE :q", q: "%#{@query}%")
-                   .distinct
+      # 1. 컨텐츠 검색: CardImage의 content에서 검색어가 포함된 CardCollection
+      @content_results = CardCollection
+                           .joins(:card_images)
+                           .where("card_images.content LIKE ?", "%#{@query}%")
+                           .distinct
+
+      # 2. 유저 검색: 유저의 nickname과, 그 유저가 작성한 CardCollection
+      @user_results = User.where("nickname LIKE ?", "%#{@query}%")
+      # 해당 유저가 작성한 게시물들 (여러 유저의 결과를 하나의 CardCollection으로 모음)
+      @user_card_collections = CardCollection.where(user: @user_results)
+
+      # 3. 해시태그 검색: Hashtag에서 검색 후, 해당 해시태그가 붙은 CardCollection
+      @hashtag_results = Hashtag.where("name LIKE ?", "%#{@query}%")
+      @hashtag_card_collections = CardCollection
+                                    .joins(:card_collection_hashtags)
+                                    .where(card_collection_hashtags: { hashtag_id: @hashtag_results.pluck(:id) })
+                                    .distinct
     else
-      @results = CardCollection.none
+      @content_results = CardCollection.none
+      @user_results = User.none
+      @user_card_collections = CardCollection.none
+      @hashtag_results = Hashtag.none
+      @hashtag_card_collections = CardCollection.none
     end
   end
 end

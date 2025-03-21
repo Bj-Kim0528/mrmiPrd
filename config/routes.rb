@@ -36,6 +36,10 @@ Rails.application.routes.draw do
       get :card_collections
       get :collections
       get :likes
+      get :follower
+      get :followee
+      get :edit_password
+      patch :update_password
     end
   end
 
