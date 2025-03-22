@@ -1,9 +1,8 @@
-<div>내가 참여한 채널</div>
+<h1>#<%= @hashtag.name %></h1>
 
-<div>해쉬태그 채널 리스트</div>
-<% @hashtags.each do |hashtag| %>
-  <%= hashtag.name%>
-  <% hashtag.card_collections.each do |collection|%>
+<% if @card_collections.any? %>
+  <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+    <% @card_collections.each do |collection| %>
       <div style="width: 160px; height: 160px;">
         <%= link_to card_collection_path(collection) do %>
           <% if collection.card_images.any? && collection.card_images.first.image.attached? %>
@@ -14,5 +13,8 @@
           <% end %>
         <% end %>
       </div>
-  <% end %>
-<%end%>
+    <% end %>
+  </div>
+<% else %>
+  <p>이 해시태그에 해당하는 게시물이 없습니다.</p>
+<% end %>

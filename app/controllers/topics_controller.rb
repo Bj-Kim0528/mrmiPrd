@@ -6,5 +6,6 @@ class TopicsController < ApplicationController
   end
 
   def hashtag_channel
+    @hashtags = Hashtag.all
   end
 end

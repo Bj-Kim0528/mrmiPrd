@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  get 'hashtags/show'
   devise_for :users, controllers: {
   registrations: 'users/registrations',
   confirmations: 'users/confirmations',
@@ -56,6 +57,8 @@ Rails.application.routes.draw do
   get '/topics/:theme', to: 'topics#show', as: 'topic'
 
   get 'search/index', to: 'search#index'
+
+  get '/hashtags/:name', to: 'hashtags#show', as: :hashtag
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
