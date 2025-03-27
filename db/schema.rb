@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_03_19_050414) do
+ActiveRecord::Schema.define(version: 2025_03_27_034824) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -42,12 +42,12 @@ ActiveRecord::Schema.define(version: 2025_03_19_050414) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.integer "card_collection_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["card_collection_id"], name: "index_bookmarks_on_card_collection_id"
-    t.index ["user_id", "card_collection_id"], name: "index_bookmarks_on_user_id_and_card_collection_id", unique: true
-    t.index ["user_id"], name: "index_bookmarks_on_user_id"
+    t.string "bookmarkable_type", default: "", null: false
+    t.integer "bookmarkable_id", null: false
+    t.index ["bookmarkable_type", "bookmarkable_id"], name: "index_bookmarks_on_bookmarkable_type_and_bookmarkable_id"
+    t.index ["user_id", "bookmarkable_type", "bookmarkable_id"], name: "index_bookmarks_on_user_and_bookmarkable", unique: true
   end
 
   create_table "card_collection_comments", force: :cascade do |t|
@@ -157,7 +157,6 @@ ActiveRecord::Schema.define(version: 2025_03_19_050414) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "bookmarks", "card_collections"
   add_foreign_key "bookmarks", "users"
   add_foreign_key "card_collection_hashtags", "card_collections"
   add_foreign_key "card_collection_hashtags", "hashtags"

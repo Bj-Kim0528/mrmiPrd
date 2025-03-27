@@ -13,7 +13,7 @@ class CardCollection < ApplicationRecord
 
   has_many :likes, as: :likeable, dependent: :destroy
 
-  has_many :bookmarks, dependent: :destroy
+  has_many :bookmarks, as: :bookmarkable, dependent: :destroy
   has_many :bookmarking_users, through: :bookmarks, source: :user
   
   # 최대 10개의 이미지 제한 (CardImage 기준)

@@ -37,7 +37,8 @@ class User < ApplicationRecord
   has_many :liked_card_collections, through: :likes, source: :likeable, source_type: "CardCollection"
 
   has_many :bookmarks, dependent: :destroy
-  has_many :bookmarked_card_collections, through: :bookmarks, source: :card_collection
+  has_many :bookmarked_card_collections, through: :bookmarks, source: :bookmarkable, source_type: "CardCollection"
+  has_many :bookmarked_hashtags, through: :bookmarks, source: :bookmarkable, source_type: "Hashtag"
 
   # 팔로우(활동적 관계): 내가 팔로우하는 관계 (follower_id가 나인 관계)
   has_many :active_relationships, class_name: "Relationship",
