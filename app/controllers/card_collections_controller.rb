@@ -47,6 +47,7 @@ class CardCollectionsController < ApplicationController
   end
 
   def show
+    @card_collection.increment!(:view_count)
     unless @card_collection
       redirect_to card_collections_path, alert: "該当投稿を探せません"
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_03_27_034824) do
+ActiveRecord::Schema.define(version: 2025_03_27_091029) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -90,6 +90,7 @@ ActiveRecord::Schema.define(version: 2025_03_27_034824) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "photo_order"
+    t.integer "view_count", default: 0, null: false
     t.index ["user_id"], name: "index_card_collections_on_user_id"
   end
 
