@@ -57,8 +57,8 @@
       <div style="gap: 10px;">
         <% @hashtag_results.each do |hashtag| %>
           <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
-            <%= link_to hashtag_channel_path(hashtag) do %>
-              <p>#<%= hashtag.name %></p>
+            <%= link_to hashtag_path(hashtag) do %>
+              <h3>#<%= hashtag.name %></h3>
             <% end %>
             <% if hashtag.card_collections.any? %>
               <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
