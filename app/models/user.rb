@@ -55,10 +55,40 @@ class User < ApplicationRecord
 
   def get_profile_image(width, height)
     unless profile_image.attached?
-        file_path = Rails.root.join('app/assets/images/no_image.jpg')
+      file_path = if guest?
+                    Rails.root.join('app/assets/images/guest_no_image.jpg')  # 게스트 전용 기본 이미지
+                  else
+                    Rails.root.join('app/assets/images/no_image.jpg')
+                  end
         profile_image.attach(io: File.open(file_path), filename: 'default-image.jpg', content_type: 'image/jpeg')
     end
     profile_image.variant(resize_to_limit: [width, height]).processed
+  end
+
+
+  def self.guest
+    guest = find_or_initialize_by(email: 'guest@example.com')
+    if guest.new_record?
+      guest.password = SecureRandom.urlsafe_base64
+      guest.nickname = "게스트 사용자"
+      guest.skip_confirmation!
+      # 기본 프로필 이미지로 no_image.jpg 첨부 (파일 경로와 이름을 실제 파일에 맞게 수정)
+      file_path = Rails.root.join('app/assets/images/no_image.jpg')
+      guest.profile_image.attach(io: File.open(file_path), filename: 'no_image.jpg', content_type: 'image/jpeg') unless guest.profile_image.attached?
+      guest.save!(validate: false)
+    elsif !guest.confirmed?
+      guest.skip_confirmation!
+      guest.save!(validate: false)
+    end
+    guest
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error "게스트 계정 생성 실패: #{e.message}"
+    nil
+  end
+  
+
+  def guest?
+    email == "guest@example.com"
   end
 
 

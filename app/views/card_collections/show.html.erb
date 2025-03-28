@@ -88,18 +88,20 @@
       </div>
     </div>
     <!-- 오른쪽 영역: 팔로우 버튼 -->
-    <% unless current_user == @card_collection.user %>
-      <div class="ms-auto">
-        <% if current_user.following.include?(@card_collection.user) %>
-          <%= link_to "언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: @card_collection.user.id)), 
-                      method: :delete,  
-                      class: "btn btn-link p-0 text-info" %>
-        <% else %>
-          <%= link_to "팔로우", relationships_path(followed_id: @card_collection.user.id), 
-                      method: :post, 
-                      class: "btn btn-link p-0 text-info" %>
-        <% end %>
-      </div>
+    <% unless current_user.email == "guest@example.com" %>
+      <% unless current_user == @card_collection.user %>
+        <div class="ms-auto">
+          <% if current_user.following.include?(@card_collection.user) %>
+            <%= link_to "언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: @card_collection.user.id)), 
+                        method: :delete,  
+                        class: "btn btn-link p-0 text-info" %>
+          <% else %>
+            <%= link_to "팔로우", relationships_path(followed_id: @card_collection.user.id), 
+                        method: :post, 
+                        class: "btn btn-link p-0 text-info" %>
+          <% end %>
+        </div>
+      <% end %>
     <% end %>
   </div>
 
@@ -166,22 +168,25 @@
                 <!-- 댓글 좋아요 버튼 -->
                 <div>
                   <p>좋아요: <%= comment.likes.count %></p>
-                  <% if current_user.likes.exists?(likeable: comment) %>
-                    <% like = current_user.likes.find_by(likeable: comment) %>
-                    <%= link_to "좋아요 취소", like_path(like), method: :delete, class: "btn btn-secondary btn-sm" %>
-                  <% else %>
-                    <%= link_to "좋아요", likes_path(likeable_type: "CardCollectionComment", likeable_id: comment.id), method: :post, class: "btn btn-primary btn-sm" %>
+                  <% unless current_user.email == "guest@example.com" %>
+                    <% if current_user.likes.exists?(likeable: comment) %>
+                      <% like = current_user.likes.find_by(likeable: comment) %>
+                      <%= link_to "좋아요 취소", like_path(like), method: :delete, class: "btn btn-secondary btn-sm" %>
+                    <% else %>
+                      <%= link_to "좋아요", likes_path(likeable_type: "CardCollectionComment", likeable_id: comment.id), method: :post, class: "btn btn-primary btn-sm" %>
+                    <% end %>
                   <% end %>
                 </div>
           <% end %>
-
-          <% unless comment.deleted? %>
-            <!-- 답글달기 버튼 -->
-            <p>
-              <a href="#" class="reply-toggle btn btn-link btn-sm" data-comment-id="<%= comment.id %>">
-                답글달기
-              </a>
-            </p>
+          <% unless current_user.email == "guest@example.com" %>
+            <% unless comment.deleted? %>
+              <!-- 답글달기 버튼 -->
+              <p>
+                <a href="#" class="reply-toggle btn btn-link btn-sm" data-comment-id="<%= comment.id %>">
+                  답글달기
+                </a>
+              </p>
+            <% end %>
           <% end %>
         </div>
 
@@ -214,43 +219,47 @@
                   <!-- 리플라이 좋아요 버튼 -->
                   <div>
                     <p>좋아요: <%= reply.likes.count %></p>
-                    <% if current_user.likes.exists?(likeable: reply) %>
-                      <% like = current_user.likes.find_by(likeable: reply) %>
-                      <%= link_to "좋아요 취소", like_path(like), method: :delete, data: { confirm: "정말 삭제하시겠습니까?" }, class: "btn btn-secondary btn-sm" %>
-                    <% else %>
-                      <%= link_to "좋아요", likes_path(likeable_type: "CardCollectionReply", likeable_id: reply.id),
-                                  method: :post,
-                                  class: "btn btn-primary btn-sm" %>
+                    <% unless current_user.email == "guest@example.com" %>
+                      <% if current_user.likes.exists?(likeable: reply) %>
+                        <% like = current_user.likes.find_by(likeable: reply) %>
+                        <%= link_to "좋아요 취소", like_path(like), method: :delete, data: { confirm: "정말 삭제하시겠습니까?" }, class: "btn btn-secondary btn-sm" %>
+                      <% else %>
+                        <%= link_to "좋아요", likes_path(likeable_type: "CardCollectionReply", likeable_id: reply.id),
+                                    method: :post,
+                                    class: "btn btn-primary btn-sm" %>
+                      <% end %>
                     <% end %>
                   </div>
 
-                  <% unless reply.deleted? %>
-                    <!-- 답글(자식 답글)에 대한 답글달기 버튼 -->
-                    <p>
-                      <a href="#" class="reply-toggle btn btn-link btn-sm" data-comment-id="<%= reply.id %>">
-                        답글달기
-                      </a>
-                    </p>
-                    <!-- 답글(자식 답글)에 대한 답글 작성 폼 -->
-                    <div id="reply-form-<%= reply.id %>" class="reply-form" style="display: none; margin-left: 20px;">
+                  <% unless current_user.email == "guest@example.com" %>
+                    <% unless reply.deleted? %>
+                      <!-- 답글(자식 답글)에 대한 답글달기 버튼 -->
                       <p>
-                        <% if reply.parent_reply_id.nil? %>
-                          @<%= reply.user.nickname %> 에 대한 답글:
-                        <% else %>
-                          @<%= reply.parent_reply.user.nickname %> 에 대한 답글:
-                        <% end %>
+                        <a href="#" class="reply-toggle btn btn-link btn-sm" data-comment-id="<%= reply.id %>">
+                          답글달기
+                        </a>
                       </p>
-                      <%= form_with model: [@card_collection, reply.card_collection_comment, CardCollectionReply.new], local: true do |f| %>
-                        <%= f.hidden_field :card_collection_comment_id, value: reply.card_collection_comment.id %>
-                        <%= f.hidden_field :parent_reply_id, value: reply.id %>
-                        <div>
-                          <%= f.text_area :comment, rows: 2, placeholder: "답글을 입력하세요" %>
-                        </div>
-                        <div style="margin-top: 5px;">
-                          <%= f.submit "답글 작성", class: "btn btn-primary btn-sm" %>
-                        </div>
-                      <% end %>
-                    </div>
+                      <!-- 답글(자식 답글)에 대한 답글 작성 폼 -->
+                      <div id="reply-form-<%= reply.id %>" class="reply-form" style="display: none; margin-left: 20px;">
+                        <p>
+                          <% if reply.parent_reply_id.nil? %>
+                            @<%= reply.user.nickname %> 에 대한 답글:
+                          <% else %>
+                            @<%= reply.parent_reply.user.nickname %> 에 대한 답글:
+                          <% end %>
+                        </p>
+                        <%= form_with model: [@card_collection, reply.card_collection_comment, CardCollectionReply.new], local: true do |f| %>
+                          <%= f.hidden_field :card_collection_comment_id, value: reply.card_collection_comment.id %>
+                          <%= f.hidden_field :parent_reply_id, value: reply.id %>
+                          <div>
+                            <%= f.text_area :comment, rows: 2, placeholder: "답글을 입력하세요" %>
+                          </div>
+                          <div style="margin-top: 5px;">
+                            <%= f.submit "답글 작성", class: "btn btn-primary btn-sm" %>
+                          </div>
+                        <% end %>
+                      </div>
+                    <% end %>
                   <% end %>
                 <% end %>
               </div>
@@ -277,37 +286,48 @@
     </div>
 
     <!-- 최상위 댓글 작성 폼 -->
-    <div style="margin-top: 20px;">
-      <%= form_with model: [@card_collection, @card_collection_comment], local: true do |f| %>
-        <div>
-          <%= f.text_area :comment, rows: 5, placeholder: "コメントをここに" %>
-        </div>
-        <div style="margin-top: 10px;">
-          <%= f.submit "送信する", class: "btn btn-primary" %>
-        </div>
+    <% unless current_user.email == "guest@example.com" %>
+      <div style="margin-top: 20px;">
+        <%= form_with model: [@card_collection, @card_collection_comment], local: true do |f| %>
+          <div>
+            <%= f.text_area :comment, rows: 5, placeholder: "コメントをここに" %>
+          </div>
+          <div style="margin-top: 10px;">
+            <%= f.submit "送信する", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <%= link_to "コメントする", destroy_user_session_path, 
+            method: :delete, 
+            data: { confirm: "로그인후 코멘트를 작성해주세요" },
+            class: "nav-link btn btn-primary", 
+            style: "width: auto; height: 40px;" %>
+    <% end %>
+  </div>
+
+
+  <% unless current_user.email == "guest@example.com" %>
+    <div>
+      <p>좋아요: <%= @card_collection.likes.count %></p>
+      <% if current_user.likes.exists?(likeable: @card_collection) %>
+        <% like = current_user.likes.find_by(likeable: @card_collection) %>
+        <%= link_to "좋아요 취소", like_path(like), method: :delete, class: "btn btn-secondary" %>
+      <% else %>
+        <%= link_to "좋아요", likes_path(likeable_type: "CardCollection", likeable_id: @card_collection.id), method: :post, class: "btn btn-primary" %>
       <% end %>
     </div>
-  </div>
 
-  <div>
-    <p>좋아요: <%= @card_collection.likes.count %></p>
-    <% if current_user.likes.exists?(likeable: @card_collection) %>
-      <% like = current_user.likes.find_by(likeable: @card_collection) %>
-      <%= link_to "좋아요 취소", like_path(like), method: :delete, class: "btn btn-secondary" %>
-    <% else %>
-      <%= link_to "좋아요", likes_path(likeable_type: "CardCollection", likeable_id: @card_collection.id), method: :post, class: "btn btn-primary" %>
-    <% end %>
-  </div>
-
-  <div>
-    <p>북마크: <%= @card_collection.bookmarks.count %></p>
-    <% if current_user.bookmarks.exists?(bookmarkable: @card_collection) %>
-      <% bookmark = current_user.bookmarks.find_by(bookmarkable: @card_collection) %>
-      <%= link_to "북마크 취소", bookmark_path(bookmark), method: :delete, data: { confirm: "정말 북마크를 취소하시겠습니까?" }, class: "btn btn-secondary" %>
-    <% else %>
-      <%= link_to "북마크", bookmarks_path(bookmarkable_type: "CardCollection", bookmarkable_id: @card_collection.id), method: :post, class: "btn btn-primary" %>
-    <% end %>
-  </div>
+    <div>
+      <p>북마크: <%= @card_collection.bookmarks.count %></p>
+      <% if current_user.bookmarks.exists?(bookmarkable: @card_collection) %>
+        <% bookmark = current_user.bookmarks.find_by(bookmarkable: @card_collection) %>
+        <%= link_to "북마크 취소", bookmark_path(bookmark), method: :delete, data: { confirm: "정말 북마크를 취소하시겠습니까?" }, class: "btn btn-secondary" %>
+      <% else %>
+        <%= link_to "북마크", bookmarks_path(bookmarkable_type: "CardCollection", bookmarkable_id: @card_collection.id), method: :post, class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  <% end %>
 
 
 

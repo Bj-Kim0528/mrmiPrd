@@ -30,6 +30,7 @@
               </div>
             <% else %>
               <div class="ms-auto">
+              <% unless current_user.email == "guest@example.com" %>
                 <% if current_user.following.include?(@userinfo) %>
                   <%= link_to "언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: @userinfo)), 
                               method: :delete,  
@@ -39,6 +40,7 @@
                               method: :post, 
                               class: "btn btn-link p-0 text-info" %>
                 <% end %>
+              <% end %>
               </div>
             <% end %>
           </div>
@@ -109,15 +111,16 @@
                           <% unless current_user == card_collection.user %>
                           
                             <div class="ms-auto">
-                              ・
-                              <% if current_user.following.include?(card_collection.user) %>
-                                <%= link_to "언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: card_collection.user.id)), 
-                                            method: :delete, 
-                                            class: "btn btn-link p-0 text-info" %>
-                              <% else %>
-                                <%= link_to "팔로우", relationships_path(followed_id: card_collection.user.id), 
-                                            method: :post, 
-                                            class: "btn btn-link p-0 text-info" %>
+                              <% unless current_user.email == "guest@example.com" %>
+                                <% if current_user.following.include?(card_collection.user) %>
+                                  <%= link_to "・언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: card_collection.user.id)), 
+                                              method: :delete, 
+                                              class: "btn btn-link p-0 text-info" %>
+                                <% else %>
+                                  <%= link_to "・팔로우", relationships_path(followed_id: card_collection.user.id), 
+                                              method: :post, 
+                                              class: "btn btn-link p-0 text-info" %>
+                                <% end %>
                               <% end %>
                             </div>
                           <% end %>

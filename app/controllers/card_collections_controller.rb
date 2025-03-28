@@ -1,6 +1,7 @@
 class CardCollectionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_card_collection, only: [:edit, :update, :show, :destroy]
+  before_action :ensure_owner, only: [:edit, :update, :destroy]
 
   def index
     @card_collections = CardCollection.all
@@ -64,6 +65,12 @@ class CardCollectionsController < ApplicationController
 
   def set_card_collection
     @card_collection = CardCollection.find(params[:id])
+  end
+
+  def ensure_owner
+    unless @card_collection.user == current_user
+      redirect_to card_collections_path, alert: "해당 작업을 수행할 권한이 없습니다."
+    end
   end
 
   def card_collection_params

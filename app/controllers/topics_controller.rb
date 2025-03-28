@@ -1,4 +1,6 @@
 class TopicsController < ApplicationController
+  before_action :authenticate_user!
+  
   def show
     @theme = params[:theme]
     # 테마가 a, b, c, d 중 하나인지 검증할 수도 있습니다.
