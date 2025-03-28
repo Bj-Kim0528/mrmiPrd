@@ -88,12 +88,13 @@
           <% else %>
             <!-- UsersController 외의 페이지에서는 글로벌 네비게이션 표시 -->
             <div class="d-flex">
-              <%= link_to "ピクチャー", card_collections_path, class: "nav-link active" %>
-              <%= link_to "リコメンド", topic_path("リコメンド"), class: "nav-link active" %>
+              <%= link_to "전체사진", card_collections_path, class: "nav-link active" %>
+              <%= link_to "추천(방사진,그외)", recommend_path, class: "nav-link active" %>
+              <%= link_to "#チャンネル", hashtag_channel_path, class: "nav-link active" %>
+
               <%= link_to "収納TIP", topic_path('収納TIP'), class: "nav-link active" %>
               <%= link_to "ペット", topic_path('ペット'), class: "nav-link active" %>
               <%= link_to "プラントテリア", topic_path('プラントテリア'), class: "nav-link active" %>
-              <%= link_to "#チャンネル", hashtag_channel_path, class: "nav-link active" %>
             </div>
           <% end %>
         </div>
