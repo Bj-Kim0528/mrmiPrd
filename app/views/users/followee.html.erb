@@ -63,7 +63,7 @@
           <%= link_to collections_user_path(@userinfo), class: "btn" do %>
             <i class="fa-solid fa-bookmark"></i>
             <div>북마크</div>
-            <div><%= @userinfo.bookmarks.count %></div>
+            <div><%= @userinfo.bookmarks.where(bookmarkable_type: "CardCollection").count %></div>
           <% end %>
 
           <%= link_to likes_user_path(@userinfo), class: "btn" do %>

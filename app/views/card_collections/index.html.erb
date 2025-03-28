@@ -57,7 +57,11 @@
                       <%= image_tag url_for(card_collection.card_images.first.image.variant(resize_to_fill: [289, 289]).processed), alt: "투고 사진", class: "img-fluid", style: "width: 289px; height: 289px;" %>
                     <% end %>
                   <% else %>
-                    <p>사진이 업로드되지 않았습니다.</p>
+                    <%= link_to card_collection_path(card_collection) do %>
+                      <div style="width: 289px; height: 289px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0;">
+                        <p>사진이 업로드되지 않았습니다.</p>
+                      </div>
+                    <% end %>
                   <% end %>
                 </div>
                 

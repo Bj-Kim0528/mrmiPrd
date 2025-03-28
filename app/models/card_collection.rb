@@ -18,6 +18,10 @@ class CardCollection < ApplicationRecord
   
   # 최대 10개의 이미지 제한 (CardImage 기준)
   validate :card_images_limit
+
+
+
+  validate :card_images_with_content_must_have_images
   
   # 카드 컬렉션이 저장된 후, 카드 이미지의 내용에서 해시태그 추출
   after_save :extract_hashtags_from_images
@@ -27,6 +31,15 @@ class CardCollection < ApplicationRecord
   def card_images_limit
     if card_images.size > 10
       errors.add(:card_images, "can have at most 10 images")
+    end
+  end
+
+
+  def card_images_with_content_must_have_images
+    card_images.each_with_index do |ci, index|
+      if ci.content.present? && !ci.image.attached?
+        errors.add(:base, "카드 이미지 #{index + 1}의 이미지를 첨부해야 합니다.")
+      end
     end
   end
   

@@ -9,21 +9,27 @@
       </div>
     <% end %>
     
-    <% @card_collection.card_images.where.not(position: nil).order(:position).each do |card_image| %>
-      <div class="container" style="max-width: 720px; margin: 0 auto 40px; padding: 0; display: flex; flex-direction: column; gap: 24px; text-align: center;">
-        <div>
-          <%= link_to card_collection_path(@card_collection) do %>
-            <% if card_image.image.attached? %>
-              <%= image_tag url_for(card_image.image.variant(resize_to_fit: [720, nil]).processed), alt: "투고 사진", class: "img-fluid" %>
+    <% if @card_collection.card_images.where.not(position: nil).any? %>
+      <% @card_collection.card_images.where.not(position: nil).order(:position).each do |card_image| %>
+        <div class="container" style="max-width: 720px; margin: 0 auto 40px; padding: 0; display: flex; flex-direction: column; gap: 24px; text-align: center;">
+          <div>
+            <%= link_to card_collection_path(@card_collection) do %>
+              <% if card_image.image.attached? %>
+                <%= image_tag url_for(card_image.image.variant(resize_to_fit: [720, nil]).processed), alt: "투고 사진", class: "img-fluid" %>
+              <% end %>
             <% end %>
-          <% end %>
+          </div>
+          <div style="text-align: left;">
+            태그사진
+          </div>
+          <div style="text-align: left;">
+            <%= simple_format(link_hashtags(card_image.content.to_s.strip)) %>
+          </div>
         </div>
-        <div style="text-align: left;">
-          태그사진
-        </div>
-        <div style="text-align: left;">
-          <%= simple_format(link_hashtags(card_image.content.to_s.strip)) %>
-        </div>
+      <% end %>
+    <% else %>
+      <div class="container" style="max-width: 720px; margin: 0 auto 40px; padding: 0; text-align: center;">
+        <%= link_to "사진을 업로드해주세요", edit_card_collection_path(@card_collection), class: "btn btn-primary" %>
       </div>
     <% end %>
     
