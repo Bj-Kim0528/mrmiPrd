@@ -3,7 +3,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :confirmable
+         :confirmable, :omniauthable, omniauth_providers: [:google_oauth2]
 
   # email_local (이메일 아이디 부분)
   attr_accessor :email_local
@@ -92,6 +92,36 @@ class User < ApplicationRecord
   end
 
 
+  def self.from_omniauth(access_token)
+    data = access_token.info
+    provider = access_token.provider
+    uid = access_token.uid
+
+    # 먼저 provider와 uid로 기존 사용자를 찾습니다.
+    user = User.where(provider: provider, uid: uid).first
+
+    if user
+      # 이미 가입된 사용자가 있다면 그대로 반환
+      user
+    else
+      # 만약 없으면, 이메일로 사용자를 찾아봅니다.
+      user = User.find_by(email: data['email'])
+      if user
+        # 기존 계정이 있으나 provider, uid가 기록되지 않은 경우, 업데이트
+        user.update(provider: provider, uid: uid)
+        user
+      else
+        # 신규 사용자 객체를 초기화만 하고, 저장은 회원가입 폼에서 진행
+        User.new(
+          email: data['email'],
+          password: Devise.friendly_token[0,20],
+          provider: provider,
+          uid: uid,
+          nickname: data['name']
+        )
+      end
+    end
+  end
 
   private
 

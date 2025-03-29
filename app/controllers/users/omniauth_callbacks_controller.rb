@@ -1,30 +1,22 @@
 # frozen_string_literal: true
 
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  # You should configure your model like this:
-  # devise :omniauthable, omniauth_providers: [:twitter]
+  def google_oauth2
+    auth = request.env["omniauth.auth"]
+    @user = User.from_omniauth(auth)
+    
+    if @user.persisted?
+      # 이미 가입된 사용자는 바로 로그인
+      sign_in_and_redirect @user, event: :authentication
+      set_flash_message(:notice, :success, kind: "Google") if is_navigational_format?
+    else
+      # 신규 사용자의 경우, Omniauth 데이터를 세션에 저장한 후 SNS 회원가입 페이지로 이동
+      session["devise.google_data"] = auth.except("extra")
+      redirect_to sns_sign_up_path
+    end
+  end
 
-  # You should also create an action method in this controller like this:
-  # def twitter
-  # end
-
-  # More info at:
-  # https://github.com/heartcombo/devise#omniauth
-
-  # GET|POST /resource/auth/twitter
-  # def passthru
-  #   super
-  # end
-
-  # GET|POST /users/auth/twitter/callback
-  # def failure
-  #   super
-  # end
-
-  # protected
-
-  # The path used when OmniAuth fails
-  # def after_omniauth_failure_path_for(scope)
-  #   super(scope)
-  # end
+  def failure
+    redirect_to root_path
+  end
 end

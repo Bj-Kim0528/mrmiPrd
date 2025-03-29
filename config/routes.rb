@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   registrations: 'users/registrations',
   confirmations: 'users/confirmations',
   passwords: 'users/passwords',
-  sessions: 'users/sessions'
+  sessions: 'users/sessions',
+  omniauth_callbacks: 'users/omniauth_callbacks'
 }
   devise_scope :user do
     # 기존의 새 확인 이메일 요청 폼은 그대로 두고,
@@ -20,6 +21,8 @@ Rails.application.routes.draw do
 
     post 'users/guest_sign_in', to: 'users/sessions#guest_sign_in'
     delete 'users/sign_out', to: 'users/sessions#destroy'
+
+    get 'users/sns_sign_up', to: 'users/registrations#sns_sign_up', as: :sns_sign_up
   end
 
   resources :card_collections do
