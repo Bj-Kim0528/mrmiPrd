@@ -14,6 +14,10 @@ Rails.application.routes.draw do
     get 'users/confirmations/certification', to: 'users/confirmations#certification', as: :certification
     post 'users/confirmations/certificate', to: 'users/confirmations#certificate', as: :certificate
 
+    get 'users/confirmations/resend', to: 'users/confirmations#resend', as: :resend_confirmation
+    post 'users/confirmations/resend', to: 'users/confirmations#resend'
+  
+
     # 비밀번호 재설정 인증번호(토큰) 입력 페이지
     get "users/password/certification", to: "users/passwords#certification", as: :password_certification
     # 사용자가 입력한 토큰을 검증하는 액션 (POST 요청)

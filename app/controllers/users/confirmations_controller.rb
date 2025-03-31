@@ -18,6 +18,19 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
     end
   end
 
+  def resend
+    # 예를 들어, 이메일 주소를 입력받아서 해당 유저를 찾습니다.
+    user = User.find_by(email: params[:email])
+    if user
+      user.send_confirmation_instructions
+      flash[:notice] = "인증 이메일이 재발송되었습니다."
+      redirect_to new_user_confirmation_path
+    else
+      flash.now[:alert] = "해당 이메일을 찾을 수 없습니다."
+      render :resend
+    end
+  end
+
   # GET /users/confirmations/certification
   def certification
     # 인증번호 입력 폼을 렌더링합니다.

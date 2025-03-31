@@ -12,6 +12,7 @@
 
 <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
   <%= link_to "인증번호 입력하러 가기", certification_path(resource_name) %><br />
+  <%= link_to "인증번호 재발급받기", resend_confirmation_path(resource_name) %><br />
 <% end %>
 
 <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
