@@ -123,6 +123,10 @@ class User < ApplicationRecord
     end
   end
 
+  def admin?
+    self.admin
+  end
+
   private
 
   # email_local + email_domain을 email로 저장

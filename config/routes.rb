@@ -1,6 +1,16 @@
 Rails.application.routes.draw do
   
-  get 'hashtags/show'
+  devise_for :admin, skip: [:registrations, :password], controllers: {
+    sessions: 'admin/sessions'
+  }
+
+  namespace :admin do
+    get 'dashboards', to: 'dashboards#index', as: :users_dashboard
+    resources :users, only: [:destroy, :update]
+  end
+
+
+  
   devise_for :users, controllers: {
   registrations: 'users/registrations',
   confirmations: 'users/confirmations',
