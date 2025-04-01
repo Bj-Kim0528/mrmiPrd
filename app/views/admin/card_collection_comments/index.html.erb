@@ -1,0 +1,53 @@
+<h1><%= @user.nickname %>님의 코멘트 목록</h1>
+
+<ul>
+  <% @comments.each do |comment| %>
+    <li>
+      <p>
+        <strong><%= comment.user.nickname %></strong> - <%= comment.created_at.strftime('%Y/%m/%d %H:%M') %>
+      </p>
+      <p>
+        <%= comment.comment %>
+      </p>
+      <p>
+        <%# 삭제(소프트 딜리트) 링크 %>
+        <% if comment.deleted == false %>
+        <%= link_to '삭제', comment_destroy_admin_user_card_collection_comment_path(@user, comment), 
+                    method: :patch, 
+                    data: { confirm: '정말 삭제하시겠습니까?' } %>
+        <% else %>
+        <%= link_to '복구', comment_restoration_admin_user_card_collection_comment_path(@user, comment), 
+                    method: :patch, 
+                    data: { confirm: '정말 복구하시겠습니까?' } %>
+        <% end %>
+      </p>
+
+
+    </li>
+  <% end %>
+
+
+  <% @replycomments.each do |comment| %>
+    <li>
+      <p>
+        <strong><%= comment.user.nickname %></strong> - <%= comment.created_at.strftime('%Y/%m/%d %H:%M') %>
+      </p>
+      <p>
+        <%= comment.comment %>
+      </p>
+      
+      <p>
+        <%# 삭제(소프트 딜리트) 링크 %>
+        <% if comment.deleted == false %>
+        <%= link_to '삭제', reply_destroy_admin_user_card_collection_comment_path(@user, comment), 
+                    method: :patch, 
+                    data: { confirm: '정말 삭제하시겠습니까?' } %>
+        <% else %>
+        <%= link_to '복구', reply_restoration_admin_user_card_collection_comment_path(@user, comment), 
+                    method: :patch, 
+                    data: { confirm: '정말 복구하시겠습니까?' } %>
+        <% end %>
+      </p>
+    </li>
+  <% end %>
+</ul>

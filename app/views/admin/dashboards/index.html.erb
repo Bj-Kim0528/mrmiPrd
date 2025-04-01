@@ -2,16 +2,35 @@
 <ul>
   <% @users.each do |user| %>
     <li>
-      <%= user.nickname %> - <%= user.email %> - 管理者権限: <%= user.admin? ? "有" : "無" %>
-      <!-- 관리자는 자신의 권한을 변경할 필요가 없으므로 current_user와 비교 -->
+      <% if user.admin == true %>
+        <管理者>
+      <% end %>
+      <%= user.nickname %> - <%= user.email %> - 管理者権限: <%= user.admin? ? "有" : "無" %> - アクティブ: <%= user.active? ? "有" : "無" %>
+      
+      <!-- 관리자는 자신의 권한/활성화 상태 변경하지 않음 -->
       <% unless user == current_user %>
+        <!-- 관리자 권한 토글 -->
         <% if user.admin? %>
           <%= link_to '管理者権限を取り消す', admin_user_path(user, user: { admin: false }), method: :patch, data: { confirm: '本当に取り消しますか？' } %>
         <% else %>
           <%= link_to '管理者権限を付与する', admin_user_path(user, user: { admin: true }), method: :patch, data: { confirm: '本当に付与しますか？' } %>
         <% end %>
+
+        <!-- 활성화 상태 토글 -->
+        <% if user.active? %>
+          <%= link_to '非アクティブにする', admin_user_path(user, user: { active: false }), method: :patch, data: { confirm: '本当に非アクティブにしますか？' } %>
+        <% else %>
+          <%= link_to 'アクティブにする', admin_user_path(user, user: { active: true }), method: :patch, data: { confirm: '本当にアクティブにしますか？' } %>
+        <% end %>
       <% end %>
-      <%= link_to '削除', admin_user_path(user), method: :delete, data: { confirm: '本当に削除しますか？' } %>
+      
+      <%= link_to 'コメント一覧', admin_user_card_collection_comments_path(user), class: "btn btn-link" %>
+
+      <% unless user == current_user %>
+        <% if user.admin == false %>
+          <%= link_to '削除', admin_user_path(user), method: :delete, data: { confirm: '本当に削除しますか？' } %>
+        <% end %>
+      <% end %>
     </li>
   <% end %>
 </ul>

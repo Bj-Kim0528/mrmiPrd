@@ -19,6 +19,6 @@ class Admin::UsersController < ApplicationController
   private
 
   def admin_params
-    params.require(:user).permit(:admin)
+    params.require(:user).permit(:admin, :active)
   end
 end

@@ -31,6 +31,7 @@ class User < ApplicationRecord
 
   has_many :card_collections, dependent: :destroy
   has_many :card_collection_comments, dependent: :destroy
+  has_many :card_collection_replies, dependent: :destroy
   has_one_attached :profile_image
 
   has_many :likes, dependent: :destroy
@@ -125,6 +126,18 @@ class User < ApplicationRecord
 
   def admin?
     self.admin
+  end
+
+  def active_for_authentication?
+    super && active?
+  end
+
+  def inactive_message
+    if !active?
+      :account_disabled  # config/locales/devise.en.yml (또는 해당 언어의 파일)에 메시지를 추가합니다.
+    else
+      super
+    end
   end
 
   private

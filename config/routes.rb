@@ -6,7 +6,16 @@ Rails.application.routes.draw do
 
   namespace :admin do
     get 'dashboards', to: 'dashboards#index', as: :users_dashboard
-    resources :users, only: [:destroy, :update]
+    resources :users, only: [:destroy, :update] do
+      resources :card_collection_comments, only: [:index] do
+        member do
+          patch :comment_destroy  # 댓글 삭제 (deleted: true로 업데이트)
+          patch :comment_restoration
+          patch :reply_destroy 
+          patch :reply_restoration
+        end
+      end
+    end
   end
 
 
