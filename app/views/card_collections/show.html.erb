@@ -242,11 +242,7 @@
                       <!-- 답글(자식 답글)에 대한 답글 작성 폼 -->
                       <div id="reply-form-<%= reply.id %>" class="reply-form" style="display: none; margin-left: 20px;">
                         <p>
-                          <% if reply.parent_reply_id.nil? %>
-                            @<%= reply.user.nickname %> 에 대한 답글:
-                          <% else %>
-                            @<%= reply.parent_reply.user.nickname %> 에 대한 답글:
-                          <% end %>
+                          @<%= reply.user.nickname %> 에 대한 답글:
                         </p>
                         <%= form_with model: [@card_collection, reply.card_collection_comment, CardCollectionReply.new], local: true do |f| %>
                           <%= f.hidden_field :card_collection_comment_id, value: reply.card_collection_comment.id %>
