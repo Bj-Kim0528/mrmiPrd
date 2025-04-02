@@ -5,3 +5,4 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+Theme.create([{ name: "お部屋写真" }, { name: "収納TIP" }, { name: "ペット" }, { name: "プラントテリア" }, { name: "その他" }])

@@ -23,8 +23,8 @@
     <%= f.select :layout, options_for_select(["1R", "1K/1DK", "1LDK/2DK", "2LDK", "3LDK以上"], @card_collection.layout) %>
   </div>
   <div>
-    <%= f.label :theme, "テーマ" %><br>
-    <%= f.select :theme, options_for_select(["お部屋写真", "収納TIP", "ペット", "プラントテリア", "その他"], @card_collection.theme) %>
+    <%= f.label :theme_id, "テーマ" %><br>
+    <%= f.select :theme_id, options_from_collection_for_select(Theme.all, :id, :name, @card_collection.theme_id) %>
   </div>
 
   <!-- CardImage 입력 영역 (nested fields) -->

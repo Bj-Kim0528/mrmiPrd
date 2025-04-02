@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_04_01_112954) do
+ActiveRecord::Schema.define(version: 2025_04_02_021351) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -97,11 +97,12 @@ ActiveRecord::Schema.define(version: 2025_04_01_112954) do
   create_table "card_collections", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "layout"
-    t.string "theme"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "photo_order"
     t.integer "view_count", default: 0, null: false
+    t.integer "theme_id"
+    t.index ["theme_id"], name: "index_card_collections_on_theme_id"
     t.index ["user_id"], name: "index_card_collections_on_user_id"
   end
 
@@ -142,6 +143,13 @@ ActiveRecord::Schema.define(version: 2025_04_01_112954) do
     t.index ["follower_id"], name: "index_relationships_on_follower_id"
   end
 
+  create_table "themes", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_themes_on_name", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -177,6 +185,7 @@ ActiveRecord::Schema.define(version: 2025_04_01_112954) do
   add_foreign_key "bookmarks", "users"
   add_foreign_key "card_collection_hashtags", "card_collections"
   add_foreign_key "card_collection_hashtags", "hashtags"
+  add_foreign_key "card_collections", "themes"
   add_foreign_key "card_collections", "users"
   add_foreign_key "card_images", "card_collections"
   add_foreign_key "likes", "users"

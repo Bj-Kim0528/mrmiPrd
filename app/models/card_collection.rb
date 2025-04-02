@@ -1,5 +1,6 @@
 class CardCollection < ApplicationRecord
   belongs_to :user
+  belongs_to :theme, optional: true
   
   # 기존 has_many_attached :photos 와 serialize :contents 제거
   has_many :card_images, -> { order(Arel.sql("CASE WHEN position IS NULL THEN 1 ELSE 0 END, position ASC")) }, dependent: :destroy, inverse_of: :card_collection

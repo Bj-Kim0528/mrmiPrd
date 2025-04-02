@@ -85,7 +85,7 @@ Rails.application.routes.draw do
 
   get '/topics/hashtag-channel', to: 'topics#hashtag_channel', as: 'hashtag_channel'
   get '/topics/recommend', to: 'topics#recommend', as: 'recommend'
-  get '/topics/:theme', to: 'topics#show', as: 'topic'
+  get '/topics/:theme_name', to: 'topics#show', as: 'topic'
 
   get 'search/index', to: 'search#index'
 

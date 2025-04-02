@@ -75,7 +75,7 @@ class CardCollectionsController < ApplicationController
 
   def card_collection_params
     params.require(:card_collection).permit(
-      :layout, :theme,
+      :layout, :theme_id,
       card_images_attributes: [:id, :content, :image, :position, :_destroy]
     )
   end
