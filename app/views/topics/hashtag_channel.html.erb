@@ -1,8 +1,7 @@
-<!-- 내가 참여한 채널: 현재 유저가 북마크한 해시태그 채널 -->
-
+<!-- 私が参加したチャンネル: 現在ユーザーがブックマークしたハッシュタグチャンネル -->
 <% unless current_user.email == "guest@example.com" %>
   <div>
-    <h2>내가 참여한 채널</h2>
+    <h2>私が参加したチャンネル</h2>
     <% if user_signed_in? %>
       <% if current_user.bookmarked_hashtags.any? %>
         <div style="display: flex; flex-wrap: wrap; gap: 10px;">
@@ -11,21 +10,28 @@
               <%= link_to hashtag_path(hashtag) do %>
                 <h3>#<%= hashtag.name %></h3>
               <% end %>
+              <% if user_signed_in? %>
+                <% unless current_user.email == "guest@example.com" %>
+                  <% if current_user.bookmarked_hashtags.exists?(id: hashtag.id) %>
+                    <%= link_to "ブックマーク解除", bookmark_path(current_user.bookmarks.find_by(bookmarkable: hashtag)), method: :delete, data: { confirm: "ブックマークを解除しますか？" } %>
+                  <% end %>
+                <% end %>
+              <% end %>
             </div>
           <% end %>
         </div>
       <% else %>
-        <p>아직 참여한 채널이 없습니다.</p>
+        <p>まだ参加したチャンネルがありません。</p>
       <% end %>
     <% else %>
-      <p>로그인 후 참여한 채널을 확인할 수 있습니다.</p>
+      <p>ログイン後、参加したチャンネルをご確認いただけます。</p>
     <% end %>
   </div>
 <% end %>
 
-<!-- 해시태그 채널 리스트 -->
+<!-- ハッシュタグチャンネルリスト -->
 <div style="margin-top: 40px;">
-  <h2>해시태그 채널 리스트</h2>
+  <h2>ハッシュタグチャンネルリスト</h2>
   <% if @hashtags.any? %>
     <div style="display: flex; flex-wrap: wrap; gap: 10px;">
       <% @hashtags.each do |hashtag| %>
@@ -36,20 +42,20 @@
           <% if user_signed_in? %>
             <% unless current_user.email == "guest@example.com" %>
               <% if current_user.bookmarked_hashtags.exists?(id: hashtag.id) %>
-                <%= button_to "북마크 취소", bookmark_path(current_user.bookmarks.find_by(bookmarkable: hashtag)), method: :delete, data: { confirm: "북마크를 취소하시겠습니까?" } %>
+                <%= link_to "ブックマーク解除", bookmark_path(current_user.bookmarks.find_by(bookmarkable: hashtag)), method: :delete, data: { confirm: "ブックマークを解除しますか？" } %>
               <% else %>
-                <%= button_to "북마크", bookmarks_path(bookmarkable_type: "Hashtag", bookmarkable_id: hashtag.id), method: :post %>
+                <%= link_to "ブックマーク", bookmarks_path(bookmarkable_type: "Hashtag", bookmarkable_id: hashtag.id), method: :post %>
               <% end %>
             <% end %>
           <% end %>
-          <!-- 해당 해시태그에 연결된 카드콜렉션을 표시 -->
+          <!-- このハッシュタグに関連するカードコレクションを表示 -->
           <% if hashtag.card_collections.any? %>
             <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
               <% hashtag.card_collections.each do |collection| %>
                 <div style="width: 160px; height: 160px;">
                   <%= link_to card_collection_path(collection) do %>
                     <% if collection.card_images.any? && collection.card_images.first.image.attached? %>
-                      <%= image_tag url_for(collection.card_images.first.image.variant(resize_to_fill: [160, 160]).processed), alt: "게시물 사진", class: "rounded" %>
+                      <%= image_tag url_for(collection.card_images.first.image.variant(resize_to_fill: [160, 160]).processed), alt: "投稿写真", class: "rounded" %>
                     <% else %>
                       <div style="width: 160px; height: 160px; background-color: #f0f0f0;"></div>
                     <% end %>
@@ -58,12 +64,12 @@
               <% end %>
             </div>
           <% else %>
-            <p>이 해시태그에 해당하는 게시물이 없습니다.</p>
+            <p>このハッシュタグに該当する投稿はありません。</p>
           <% end %>
         </div>
       <% end %>
     </div>
   <% else %>
-    <p>해시태그 채널이 없습니다.</p>
+    <p>ハッシュタグチャンネルがありません。</p>
   <% end %>
 </div>

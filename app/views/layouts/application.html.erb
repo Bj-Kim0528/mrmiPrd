@@ -54,30 +54,12 @@
                           <%= link_to "로그아웃", destroy_user_session_path, method: :delete, class: "nav-link" %>
                         </li>
                       <% else %>
-                        <% if current_user.admin? %>
-                          <% if admin_signed_in? %>
-                            <li>
-                              <%= link_to "관리자 페이지", admin_users_dashboard_path, class: "nav-link" %>
-                            </li>
-                          <% else %>
-                            <li>
-                              <%= link_to "관리자 로그인", new_admin_session_path, class: "nav-link" %>
-                            </li>
-                          <% end %>
-                          <li>
-                            <%= link_to "로그아웃", destroy_user_session_path, method: :delete, class: "nav-link" %>
-                          </li>
-                          <li>
-                            <%= link_to "マイページ", user_path(current_user), class: "nav-link" %>
-                          </li>
-                        <% else %>
-                          <li>
-                            <%= link_to "로그아웃", destroy_user_session_path, method: :delete, class: "nav-link" %>
-                          </li>
-                          <li>
-                            <%= link_to "マイページ", user_path(current_user), class: "nav-link" %>
-                          </li>
-                        <% end %>
+                        <li>
+                          <%= link_to "로그아웃", destroy_user_session_path, method: :delete, class: "nav-link" %>
+                        </li>
+                        <li>
+                          <%= link_to "マイページ", user_path(current_user), class: "nav-link" %>
+                        </li>
                       <% end %>
                     </ul>
                   </div>
