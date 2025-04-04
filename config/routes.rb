@@ -58,8 +58,6 @@ Rails.application.routes.draw do
   resources :card_images, only: [] do
     member do
       patch :clear
-      patch :move_up
-      patch :move_down
     end
   end
   

@@ -68,21 +68,49 @@
                 
                 <!-- 버튼 영역 -->
                 <div class="mt-2 d-flex justify-content-around">
-                  <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;">
-                    <i class="fa-regular fa-heart"></i>
-                    <%= card_collection.likes.count %>
+                  <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;">                  
+                    <% if current_user.likes.exists?(likeable: card_collection) %>
+                      <% like = current_user.likes.find_by(likeable: card_collection) %>
+                      <%= link_to like_path(like), method: :delete, class: "btn" do %>
+                        <i class="fa-solid fa-heart"></i>
+                        <span><%= card_collection.likes.count %></span>
+                      <% end %>
+                    <% else %>
+                      <%= link_to likes_path(likeable_type: "CardCollection", likeable_id: card_collection.id), method: :post, class: "btn" do %>
+                        <i class="fa-regular fa-heart"></i>
+                        <span><%= card_collection.likes.count %></span>
+                      <% end %>
+                    <% end %>
                   </button>
+                    
+                  
+                    
                   <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;">
-                    <i class="fa-regular fa-bookmark"></i>
-                    <%= card_collection.bookmarks.count %>
+                    <% if current_user.bookmarks.exists?(bookmarkable: card_collection) %>
+                      <% bookmark = current_user.bookmarks.find_by(bookmarkable: card_collection) %>
+                      <%= link_to bookmark_path(bookmark), method: :delete, data: { confirm: "정말 북마크를 취소하시겠습니까?" }, class: "btn" do %>
+                        <i class="fa-solid fa-bookmark"></i>
+                        <span><%= card_collection.bookmarks.count %></span>
+                      <% end %>
+                    <% else %>
+                      <%= link_to bookmarks_path(bookmarkable_type: "CardCollection", bookmarkable_id: card_collection.id), method: :post, class: "btn" do %>
+                        <i class="fa-regular fa-bookmark"></i>
+                        <span><%= card_collection.bookmarks.count %></span>
+                      <% end %>
+                    <% end %>
                   </button>
+                    
+
+
                   <button type="button" class="btn btn-link p-0 text-dark" style="font-size: 25px;">
-                    <i class="fa-regular fa-comment"></i>
-                    <% total_comments = card_collection.card_collection_comments.where(deleted: false).count +
-                    CardCollectionReply.joins(:card_collection_comment)
-                                      .where(card_collection_comments: { card_collection_id: card_collection.id }, deleted: false)
-                                      .count %>
-                    <%= total_comments %>
+                    <%= link_to card_collection_path(card_collection), class: "btn" do %>
+                      <i class="fa-regular fa-comment"></i>
+                      <% total_comments = card_collection.card_collection_comments.where(deleted: false).count +
+                          CardCollectionReply.joins(:card_collection_comment)
+                                              .where(card_collection_comments: { card_collection_id: card_collection.id }, deleted: false)
+                                              .count %>
+                      <%= total_comments %>
+                    <% end %>
                   </button>
                 </div>
                 
@@ -106,8 +134,30 @@
                 </div>
                 
                 <!-- 댓글 영역 (필요한 경우) -->
-                <div class="mt-2">
-                  <h6>コメント</h6>
+                <div>
+                  <%# 카드콜렉션의 코멘트와 리플라이(삭제되지 않은 것)를 모두 가져옵니다. %>
+                  <% all_comments = card_collection.card_collection_comments.where(deleted: false).to_a +
+                                    CardCollectionReply.joins(:card_collection_comment)
+                                                        .where(card_collection_comments: { card_collection_id: card_collection.id }, deleted: false)
+                                                        .to_a %>
+                  
+                  <%# 생성시간 기준으로 오름차순 정렬 (가장 먼저 작성된 항목이 첫번째) %>
+                  <% sorted_comments = all_comments.sort_by(&:created_at) %>
+                  
+                  <% if sorted_comments.any? %>
+                    <% first_comment = sorted_comments.first %>
+                    <div class="comment-display">
+                      <%= link_to user_path(first_comment.user) do %>
+                        <%= image_tag url_for(first_comment.user.get_profile_image(36, 36)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover;" %>
+                        <strong><%= first_comment.user.nickname %></strong>
+                      <% end %>
+                      <%= link_to card_collection_path(card_collection), class: "btn" do %>
+                        <div style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; word-wrap: break-word;">
+                          <%= simple_format(first_comment.comment) %>
+                        </div>
+                      <% end %>
+                    </div>
+                  <% end %>
                 </div>
               </div>
             </div>
