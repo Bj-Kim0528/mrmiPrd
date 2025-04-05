@@ -12,10 +12,10 @@ class TopicsController < ApplicationController
   end
 
   def recommend
-    room_photo_theme = Theme.find_by(name: "お部屋写真")
-    other_theme = Theme.find_by(name: "その他")
+    @room_photo_theme = Theme.find_by(name: "お部屋写真")
+    @other_theme = Theme.find_by(name: "その他")
   
-    @card_collections_room_photo = CardCollection.where(theme_id: room_photo_theme.id).sort_by do |cc|
+    @card_collections_room_photo = CardCollection.where(theme_id: @room_photo_theme.id).sort_by do |cc|
       total_interactions = cc.likes.count +
                            cc.bookmarks.count +
                            cc.card_collection_comments.where(deleted: false).count +
@@ -26,7 +26,7 @@ class TopicsController < ApplicationController
       -total_interactions  # 내림차순 정렬을 위해 음수값 반환
     end
   
-    @card_collections_other = CardCollection.where(theme_id: other_theme.id).sort_by do |cc|
+    @card_collections_other = CardCollection.where(theme_id: @other_theme.id).sort_by do |cc|
       total_interactions = cc.likes.count +
                            cc.bookmarks.count +
                            cc.card_collection_comments.where(deleted: false).count +

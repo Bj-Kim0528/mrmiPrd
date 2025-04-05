@@ -18,3 +18,33 @@
   line-height: 1.5em;                /* 줄 높이 설정 */
   height: 4.5em;                     /* 3줄(1.5em * 3) 만큼의 고정 높이 */
 }
+
+@media (min-width: 1256px) {
+  .container {
+      padding-right: 0px; 
+      padding-left: 0px;
+      margin-right: auto;
+      margin-left: auto;
+      width: 1136px;
+      max-width: 100%;
+      box-sizing: border-box;
+      min-height: 1px;
+  }
+}
+
+@media (min-width: 1256px) {
+  .row {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -moz-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-flex-wrap: wrap;
+      -moz-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      box-sizing: border-box;
+      margin-right: -10px;
+      margin-left: -10px;
+  }
+}

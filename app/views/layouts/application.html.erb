@@ -15,22 +15,23 @@
   <body>
     <header style="position: sticky; top: 0; z-index: 999; background-color: #fff;">
       <!-- 메인 네비게이션 (글로벌 헤더) -->
-      <nav class="navbar p-0" style="max-width: 1256px;" >
-        <div class="d-flex justify-content-between align-items-center" style="width: 100%; height: 80px; padding-top: 10px; padding-bottom: 10px; margin: 0 auto; padding: 0 60px;">
-          <div class="d-flex justify-content-between" style="width: 18%;">
-            <div>
-              <i class="fa-solid fa-house-chimney" style="font-size: 23.7px; color: #666;"></i>
-              <%= link_to "MRMI", root_path, class: "navbar-brand" %>
+      <nav class="navbar p-0" style="width: 100%; border-bottom: 1px solid #ddd;">
+        <!-- 내부 컨테이너: 최대폭 1256px -->
+        <div style="max-width: 1256px; margin: 0 auto; width: 100%; height: 80px; padding: 10px 60px;">
+          <div class="d-flex justify-content-between align-items-center" style="width: 100%;">
+            <div class="d-flex justify-content-between" style="width: 18%;">
+              <div>
+                <i class="fa-solid fa-house-chimney" style="font-size: 23.7px; color: #666;"></i>
+                <%= link_to "MRMI", root_path, class: "navbar-brand", style: "text-decoration: none; color: inherit;" %>
+              </div>
+              <div>
+                <%= link_to "About", root_path, class: "navbar-brand", style: "text-decoration: none; color: inherit;" %>
+              </div>
             </div>
-            <div>
-              <%= link_to "About", root_path, class: "navbar-brand" %>
-            </div>
-          </div>
-          <div>
-            <div class="d-flex">
+            <div class="d-flex align-items-center">
               <div style="margin-right: 14px;">
-                <div style="width: 100%;">
-                  <%= form_with url: search_index_path, method: :get, local: true, html: { style: "position: relative; width: 300px;" } do |f| %>
+                <div style="width: 300px; position: relative;">
+                  <%= form_with url: search_index_path, method: :get, local: true, html: { style: "width: 100%; position: relative;" } do |f| %>
                     <button type="submit" 
                             style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
                                   background: none; border: none; padding: 0; cursor: pointer;">
@@ -42,7 +43,7 @@
                   <% end %>
                 </div>
               </div>
-              <div class="d-flex">
+              <div class="d-flex align-items-center">
                 <% if user_signed_in? %>
                   <div class="dropdown" style="margin: 0 20px 0 13px;">
                     <button data-bs-toggle="dropdown" style="border: none; background: transparent; padding: 0;">
@@ -70,24 +71,22 @@
                     <%= link_to "会員登録", new_user_registration_path, class: "nav-link" %>
                   </div>
                 <% end %>
-
-                <div style="margin: 0 10px 0 8px;"></div>
+                <div style="margin: 0 10px;"></div>
                 <% if user_signed_in? %>
                   <% if current_user.email == "guest@example.com" %>
                     <%= link_to "投稿する", destroy_user_session_path, 
-                                method: :delete, 
-                                data: { confirm: "로그인후 투고를 작성해주세요" },
-                                class: "nav-link btn btn-primary", 
-                                style: "width: auto; height: 40px;" %>
+                                method: :delete, data: { confirm: "로그인후 투고를 작성해주세요" },
+                                class: "btn btn-primary nav-link", 
+                                style: "height: 40px; padding: 0 15px; display: flex; align-items: center; justify-content: center;" %>
                   <% else %>
                     <%= link_to "投稿する", new_card_collection_path, 
-                                class: "nav-link btn btn-primary", 
-                                style: "width: auto; height: 40px;" %>
+                                class: "btn btn-primary nav-link", 
+                                style: "height: 40px; padding: 0 15px; display: flex; align-items: center; justify-content: center;" %>
                   <% end %>
                 <% else %>
                   <%= link_to "投稿する", new_user_session_path, 
-                              class: "nav-link btn btn-primary", 
-                              style: "width: auto; height: 40px;" %>
+                              class: "btn btn-primary nav-link", 
+                              style: "height: 40px; padding: 0 15px; display: flex; align-items: center; justify-content: center;" %>
                 <% end %>
               </div>
             </div>
@@ -95,75 +94,67 @@
         </div>
       </nav>
 
-      <%# --- 두 번째(상단) 네비게이션 --- %>
-      <nav class="navbar p-0" style="max-width: 1256px;">
-        <div style="margin: 0 auto; padding: 0 60px; width: 100%;">
+      <!-- 두 번째(상단) 네비게이션 -->
+      <nav class="navbar p-0" style="width: 100%; border-bottom: 1px solid #ddd;">
+        <div style="max-width: 1256px; margin: 0 auto; padding: 0 60px; width: 100%;">
           <% if controller_name == 'users' %>
-            <%# UsersController 내라면 글로벌 네비게이션 대신 사용자 전용 탭을 표시한다. %>
             <% if user_signed_in? && current_user.id.to_s == params[:id] %>
-              <!-- 로그인 후 현재 유저의 마이페이지인 경우: "프로필"과 "설정" 탭 표시 -->
               <div class="d-flex">
-                <%= link_to "프로필", user_path(current_user), { class: "nav-link #{'active' if current_page?(user_path(current_user))}", style: "margin-left: 60px;" } %>
-                <%= link_to "설정", edit_user_path(current_user), {class: "nav-link #{'active' if current_page?(edit_user_path(current_user))}", style: "margin-left: 30px;" }  %>
+                <%= link_to "프로필", user_path(current_user), class: "nav-link #{'active' if current_page?(user_path(current_user))}", style: "margin-left: 60px; text-decoration: none; color: inherit;" %>
+                <%= link_to "설정", edit_user_path(current_user), class: "nav-link #{'active' if current_page?(edit_user_path(current_user))}", style: "margin-left: 30px; text-decoration: none; color: inherit;" %>
               </div>
             <% else %>
-              <!-- 로그인 후 현재 유저가 아닌 다른 사용자의 페이지에서는 상단 탭은 표시하지 않음 -->
               <div class="d-flex">
-                <!-- 필요 시 "모두보기" 탭 하나만 표시할 수도 있음 -->
+                <!-- 필요 시 탭 추가 -->
               </div>
             <% end %>
           <% else %>
-            <!-- UsersController 외의 페이지에서는 글로벌 네비게이션 표시 -->
             <div class="d-flex">
-              <%= link_to "전체사진", card_collections_path, class: "nav-link active" %>
-              <%= link_to "추천(방사진,그외)", recommend_path, class: "nav-link active" %>
-              <%= link_to "#チャンネル", hashtag_channel_path, class: "nav-link active" %>
-
-            <% Theme.where.not(name: ["お部屋写真", "その他"]).each do |theme| %>
-              <%= link_to theme.name, topic_path(theme.name), class: "nav-link #{'active' if params[:topic] == theme.name}" %>
-            <% end %>
+              <%= link_to "전체사진", card_collections_path, class: "nav-link active", style: "text-decoration: none; color: inherit;" %>
+              <%= link_to "추천(방사진,그외)", recommend_path, class: "nav-link active", style: "text-decoration: none; color: inherit;" %>
+              <%= link_to "#チャンネル", hashtag_channel_path, class: "nav-link active", style: "text-decoration: none; color: inherit;" %>
+              <% Theme.where.not(name: ["お部屋写真", "その他"]).each do |theme| %>
+                <%= link_to theme.name, topic_path(theme.name), class: "nav-link #{'active' if params[:topic] == theme.name}", style: "text-decoration: none; color: inherit;" %>
+              <% end %>
             </div>
           <% end %>
         </div>
       </nav>
 
-      <%# --- 하위(서브) 네비게이션 --- %>
-      <nav class="navbar p-0" style="max-width: 1256px;">
-        <div style="margin: 0 auto; padding: 0 60px; width: 100%;">
-          <% if controller_name == 'users' && ['edit', 'edit_password'].include?(action_name)%>
-            <!-- 여기에 표시할 내용을 작성합니다. 예: 기본설정, 비밀번호 변경 탭 등 -->
+      <!-- 하위(서브) 네비게이션 -->
+      <nav class="navbar p-0" style="width: 100%; border-bottom: 1px solid #ddd;">
+        <div style="max-width: 1256px; margin: 0 auto; padding: 0 60px; width: 100%;">
+          <% if controller_name == 'users' && ['edit', 'edit_password'].include?(action_name) %>
             <div class="d-flex">
-              <%= link_to "프로필 수정", edit_user_path(current_user), class: "nav-link #{'active' if action_name == 'edit'}" %>
-              <%= link_to "비밀번호 변경", edit_password_user_path(current_user), class: "nav-link #{'active' if action_name == 'edit_password'}" %>
+              <%= link_to "프로필 수정", edit_user_path(current_user), class: "nav-link #{'active' if action_name == 'edit'}", style: "text-decoration: none; color: inherit;" %>
+              <%= link_to "비밀번호 변경", edit_password_user_path(current_user), class: "nav-link #{'active' if action_name == 'edit_password'}", style: "text-decoration: none; color: inherit;" %>
             </div>
           <% elsif controller_name == 'users' && ['show', 'card_collections', 'likes', 'collections', 'follower', 'followee'].include?(action_name) %>
             <% if user_signed_in? && current_user.id.to_s == params[:id] %>
               <div class="d-flex">
-                <%= link_to "모두보기", user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'all' || params[:sub].blank?}" %>
-                <%= link_to "사진", card_collections_user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'card_collections'}" %>
-                <%= link_to "좋아요", likes_user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'likes'}" %>
-                <%= link_to "북마크", collections_user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'collections'}" %>
+                <%= link_to "모두보기", user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'all' || params[:sub].blank?}", style: "text-decoration: none; color: inherit;" %>
+                <%= link_to "사진", card_collections_user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'card_collections'}", style: "text-decoration: none; color: inherit;" %>
+                <%= link_to "좋아요", likes_user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'likes'}", style: "text-decoration: none; color: inherit;" %>
+                <%= link_to "북마크", collections_user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'collections'}", style: "text-decoration: none; color: inherit;" %>
               </div>
             <% else %>
               <div class="d-flex">
-                <%= link_to "모두보기", user_path(@userinfo), class: "nav-link #{'active' if params[:sub] == 'all' || params[:sub].blank?}" %>
-                <%= link_to "사진", card_collections_user_path(@userinfo), class: "nav-link #{'active' if params[:sub] == 'card_collections'}" %>
-                <%= link_to "북마크", collections_user_path(@userinfo), class: "nav-link #{'active' if params[:sub] == 'collections'}" %>
+                <%= link_to "모두보기", user_path(@userinfo), class: "nav-link #{'active' if params[:sub] == 'all' || params[:sub].blank?}", style: "text-decoration: none; color: inherit;" %>
+                <%= link_to "사진", card_collections_user_path(@userinfo), class: "nav-link #{'active' if params[:sub] == 'card_collections'}", style: "text-decoration: none; color: inherit;" %>
+                <%= link_to "북마크", collections_user_path(@userinfo), class: "nav-link #{'active' if params[:sub] == 'collections'}", style: "text-decoration: none; color: inherit;" %>
               </div>
             <% end %>
           <% end %>
         </div>
       </nav>
-         
     </header>
 
 
 
-    <div class="container-fluid">
-      <div class="card ">
-        <div class="card-body">
-          <%= yield %>
-        </div>
+
+    <div class="container">
+      <div class="card">
+        <%= yield %>
       </div>
     </div>
   </body>
