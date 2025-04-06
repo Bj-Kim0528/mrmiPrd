@@ -1,7 +1,7 @@
 <div class="row" style="padding-top: 0px; padding-bottom: 5900px; transform: translateY(0px);">
   <% @card_collections.each do |card_collection| %>
     <div class="col-12 col-lg-4 col-xl-3" style="padding: 0 10px; margin-bottom: 30px;">
-      <article class="card-collection-item" style="background: #fff; border: 1px solid #eaeaea; border-radius: 8px; overflow: hidden; transition: box-shadow 0.2s ease;">
+      <article class="card-collection-item" style="overflow: hidden; transition: box-shadow 0.2s ease;">
         <!-- 작성자 영역 -->
         <div class="card-item-writer" style="padding: 10px; border-bottom: 1px solid #eaeaea;">
           <address style="margin: 0; display: flex;">
@@ -52,7 +52,7 @@
         <div class="card-collection-item__content" style="position: relative;">
           <% if card_collection.card_images.any? && card_collection.card_images.first.image.attached? %>
             <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
-              <%= image_tag url_for(card_collection.card_images.first.image.variant(resize_to_fill: [289, 289]).processed), alt: "투고 사진", class: "img-fluid", style: "width: 289px; height: 289px; display: block;" %>
+              <%= image_tag url_for(card_collection.card_images.first.image.variant(resize_to_fill: [289, 289]).processed), alt: "투고 사진", class: "img-fluid", style: "border-radius: 0.4rem !important; width: 289px; height: 289px; display: block;" %>
             <% end %>
           <% else %>
             <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
@@ -64,7 +64,7 @@
         </div>
 
         <!-- 액션 버튼 영역 -->
-        <div class="card-item-action-list" style="display: flex; justify-content: space-around; padding: 10px; border-top: 1px solid #eaeaea;">
+        <div class="card-item-action-list" style="display: flex; justify-content: space-around; margin-top: 10px;">
           <div>
             <% if current_user.likes.exists?(likeable: card_collection) %>
               <% like = current_user.likes.find_by(likeable: card_collection) %>
@@ -106,7 +106,7 @@
         </div>
 
         <!-- 게시글 내용 영역 -->
-        <div class="card-item-description" style="padding: 10px; font-size: 15px; color: #333; line-height: 1.4; max-height: 3.5em; overflow: hidden; text-overflow: ellipsis; margin-top: 10px;">
+        <div class="card-item-description" style="font-size: 15px; color: #333; line-height: 1.4; max-height: 3.5em; overflow: hidden; text-overflow: ellipsis; margin-top: 10px;">
           <%
             text = card_collection.card_images.map(&:content).reject(&:blank?).join("\n\n")
             lines = text.split(/\r?\n/)
@@ -128,7 +128,7 @@
         <% sorted_comments = all_comments.sort_by(&:created_at) %>
         <% if sorted_comments.any? %>
           <% first_comment = sorted_comments.first %>
-          <div class="card-item-comment" style="padding: 10px; border-top: 1px solid #eaeaea; margin-top: 10px; display: flex; align-items: flex-start;">
+          <div class="card-item-comment" style="display: flex; align-items: flex-start; margin-top: 10px">
             <%= link_to user_path(first_comment.user), style: "text-decoration: none; display: flex; align-items: center;" do %>
               <%= image_tag url_for(first_comment.user.get_profile_image(24, 24)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 24px; height: 24px; object-fit: cover; margin-right: 10px;" %>
               <strong style="font-size: 13px; font-style: normal;"><%= first_comment.user.nickname %></strong>
