@@ -8,7 +8,10 @@ class TopicsController < ApplicationController
   end
 
   def hashtag_channel
-    @hashtags = Hashtag.all
+    @hashtags = Hashtag.left_outer_joins(:bookmarks, :card_collections)
+                        .select("hashtags.*, (COUNT(DISTINCT bookmarks.id) + COUNT(DISTINCT card_collections.id)) AS total_count")
+                        .group("hashtags.id")
+                        .order("total_count DESC")
   end
 
   def recommend
