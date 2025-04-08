@@ -4,11 +4,9 @@
     <%= link_to "더보기", topic_path(@room_photo_theme.name), class: "nav-link", style: "text-decoration: none; color: inherit;" %>
   </div>
   <div class="row" style="padding-top: 0px; transform: translateY(0px); max-height: 1000px; overflow: hidden;">
-    <% @card_collections_room_photo.each do |card_collection| %>
+    <% @card_collections_room_photo.first(8).each do |card_collection| %>
       <div class="col-12 col-lg-4 col-xl-3" style="padding: 0 10px; margin-bottom: 30px;">
         <article class="card-collection-item" style="overflow: hidden;">
-
-
           <!-- 게시물 이미지 영역 -->
           <div class="card-collection-item__content" style="position: relative;">
             <% if card_collection.card_images.any? && card_collection.card_images.first.image.attached? %>
@@ -22,8 +20,8 @@
                 </div>
               <% end %>
             <% end %>
-          
-            <!-- 북마크 영역을 이미지의 오른쪽 하단에 배치 -->
+            
+            <!-- 북마크 영역 -->
             <div style="position: absolute; right: 10px; bottom: 10px; display: flex; align-items: center;">
               <% if current_user.bookmarks.exists?(bookmarkable: card_collection) %>
                 <% bookmark = current_user.bookmarks.find_by(bookmarkable: card_collection) %>
@@ -39,7 +37,6 @@
               <% end %>
             </div>
           </div>
-          
 
           <!-- 게시글 내용 영역 -->
           <div class="card-item-description" style="font-size: 15px; color: #333; line-height: 1.4; max-height: 3.5em; overflow: hidden; text-overflow: ellipsis; margin-top: 10px;">
@@ -59,14 +56,12 @@
           <div class="card-item-writer justify-content-between" style="padding: 0px; display: flex;">
             <div style="display: flex;">
               <div class="card-item-writer__header" style="align-items: center;">
-                <%= link_to user_path(card_collection.user), class: "card-item-writer__link", style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
+                <%= link_to user_path(card_collection.user), style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
                   <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 18px; height: 18px; object-fit: cover; margin-right: 10px;" %>
                 <% end %>
               </div>
-
-              
               <div>
-                <%= link_to user_path(card_collection.user), class: "card-item-writer__link", style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
+                <%= link_to user_path(card_collection.user), style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
                   <div style="font-size: 11px; font-weight: bold;"><%= card_collection.user.nickname %></div>
                 <% end %>
               </div>
@@ -92,6 +87,7 @@
       </div>
     <% end %>
   </div>
+
 </div>
 
 
@@ -102,7 +98,7 @@
     <%= link_to "더보기", topic_path(@other_theme.name), class: "nav-link", style: "text-decoration: none; color: inherit;" %>
   </div>
   <div class="row" style="padding-top: 0px; transform: translateY(0px); max-height: 1000px; overflow: hidden; margin-bottom: 50px;">
-    <% @card_collections_other.each do |card_collection| %>
+    <% @card_collections_other.first(8).each do |card_collection| %>
       <div class="col-12 col-lg-4 col-xl-3" style="padding: 0 10px; margin-bottom: 30px;">
         <article class="card-collection-item" style="overflow: hidden;">
 
