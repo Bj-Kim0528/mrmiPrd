@@ -7,6 +7,8 @@ class HashtagsController < ApplicationController
     end
 
     @hashtag = Hashtag.find_or_create_by(name: hashtag_name)
+    @hashtag_bookmark_count = Bookmark.where(bookmarkable_type: "Hashtag", bookmarkable_id: @hashtag.id).count
+    @card_collection_count = @hashtag.card_collections.count
     @card_collections = @hashtag.card_collections.order(created_at: :desc)
   end
 end

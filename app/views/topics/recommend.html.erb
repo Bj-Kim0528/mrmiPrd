@@ -39,7 +39,7 @@
           </div>
 
           <!-- 게시글 내용 영역 -->
-          <div class="card-item-description" style="font-size: 15px; color: #333; line-height: 1.4; max-height: 3.5em; overflow: hidden; text-overflow: ellipsis; margin-top: 10px;">
+          <div class="card-item-description" style="font-size: 15px; color: #333; line-height: 1.4; height: 3em; overflow: hidden; text-overflow: ellipsis; margin-top: 10px;">
             <%
               text = card_collection.card_images.map(&:content).reject(&:blank?).join("\n\n")
               lines = text.split(/\r?\n/)
@@ -136,7 +136,7 @@
           
 
           <!-- 게시글 내용 영역 -->
-          <div class="card-item-description" style="font-size: 15px; color: #333; line-height: 1.4; max-height: 3.5em; overflow: hidden; text-overflow: ellipsis; margin-top: 10px;">
+          <div class="card-item-description" style="font-size: 15px; color: #333; line-height: 1.4; height: 3em; overflow: hidden; text-overflow: ellipsis; margin-top: 10px;">
             <%
               text = card_collection.card_images.map(&:content).reject(&:blank?).join("\n\n")
               lines = text.split(/\r?\n/)
