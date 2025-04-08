@@ -1,8 +1,46 @@
-<div>
-  <div class="d-flex justify-content-between" style="margin-right: 50px">
-    <h2>お部屋写真</h2>
-    <%= link_to "더보기", topic_path(@room_photo_theme.name), class: "nav-link", style: "text-decoration: none; color: inherit;" %>
+<div style="margin-top: 32px;  position: relative;">
+
+
+  <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between;">
+    <div>
+      <div style="display: flex; font-size: 20px; line-height: 28px; font-weight: 700; padding: 0px; margin: 0px; -webkit-box-align: center; align-items: center;">
+        お部屋写真
+      </div>
+      <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= @card_collections_room_photo.count %>개의 콘텐츠</span>
+    </div>
+    <%= link_to "더보기", topic_path(@room_photo_theme.name), 
+                        class: "btn",
+                        style: "margin: 0px;
+                                border: none;
+                                background: none rgb(10, 165, 255);
+                                font-style: inherit;
+                                font-variant: inherit;
+                                font-stretch: inherit;
+                                font-family: inherit;
+                                font-optical-sizing: inherit;
+                                font-size-adjust: inherit;
+                                font-kerning: inherit;
+                                font-feature-settings: inherit;
+                                font-variation-settings: inherit;
+                                font-size: 14px;
+                                line-height: 18px;
+                                display: inline-flex;
+                                -webkit-box-pack: center;
+                                justify-content: center;
+                                -webkit-box-align: center;
+                                align-items: center;
+                                height: 40px;
+                                border-radius: 4px;
+                                padding: 0px 16px;
+                                box-sizing: border-box;
+                                text-align: center;
+                                color: rgb(255, 255, 255);
+                                font-weight: 700;
+                                width: 80px;"%>
   </div>
+  
+  <hr class="e10dn35k2 css-98ijgf">
+
   <div class="row" style="padding-top: 0px; transform: translateY(0px); max-height: 1000px; overflow: hidden;">
     <% @card_collections_room_photo.first(8).each do |card_collection| %>
       <div class="col-12 col-lg-4 col-xl-3" style="padding: 0 10px; margin-bottom: 30px;">
@@ -90,13 +128,49 @@
 
 </div>
 
-
+<hr class="e10dn35k2 css-98ijgf">
 
 <div>
-  <div class="d-flex justify-content-between" style="padding-right: 50px; background: #fff; border-top: 1px solid #eaeaea;">
-    <h2>その他</h2>
-    <%= link_to "더보기", topic_path(@other_theme.name), class: "nav-link", style: "text-decoration: none; color: inherit;" %>
+  <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between;">
+    <div>
+      <div style="display: flex; font-size: 20px; line-height: 28px; font-weight: 700; padding: 0px; margin: 0px; -webkit-box-align: center; align-items: center;">
+        その他
+      </div>
+      <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= @card_collections_other.count %>개의 콘텐츠</span>
+    </div>
+    <%= link_to "더보기", topic_path(@other_theme.name),
+                          class: "btn",
+                          style: "margin: 0px;
+                                  border: none;
+                                  background: none rgb(10, 165, 255);
+                                  font-style: inherit;
+                                  font-variant: inherit;
+                                  font-stretch: inherit;
+                                  font-family: inherit;
+                                  font-optical-sizing: inherit;
+                                  font-size-adjust: inherit;
+                                  font-kerning: inherit;
+                                  font-feature-settings: inherit;
+                                  font-variation-settings: inherit;
+                                  font-size: 14px;
+                                  line-height: 18px;
+                                  display: inline-flex;
+                                  -webkit-box-pack: center;
+                                  justify-content: center;
+                                  -webkit-box-align: center;
+                                  align-items: center;
+                                  height: 40px;
+                                  border-radius: 4px;
+                                  padding: 0px 16px;
+                                  box-sizing: border-box;
+                                  text-align: center;
+                                  color: rgb(255, 255, 255);
+                                  font-weight: 700;
+                                  width: 80px;"%>
   </div>
+
+  <hr class="e10dn35k2 css-98ijgf">
+
   <div class="row" style="padding-top: 0px; transform: translateY(0px); max-height: 1000px; overflow: hidden; margin-bottom: 50px;">
     <% @card_collections_other.first(8).each do |card_collection| %>
       <div class="col-12 col-lg-4 col-xl-3" style="padding: 0 10px; margin-bottom: 30px;">
