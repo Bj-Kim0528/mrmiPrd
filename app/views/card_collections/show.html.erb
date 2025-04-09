@@ -213,13 +213,14 @@
 
     <div style="margin-bottom: 40px; margin-top: 8px;">
       <div style="display: flex; align-items: center;">
-        <%= link_to user_path(@card_collection.user) do %>
-          <%= image_tag url_for(@card_collection.user.get_profile_image(40, 40)), 
+        <% unless current_user.email == "guest@example.com" %>
+
+          <%= image_tag url_for(current_user.get_profile_image(40, 40)), 
                 alt: "프로필 이미지", 
                 style: "object-fit: cover; width: 30px; height: 30px; border-radius: 50%; margin-right: 12px; border: 0.5px solid rgba(0, 0, 0, 0.08);" %>
-        <% end %>
+
         
-        <% unless current_user.email == "guest@example.com" %>
+        
           <!-- 입력 폼 컨테이너: 남은 영역을 차지 -->
           <div style="flex: 1; position: relative;">
             <%= form_with model: [@card_collection, @card_collection_comment], local: true do |f| %>
@@ -239,7 +240,7 @@
                       method: :delete, 
                       data: { confirm: "로그인후 코멘트를 작성해주세요" },
                       class: "btn btn-primary", 
-                      style: "height: 40px; padding: 0 15px;" %>
+                      style: "width:100%; height: 40px; padding: 0 15px;" %>
         <% end %>
       </div>
     </div>
@@ -254,7 +255,7 @@
     <!-- 최상위 댓글 목록 -->
     <div>
       <% @card_collection.card_collection_comments.order(created_at: :asc).each do |comment| %>
-        <div class="comment" style="margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px; display: flex; align-items: flex-start; margin: 16px 0px;">
+        <div class="comment" style="margin-bottom: 15px; padding-bottom: 10px; display: flex; align-items: flex-start; margin: 16px 0px;">
           <% if comment.deleted? %>
             <p><strong>볼 수 없는 유저</strong></p>
             <p>댓글이 삭제되었습니다</p>
@@ -365,9 +366,9 @@
 
         <!-- 답글 목록 (CardCollectionReply 모델 사용) -->
         <% if comment.card_collection_replies.any? %>
-          <div class="child-replies" style="margin-left: 40px;">
+          <div class="child-replies" style="margin-left: 40px; border-radius: 4px; background-color: rgb(247, 249, 250);">
             <% comment.card_collection_replies.order(created_at: :asc).each do |reply| %>
-              <div class="reply" style="margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px; display: flex; align-items: flex-start; margin: 16px 0px;">
+              <div class="reply" style="margin-bottom: 15px; padding-bottom: 10px; display: flex; align-items: flex-start; margin: 16px 0px; ">
                 <% if reply.deleted? %>
                   <p><strong>볼 수 없는 유저</strong></p>
                   <p>답글이 삭제되었습니다</p>
