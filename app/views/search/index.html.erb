@@ -1,89 +1,389 @@
 <% if @query.present? %>
   <section>
-    <h2>사진</h2>
-    <% if @content_results.any? %>
-      <% @content_results.each do |collection| %>
-        <%= link_to card_collection_path(collection) do %>
-          <% if collection.card_images.any? && collection.card_images.first.image.attached? %>
-            <%= image_tag url_for(collection.card_images.first.image.variant(resize_to_fill: [160, 160]).processed), alt: "게시물 사진", class: "rounded" %>
-          <% else %>
-            <div style="width: 160px; height: 160px; background-color: #f0f0f0;"></div>
+    <div style="margin-top: 32px;  position: relative;">
+      <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between;">
+        <div>
+          <div style="display: flex; font-size: 20px; line-height: 28px; font-weight: 700; padding: 0px; margin: 0px; -webkit-box-align: center; align-items: center;">
+            写真
+          </div>
+          <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= @content_results.count %>개의 콘텐츠</span>
+        </div>
+        <% if @content_results.any? %>
+          <%= link_to "더보기", search_photos_path(query: @query), 
+                              class: "btn",
+                              style: "margin: 0px;
+                                      border: none;
+                                      background: none rgb(10, 165, 255);
+                                      font-style: inherit;
+                                      font-variant: inherit;
+                                      font-stretch: inherit;
+                                      font-family: inherit;
+                                      font-optical-sizing: inherit;
+                                      font-size-adjust: inherit;
+                                      font-kerning: inherit;
+                                      font-feature-settings: inherit;
+                                      font-variation-settings: inherit;
+                                      font-size: 14px;
+                                      line-height: 18px;
+                                      display: inline-flex;
+                                      -webkit-box-pack: center;
+                                      justify-content: center;
+                                      -webkit-box-align: center;
+                                      align-items: center;
+                                      height: 40px;
+                                      border-radius: 4px;
+                                      padding: 0px 16px;
+                                      box-sizing: border-box;
+                                      text-align: center;
+                                      color: rgb(255, 255, 255);
+                                      font-weight: 700;
+                                      width: 80px;"%>
           <% end %>
-        <% end %>
+      </div>
+
+      <% if @content_results.any? %>
+        <div class="row" style="padding-top: 0px; transform: translateY(0px); max-height: 1000px; overflow: hidden;">
+          <% @content_results.first(8).each do |card_collection| %>
+            <div class="col-12 col-lg-4 col-xl-3" style="padding: 0 10px; margin-bottom: 30px;">
+              <article class="card-collection-item" style="overflow: hidden;">
+                <!-- 게시물 이미지 영역 -->
+                <div class="card-collection-item__content" style="position: relative;">
+                  <% if card_collection.card_images.any? && card_collection.card_images.first.image.attached? %>
+                    <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
+                      <%= image_tag url_for(card_collection.card_images.first.image.variant(resize_to_fill: [289, 289]).processed), alt: "투고 사진", class: "img-fluid", style: "border-radius: 0.4rem !important; width: 289px; height: 289px; display: block;" %>
+                    <% end %>
+                  <% else %>
+                    <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
+                      <div style="width: 289px; height: 289px; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center;">
+                        <p style="margin: 0;">사진이 업로드되지 않았습니다.</p>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
+              </article>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p>검색어가 포함된 컨텐츠가 없습니다.</p>
       <% end %>
-    <% else %>
-      <p>검색어가 포함된 컨텐츠가 없습니다.</p>
-    <% end %>
+    </div>
   </section>
 
+
+  <hr class="e10dn35k2 css-98ijgf">
+
   <section>
-    <h3>유저</h3>
-    <% if @user_results.any? %>
-      <div style="gap: 10px;">
-        <% @user_results.each do |user| %>
-          <div>
-            <%= link_to user_path(user) do %>
-              <%= image_tag url_for(user.get_profile_image(100, 100)), 
-                            alt: "프로필 이미지", 
-                            class: "rounded-circle", 
-                            style: "width: 100px; height: 100px; object-fit: cover;" %>
-              <p><%= user.nickname %></p>
-            <% end %>
-            <%# 여기서 해당 유저의 카드콜렉션을 표시 (예: 사용자가 작성한 카드콜렉션) %>
-            <% user.card_collections.each do |collection| %>
-              <div style="margin-top: 10px;">
-                <%= link_to card_collection_path(collection) do %>
-                  <% if collection.card_images.any? && collection.card_images.first.image.attached? %>
-                    <%= image_tag url_for(collection.card_images.first.image.variant(resize_to_fill: [160, 160]).processed), 
-                                  alt: "게시물 사진", 
-                                  class: "rounded" %>
+    <div style="margin-top: 32px;  position: relative;">
+      <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between;">
+        <div>
+          <div style="display: flex; font-size: 20px; line-height: 28px; font-weight: 700; padding: 0px; margin: 0px; -webkit-box-align: center; align-items: center;">
+            ユーザ
+          </div>
+          <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= @user_results.count %>명의 유저</span>
+        </div>
+        
+        <% if @user_results.any? %>
+          <%= link_to "더보기", search_users_path(query: @query), 
+                              class: "btn",
+                              style: "margin: 0px;
+                                      border: none;
+                                      background: none rgb(10, 165, 255);
+                                      font-style: inherit;
+                                      font-variant: inherit;
+                                      font-stretch: inherit;
+                                      font-family: inherit;
+                                      font-optical-sizing: inherit;
+                                      font-size-adjust: inherit;
+                                      font-kerning: inherit;
+                                      font-feature-settings: inherit;
+                                      font-variation-settings: inherit;
+                                      font-size: 14px;
+                                      line-height: 18px;
+                                      display: inline-flex;
+                                      -webkit-box-pack: center;
+                                      justify-content: center;
+                                      -webkit-box-align: center;
+                                      align-items: center;
+                                      height: 40px;
+                                      border-radius: 4px;
+                                      padding: 0px 16px;
+                                      box-sizing: border-box;
+                                      text-align: center;
+                                      color: rgb(255, 255, 255);
+                                      font-weight: 700;
+                                      width: 80px;"%>
+        <% end %>
+      </div>
+
+
+
+      <div style="margin-top: 10px;">
+        <% if @user_results.any? %>
+        
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; width: 100%;">
+            <% @user_results.first(4).each do |user| %>
+      
+      
+              <div class="rounded" style="padding: 10px; text-align: center; width: calc(50% - 5px); box-sizing: border-box; padding: 0; border: 1px solid rgba(0, 0, 0, 0.1);">
+                <div style="padding: 10px 10px 10px 18px; width: 100%;">
+      
+                  <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between; margin-bottom: 10px;">
+                    <%= link_to user_path(user) do %>
+                      <div style="display: flex;">
+                        <%= image_tag url_for(user.get_profile_image(100, 100)), 
+                                alt: "프로필 이미지", 
+                                class: "rounded-circle", 
+                                style: "width: 60px; height: 60px; object-fit: cover; margin-bottom: 3px; margin-right: 5px;" %>
+                        <div>
+                          <h1 style="display: flex; font-size: 20px; line-height: 28px; font-weight: 700; padding: 0px; margin-bottom: 3px; -webkit-box-align: center; align-items: center; color: #000000;"><%= user.nickname %></h1>
+                          
+                          <div style="font-size: 12px; color: #666; margin-top: 0px; margin-bottom: 0px; align-items: center;">
+                            <% if user.introduction.present? %>
+                              <%= user.introduction %>
+                            <% else %>
+                              作成された自己紹介はありません
+                            <% end %>
+                          </div>
+
+                          <div style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); text-align: left;"><%= user.card_collections.count %>개의 콘텐츠</div>   
+                        </div>
+
+
+                      </div>
+
+                      
+           
+                    <% end %>
+
+
+
+                    <% unless current_user.email == "guest@example.com" %>
+                      <% unless current_user == user %>
+                        <% if current_user.following.include?(user) %>
+                          <%= link_to "팔로잉", relationship_path(current_user.active_relationships.find_by(followed_id: user.id)), 
+                                      method: :delete,  
+                                      class: "btn",
+                                      style: "margin: 0px;
+                                      background: none;
+                                      font-style: inherit;
+                                      font-variant: inherit;
+                                      font-stretch: inherit;
+                                      font-family: inherit;
+                                      font-optical-sizing: inherit;
+                                      font-size-adjust: inherit;
+                                      font-kerning: inherit;
+                                      font-feature-settings: inherit;
+                                      font-variation-settings: inherit;
+                                      font-size: 14px;
+                                      line-height: 18px;
+                                      display: inline-flex;
+                                      -webkit-box-pack: center;
+                                      justify-content: center;
+                                      -webkit-box-align: center;
+                                      align-items: center;
+                                      height: 40px;
+                                      border-radius: 4px;
+                                      padding: 0px 16px;
+                                      font-weight: 400;
+                                      box-sizing: border-box;
+                                      text-align: center;
+                                      color: rgb(47, 52, 56);
+                                      border: 1px solid rgb(230, 230, 230);
+                                      width: 80px;"%>
+                        <% else %>
+                          <%= link_to "팔로우", relationships_path(followed_id: user.id), 
+                                      method: :post, 
+                                      class: "btn",
+                                      style: "margin: 0px;
+                                              border: none;
+                                              background: none rgb(10, 165, 255);
+                                              font-style: inherit;
+                                              font-variant: inherit;
+                                              font-stretch: inherit;
+                                              font-family: inherit;
+                                              font-optical-sizing: inherit;
+                                              font-size-adjust: inherit;
+                                              font-kerning: inherit;
+                                              font-feature-settings: inherit;
+                                              font-variation-settings: inherit;
+                                              font-size: 14px;
+                                              line-height: 18px;
+                                              display: inline-flex;
+                                              -webkit-box-pack: center;
+                                              justify-content: center;
+                                              -webkit-box-align: center;
+                                              align-items: center;
+                                              height: 40px;
+                                              border-radius: 4px;
+                                              padding: 0px 16px;
+                                              box-sizing: border-box;
+                                              text-align: center;
+                                              color: rgb(255, 255, 255);
+                                              font-weight: 700;
+                                              width: 80px;"%>
+                        <% end %>   
+                      <% end %>
+                    <% end %> 
+                  </div>
+      
+      
+      
+                  <!-- このハッシュタグに関連するカードコレクションを表示 -->
+                  <% if user.card_collections.any? %>
+      
+                  
+                    <div class="d-flex flex-wrap" style="width: 100%; justify-content: flex-start; gap: 8px;">
+                      <% posts = user.card_collections.limit(4) %>
+                      <% posts.each_with_index do |post, index| %>
+                        <div style="width: calc(25% - 8px); position: relative; aspect-ratio: 2/3;">
+                          <%= link_to card_collection_path(post), style: "text-decoration: none;" do %>
+                            <% if post.card_images.any? && post.card_images.first.image.attached? %>
+                              <%= image_tag url_for(post.card_images.first.image), 
+                                            alt: "投稿写真", 
+                                            class: "rounded", 
+                                            style: "width: 100%; height: 100%; object-fit: cover; border-radius: 4px;" %>
+                            <% else %>
+                              <div class="rounded" style="width: 100%; height: 100%; background-color: #f0f0f0; border-radius: 4px;"></div>
+                            <% end %>
+                          <% end %>
+                        </div>
+                      <% end %>
+                    </div>
+      
+      
+      
                   <% else %>
-                    <div style="width: 160px; height: 160px; background-color: #f0f0f0;"></div>
+                    <div class="gallery-item" style="flex: 0 0 calc(25% - 8px); position: relative; height: 183px; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; border-radius: 4px;">
+                      <p style="margin: 0; color: #999; font-size: 14px;">해당 유저의 게시물이 없습니다</p>
+                    </div>
                   <% end %>
-                <% end %>
+                </div>
               </div>
             <% end %>
           </div>
+        <% else %>
+          <p>검색어가 포함된 유저가 없습니다.</p>
         <% end %>
       </div>
-    <% else %>
-      <p>검색어가 포함된 유저가 없습니다.</p>
-    <% end %>
+    </div>
   </section>
 
+  <hr class="e10dn35k2 css-98ijgf">
+
   <section>
-    <h3>해시태그</h3>
-    <% if @hashtag_results.any? %>
-      <div style="gap: 10px;">
-        <% @hashtag_results.each do |hashtag| %>
-          <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
-            <%= link_to hashtag_path(hashtag) do %>
-              <h3>#<%= hashtag.name %></h3>
-            <% end %>
-            <% if hashtag.card_collections.any? %>
-              <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
-                <% hashtag.card_collections.each do |collection| %>
-                  <div style="width: 160px; height: 160px;">
-                    <%= link_to card_collection_path(collection) do %>
-                      <% if collection.card_images.any? && collection.card_images.first.image.attached? %>
-                        <%= image_tag url_for(collection.card_images.first.image.variant(resize_to_fill: [160, 160]).processed),
-                                      alt: "게시물 사진", class: "rounded" %>
-                      <% else %>
-                        <div style="width: 160px; height: 160px; background-color: #f0f0f0;"></div>
-                      <% end %>
+    <div style="margin-top: 32px;  position: relative;">
+      <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between;">
+        <div>
+          <div style="display: flex; font-size: 20px; line-height: 28px; font-weight: 700; padding: 0px; margin: 0px; -webkit-box-align: center; align-items: center;">
+            ハッシュタグ
+          </div>
+          <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= @hashtag_results.count %>개의 해쉬태그</span>
+        </div>
+        <% if @hashtag_results.any? %>
+          <%= link_to "더보기", search_hashtags_path(query: @query), 
+                              class: "btn",
+                              style: "margin: 0px;
+                                      border: none;
+                                      background: none rgb(10, 165, 255);
+                                      font-style: inherit;
+                                      font-variant: inherit;
+                                      font-stretch: inherit;
+                                      font-family: inherit;
+                                      font-optical-sizing: inherit;
+                                      font-size-adjust: inherit;
+                                      font-kerning: inherit;
+                                      font-feature-settings: inherit;
+                                      font-variation-settings: inherit;
+                                      font-size: 14px;
+                                      line-height: 18px;
+                                      display: inline-flex;
+                                      -webkit-box-pack: center;
+                                      justify-content: center;
+                                      -webkit-box-align: center;
+                                      align-items: center;
+                                      height: 40px;
+                                      border-radius: 4px;
+                                      padding: 0px 16px;
+                                      box-sizing: border-box;
+                                      text-align: center;
+                                      color: rgb(255, 255, 255);
+                                      font-weight: 700;
+                                      width: 80px;"%>
+        <% end %>
+      </div>
+
+
+
+
+
+      <div style="margin-top: 10px;">
+        <% if @hashtag_results.any? %>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; width: 100%;">
+            <% @hashtag_results.first(4).each do |hashtag| %>
+
+
+              <div class="rounded" style="padding: 10px; text-align: center; width: calc(50% - 5px); height: 257px; box-sizing: border-box; padding: 0; border: 1px solid rgba(0, 0, 0, 0.1);">
+                <div style="padding: 10px 10px 10px 18px; width: 100%;">
+
+                  <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between;">
+                    <%= link_to hashtag_path(hashtag) do %>
+                      <h1 style="display: flex; font-size: 20px; line-height: 28px; font-weight: 700; padding: 0px; margin: 0px; -webkit-box-align: center; align-items: center; color: #000000;">#<%= hashtag.name %></h1>
+                      <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= Bookmark.where(bookmarkable_type: "Hashtag", bookmarkable_id: hashtag.id).count%>명 활동 중</span>
+                      <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</span>
+                      <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= hashtag.card_collections.count %>개의 콘텐츠</span>              
+                    <% end %>
+                    <%= link_to hashtag_path(hashtag) do %>
+                      <i class="fa-solid fa-arrow-right"></i>
                     <% end %>
                   </div>
-                <% end %>
+
+
+
+                  <!-- このハッシュタグに関連するカードコレクションを表示 -->
+                  <% if hashtag.card_collections.any? %>
+
+                  
+                    <div class="d-flex flex-wrap" style="width: 100%; justify-content: flex-start; gap: 8px;">
+                      <% posts = hashtag.card_collections.limit(4) %>
+                      <% posts.each_with_index do |post, index| %>
+                        <div style="width: calc(25% - 8px); position: relative; aspect-ratio: 2/3;">
+                          <%= link_to card_collection_path(post), style: "text-decoration: none;" do %>
+                            <% if post.card_images.any? && post.card_images.first.image.attached? %>
+                              <%= image_tag url_for(post.card_images.first.image), 
+                                            alt: "投稿写真", 
+                                            class: "rounded", 
+                                            style: "width: 100%; height: 100%; object-fit: cover; border-radius: 4px;" %>
+                            <% else %>
+                              <div class="rounded" style="width: 100%; height: 100%; background-color: #f0f0f0; border-radius: 4px;"></div>
+                            <% end %>
+                          <% end %>
+                        </div>
+                      <% end %>
+                    </div>
+
+
+
+                  <% else %>
+                    <div class="gallery-item" style="flex: 0 0 calc(25% - 8px); position: relative; height: 183px; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; border-radius: 4px;">
+                      <p style="margin: 0; color: #999; font-size: 14px;">このハッシュタグに該当する投稿はありません。</p>
+                    </div>
+                  <% end %>
+                </div>
               </div>
-            <% else %>
-              <p>이 해시태그에 해당하는 게시물이 없습니다.</p>
             <% end %>
           </div>
+        <% else %>
+          <p>검색어가 포함된 해시태그가 없습니다.</p>
         <% end %>
+
+
+
+
+
+
       </div>
-    <% else %>
-      <p>검색어가 포함된 해시태그가 없습니다.</p>
-    <% end %>
+    </div>
   </section>
 
 <% else %>

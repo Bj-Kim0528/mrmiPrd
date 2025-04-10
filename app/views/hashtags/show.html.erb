@@ -15,35 +15,6 @@
             <%= link_to "解除", bookmark_path(current_user.bookmarks.find_by(bookmarkable: @hashtag)), method: :delete, data: { confirm: "ブックマークを解除しますか？" },
                       class: "btn",
                       style: "margin: 0px;
-                              border: none;
-                              background: none rgb(10, 165, 255);
-                              font-style: inherit;
-                              font-variant: inherit;
-                              font-stretch: inherit;
-                              font-family: inherit;
-                              font-optical-sizing: inherit;
-                              font-size-adjust: inherit;
-                              font-kerning: inherit;
-                              font-feature-settings: inherit;
-                              font-variation-settings: inherit;
-                              font-size: 14px;
-                              line-height: 18px;
-                              display: inline-flex;
-                              -webkit-box-pack: center;
-                              justify-content: center;
-                              -webkit-box-align: center;
-                              align-items: center;
-                              height: 40px;
-                              border-radius: 4px;
-                              padding: 0px 16px;
-                              box-sizing: border-box;
-                              text-align: center;
-                              color: rgb(255, 255, 255);
-                              font-weight: 700;
-                              width: 110px;" %>
-          <% else %>
-            <%= link_to "ブックマーク", bookmarks_path(bookmarkable_type: "Hashtag", bookmarkable_id: @hashtag.id), method: :post, class: "btn",
-                      style: "margin: 0px;
                               background: none;
                               font-style: inherit;
                               font-variant: inherit;
@@ -70,6 +41,36 @@
                               color: rgb(47, 52, 56);
                               border: 1px solid rgb(230, 230, 230);
                               width: 110px;" %>
+          <% else %>
+            <%= link_to "ブックマーク", bookmarks_path(bookmarkable_type: "Hashtag", bookmarkable_id: @hashtag.id), method: :post, 
+                              class: "btn",
+                              style: "margin: 0px;
+                                      border: none;
+                                      background: none rgb(10, 165, 255);
+                                      font-style: inherit;
+                                      font-variant: inherit;
+                                      font-stretch: inherit;
+                                      font-family: inherit;
+                                      font-optical-sizing: inherit;
+                                      font-size-adjust: inherit;
+                                      font-kerning: inherit;
+                                      font-feature-settings: inherit;
+                                      font-variation-settings: inherit;
+                                      font-size: 14px;
+                                      line-height: 18px;
+                                      display: inline-flex;
+                                      -webkit-box-pack: center;
+                                      justify-content: center;
+                                      -webkit-box-align: center;
+                                      align-items: center;
+                                      height: 40px;
+                                      border-radius: 4px;
+                                      padding: 0px 16px;
+                                      box-sizing: border-box;
+                                      text-align: center;
+                                      color: rgb(255, 255, 255);
+                                      font-weight: 700;
+                                      width: 110px;" %>
           <% end %>
         <% end %>
       <% end %>

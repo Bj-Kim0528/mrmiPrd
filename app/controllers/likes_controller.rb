@@ -1,5 +1,6 @@
 class LikesController < ApplicationController
   before_action :authenticate_user!
+  before_action :check_guest
 
   def create
     # 파라미터로 전달된 likeable_type과 likeable_id를 통해 대상 객체를 찾습니다.
@@ -26,6 +27,15 @@ class LikesController < ApplicationController
       redirect_back(fallback_location: root_path, notice: '좋아요를 취소했습니다.')
     else
       redirect_back(fallback_location: root_path, alert: '좋아요 취소에 실패했습니다.')
+    end
+  end
+
+  private
+
+  def check_guest
+    if current_user.email == "guest@example.com"
+      # 이전 페이지로 리다이렉트 (HTTP_REFERER가 없는 경우 fallback으로 root_path 사용)
+      redirect_back fallback_location: root_path, alert: "게스트 유저는 이 기능을 사용할 수 없습니다." and return
     end
   end
 end

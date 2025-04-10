@@ -86,7 +86,12 @@ Rails.application.routes.draw do
   get '/topics/recommend', to: 'topics#recommend', as: 'recommend'
   get '/topics/:theme_name', to: 'topics#show', as: 'topic'
 
-  get 'search/index', to: 'search#index'
+  get 'search/index', to: 'search#index', as: 'searchs'
+  get '/search/photos', to: 'search#photos', as: 'search_photos'
+  get '/search/users', to: 'search#users', as: 'search_users'
+  get '/search/hashtags', to: 'search#hashtags', as: 'search_hashtags'
+
+
 
   get '/hashtags/:name', to: 'hashtags#show', as: :hashtag
 

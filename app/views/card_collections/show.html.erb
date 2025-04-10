@@ -111,39 +111,8 @@
     <% unless current_user.email == "guest@example.com" %>
       <% unless current_user == @card_collection.user %>
         <% if current_user.following.include?(@card_collection.user) %>
-          <%= link_to "팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: @card_collection.user.id)), 
+          <%= link_to "팔로잉", relationship_path(current_user.active_relationships.find_by(followed_id: @card_collection.user.id)), 
                       method: :delete,  
-                      class: "btn",
-                      style: "margin: 0px;
-                              border: none;
-                              background: none rgb(10, 165, 255);
-                              font-style: inherit;
-                              font-variant: inherit;
-                              font-stretch: inherit;
-                              font-family: inherit;
-                              font-optical-sizing: inherit;
-                              font-size-adjust: inherit;
-                              font-kerning: inherit;
-                              font-feature-settings: inherit;
-                              font-variation-settings: inherit;
-                              font-size: 14px;
-                              line-height: 18px;
-                              display: inline-flex;
-                              -webkit-box-pack: center;
-                              justify-content: center;
-                              -webkit-box-align: center;
-                              align-items: center;
-                              height: 40px;
-                              border-radius: 4px;
-                              padding: 0px 16px;
-                              box-sizing: border-box;
-                              text-align: center;
-                              color: rgb(255, 255, 255);
-                              font-weight: 700;
-                              width: 80px;"%>
-        <% else %>
-          <%= link_to "팔로잉", relationships_path(followed_id: @card_collection.user.id), 
-                      method: :post, 
                       class: "btn",
                       style: "margin: 0px;
                               background: none;
@@ -171,6 +140,37 @@
                               text-align: center;
                               color: rgb(47, 52, 56);
                               border: 1px solid rgb(230, 230, 230);
+                              width: 80px;"%>
+        <% else %>
+          <%= link_to "팔로우", relationships_path(followed_id: @card_collection.user.id), 
+                      method: :post, 
+                      class: "btn",
+                      style: "margin: 0px;
+                              border: none;
+                              background: none rgb(10, 165, 255);
+                              font-style: inherit;
+                              font-variant: inherit;
+                              font-stretch: inherit;
+                              font-family: inherit;
+                              font-optical-sizing: inherit;
+                              font-size-adjust: inherit;
+                              font-kerning: inherit;
+                              font-feature-settings: inherit;
+                              font-variation-settings: inherit;
+                              font-size: 14px;
+                              line-height: 18px;
+                              display: inline-flex;
+                              -webkit-box-pack: center;
+                              justify-content: center;
+                              -webkit-box-align: center;
+                              align-items: center;
+                              height: 40px;
+                              border-radius: 4px;
+                              padding: 0px 16px;
+                              box-sizing: border-box;
+                              text-align: center;
+                              color: rgb(255, 255, 255);
+                              font-weight: 700;
                               width: 80px;"%>
         <% end %>   
       <% end %>
@@ -284,7 +284,9 @@
 
 
                 <!-- 댓글 좋아요 버튼 -->
-                <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
+                <% unless current_user.email == "guest@example.com" %>
+                  <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
+                <% end %>
 
                 <div>
                   <% unless current_user.email == "guest@example.com" %>
@@ -309,8 +311,9 @@
                   <% end %>
                 </div>
 
-                <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
-
+                <% unless current_user.email == "guest@example.com" %>
+                  <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
+                <% end %>
 
               
                 <% unless current_user.email == "guest@example.com" %>
@@ -404,8 +407,9 @@
                         <% end %>
                       </div>
 
-                      <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
-
+                      <% unless current_user.email == "guest@example.com" %>
+                        <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
+                      <% end %>
 
                       <!-- 리플라이 좋아요 버튼 -->
                       <div>
@@ -429,8 +433,9 @@
                         <% end %>
                       </div>
 
-
-                      <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
+                      <% unless current_user.email == "guest@example.com" %>
+                        <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
+                      <% end %>
 
                       <% unless current_user.email == "guest@example.com" %>
                         <% unless reply.deleted? %>
