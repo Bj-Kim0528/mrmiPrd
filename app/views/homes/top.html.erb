@@ -1,12 +1,36 @@
-<div class="hero-section">
-  <div class="hero-content">
+<div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="15000" style="position: relative; width: 100%; height: 400px;">
+  <!-- 배경 이미지 영역 -->
+  <div class="carousel-inner" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+    <div class="carousel-item active" style="width: 100%; height: 100%; background-image: url('/assets/livingroom.jpg'); background-size: cover; background-position: center;">
+    </div>
+    <div class="carousel-item" style="width: 100%; height: 100%; background-image: url('/assets/modern_bathroom.jpg'); background-size: cover; background-position: center;">
+    </div>
+    <div class="carousel-item" style="width: 100%; height: 100%; background-image: url('/assets/modern_livingroom.jpg'); background-size: cover; background-position: center;">
+    </div>
+  </div>
+
+  <!-- 슬라이드 컨트롤 버튼 -->
+</div>
+
+<!-- 고정 텍스트 콘텐츠 영역: 배경 이미지 위에 절대 배치 -->
+<div class="hero-content" style="position: absolute; top: 0; width: 100%; height: 400px; display: flex; align-items: center; justify-content: center; text-align: center; z-index: 1; color: white;">
+  <div>
     <h1>나만의 공간을 자랑하세요</h1>
     <p>감각적인 인테리어 사진을 업로드하고 다른 사람들과 공유해보세요.</p>
     <%= link_to "사진 보러가기", card_collections_path, class: "hero-button" %>
   </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden"></span>
+  </button>
 </div>
 
-<section class="recommend-gallery" style="max-width: 100%; margin: 30px 0; padding: 0 20px;">
+
+<section class="recommend-gallery" style="max-width: 100%; margin: 30px 0; padding: 0;">
   <h2>오늘의 추천 인테리어</h2>
   <span style="overflow: hidden; display: inline-block; font-size: 14px; line-height: 18px; font-weight: 400; color: rgb(47, 52, 56); letter-spacing: -0.3px; white-space: nowrap; text-overflow: ellipsis;">
     좋아하실 만한 인테리어 콘텐츠를 추천해드려요
@@ -57,7 +81,7 @@
 </section>
 
 
-<section class="theme-catalog" style="max-width: 100%; margin: 30px 0; padding: 0 20px;">
+<section class="theme-catalog" style="max-width: 100%; margin: 30px 0; padding: 0;">
   <h2>이런것은 어떤가요?</h2>
   <!-- Grid 레이아웃: 한 줄에 3개 -->
   <div class="catalog-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 0;">

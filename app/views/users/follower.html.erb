@@ -227,63 +227,128 @@
   <div style="width: 8.333333333333332%; padding-left: 10px; padding-right: 10px;position: relative; padding-top: 30px;"><!-- 중간공간파트 -->
   </div>
 
-  <div style="width: 66.66666666666666%; padding-left: 10px; padding-right: 10px;position: relative; padding-top: 30px;"><!-- 사진,좋아요,북마크파트 -->
+  <div style="width: 66.66666666666666%; padding-left: 10px; padding-right: 10px;position: relative;"><!-- 사진,좋아요,북마크파트 -->
     <div style="max-width: 720px; margin: 0 auto 40px; padding: 0;">
-      <div class="row">
-        <% @followers.each do |follower| %>
-          <div style="padding: 0px 10px">
-            <div class="col-12 col-lg-4 col-xl-3 mb-4 p-0">
-              <!-- 카드 영역 -->
-              <div class="card fixed-card border-0">
-                <div class="card-body p-0">
-                  <div class="d-flex">
-                    <!-- 왼쪽: 프로필 이미지 -->
-                    <div class="p-2">
-                      <%= link_to user_path(follower) do %>
-                        <%= image_tag url_for(follower.get_profile_image(36, 36)),
-                                      alt: "프로필 이미지",
-                                      class: "rounded-circle",
-                                      style: "width: 40px; height: 40px; object-fit: cover;" %>
-                      <% end %>
-                    </div>
-                    <!-- 오른쪽: 닉네임, 팔로우 버튼, 자기소개 -->
-                    <div class="p-2">
-                      <div class="d-flex align-items-center">
-                        <%= link_to user_path(follower) do %>
-                          <h6 class="mb-0 d-inline" style="font-size: 15px;"><%= follower.nickname %></h6>
-                        <% end %>
-                        <%# 현재 사용자와 표시 대상이 같지 않을 때만 팔로우/언팔로우 버튼 표시 %>
-                        <% unless current_user == follower %>
-                          <div class="ms-auto">
-                            ・
-                            <% if current_user.following.include?(follower) %>
-                              <%= link_to "언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: follower.id)),
-                                          method: :delete,
-                                          data: { confirm: "정말 언팔로우 하시겠습니까?" },
-                                          class: "btn btn-link p-0 text-info" %>
-                            <% else %>
-                              <%= link_to "팔로우", relationships_path(followed_id: follower.id),
-                                          method: :post,
-                                          class: "btn btn-link p-0 text-info" %>
-                            <% end %>
-                          </div>
-                        <% end %>
-                      </div>
-                      <div style="font-size: 12px;">
-                        <% if follower.introduction.present? %>
-                          <%= follower.introduction %>
-                        <% else %>
-                          作成された自己紹介はありません
-                        <% end %>
-                      </div>
-                    </div>
+      
+      <div style="padding: 0px 10px">
+
+        <div style="margin: 40px auto 60px; width: 100%; max-width: 600px;">
+          <h1 style="margin: 0 0 30px;
+                      font-size: 18px;
+                      line-height: 24px;
+                      font-weight: bold;
+                      color: #2f3438;">
+            팔로워
+          </h1>
+          
+          <% @followers.each do |follower| %>
+            <div class="d-flex justify-content-between">
+
+              <!-- 왼쪽: 프로필 이미지 -->
+              <div class="d-flex">
+                <div class="p-2">
+                  <%= link_to user_path(follower) do %>
+                    <%= image_tag url_for(follower.get_profile_image(36, 36)),
+                                  alt: "프로필 이미지",
+                                  class: "rounded-circle",
+                                  style: "width: 40px; height: 40px; object-fit: cover;" %>
+                  <% end %>
+                </div>
+                <!-- 오른쪽: 닉네임, 팔로우 버튼, 자기소개 -->
+                <div class="p-2">
+                  <div class="d-flex align-items-center">
+                    <%= link_to user_path(follower) do %>
+                      <h6 class="mb-0 d-inline" style="font-size: 15px;"><%= follower.nickname %></h6>
+                    <% end %>
+                    <%# 현재 사용자와 표시 대상이 같지 않을 때만 팔로우/언팔로우 버튼 표시 %>
+
+                  </div>
+
+                  <div style="font-size: 12px;">
+                    <% if follower.introduction.present? %>
+                      <%= follower.introduction %>
+                    <% else %>
+                      作成された自己紹介はありません
+                    <% end %>
                   </div>
                 </div>
               </div>
+
+              <% unless current_user == follower %>
+                <div class="ms-auto" style="display: flex; align-items: center;">
+                
+                  <% if current_user.following.include?(follower) %>
+                    <%= link_to "팔로잉", relationship_path(current_user.active_relationships.find_by(followed_id: follower.id)),
+                                method: :delete,
+                                data: { confirm: "정말 언팔로우 하시겠습니까?" },
+                                class: "btn",
+                                style: "margin: 0px;
+                                        background: none;
+                                        font-style: inherit;
+                                        font-variant: inherit;
+                                        font-stretch: inherit;
+                                        font-family: inherit;
+                                        font-optical-sizing: inherit;
+                                        font-size-adjust: inherit;
+                                        font-kerning: inherit;
+                                        font-feature-settings: inherit;
+                                        font-variation-settings: inherit;
+                                        font-size: 14px;
+                                        line-height: 18px;
+                                        display: inline-flex;
+                                        -webkit-box-pack: center;
+                                        justify-content: center;
+                                        -webkit-box-align: center;
+                                        align-items: center;
+                                        height: 40px;
+                                        border-radius: 4px;
+                                        padding: 0px 16px;
+                                        font-weight: 400;
+                                        box-sizing: border-box;
+                                        text-align: center;
+                                        color: rgb(47, 52, 56);
+                                        border: 1px solid rgb(230, 230, 230);
+                                        width: 80px;"%>
+                  <% else %>
+                    <%= link_to "팔로우", relationships_path(followed_id: follower.id),
+                                method: :post,
+                                      class: "btn",
+                                      style: "margin: 0px;
+                                              border: none;
+                                              background: none rgb(10, 165, 255);
+                                              font-style: inherit;
+                                              font-variant: inherit;
+                                              font-stretch: inherit;
+                                              font-family: inherit;
+                                              font-optical-sizing: inherit;
+                                              font-size-adjust: inherit;
+                                              font-kerning: inherit;
+                                              font-feature-settings: inherit;
+                                              font-variation-settings: inherit;
+                                              font-size: 14px;
+                                              line-height: 18px;
+                                              display: inline-flex;
+                                              -webkit-box-pack: center;
+                                              justify-content: center;
+                                              -webkit-box-align: center;
+                                              align-items: center;
+                                              height: 40px;
+                                              border-radius: 4px;
+                                              padding: 0px 16px;
+                                              box-sizing: border-box;
+                                              text-align: center;
+                                              color: rgb(255, 255, 255);
+                                              font-weight: 700;
+                                              width: 80px;"%>
+                  <% end %>
+                </div>
+              <% end %>
             </div>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
+
       </div>
+      
     </div>
   </div>
 </div>
