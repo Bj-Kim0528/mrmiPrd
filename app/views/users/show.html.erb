@@ -1,219 +1,405 @@
-<div class="d-flex" style="padding: 0 60px; position: relative;"><!-- 전체 -->
-  <div style="width: 25%; padding-left: 10px; padding-right: 10px; padding-top: 30px;"><!-- 카드파트 -->
+<div style="margin: 0px -10px; display: flex; flex-wrap: wrap; box-sizing: border-box; padding: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><!-- 전체 -->
 
-    <div class="card d-flex flex-column" style="top: 81px; transition: top 0.1s; text-align: center; padding: 30px 25px 18px;"><!-- 카드내부파트 -->
 
-      <div><!-- 프로필~설정 -->
-        <div style="margin: 0 auto 24px;"><!-- 프로필사진 -->
-            <%= image_tag url_for(@userinfo.get_profile_image(120, 120)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 120px; height: 120px; object-fit: cover;" %>
-        </div>
-        
-        <div><!-- 그외 -->
-          <div class="mb-1" style="font-size: 15px; margin: 0 0 10px;">
-            <%= @userinfo.nickname %>
-          </div>
+  <div style="width: 25%; padding-left: 10px; padding-right: 10px;position: relative; padding-top: 30px;"><!-- 카드파트 -->
+    <div style="position: sticky; top: 160px; transition: top 0.1s;"><!-- 카드내부파트 -->
+      <div style="position: relative;">
+        <div>
+          <div style= "padding: 30px 25px 18px;
+                border-radius: 4px;
+                border: 1px solid rgb(218, 220, 224);
+                box-shadow: rgba(63, 71, 77, 0.06); position: relative;">
 
-          <div>
-            <dl class="d-flex justify-content-center" style="margin: 0 0 13px;"><!-- 팔로워 팔로잉 -->
-              <dt>팔로워:</dt>
-              <%= link_to follower_user_path(@userinfo) do %>
-                <%= @userinfo.followers.count %>
-              <% end %>
-              <dt> | 팔로잉:</dt>
-              <%= link_to followee_user_path(@userinfo) do %>
-                <%= @userinfo.following.count %>
-              <% end %>
-            </dl>
-            <% if current_user == @userinfo%>
-              <div><!-- 설정버튼 -->
-                <%= link_to "설정", edit_user_path(current_user), class: "btn btn-outline-primary btn-sm" %>
-              </div>
-            <% else %>
-              <div class="ms-auto">
-                <% if user_signed_in? %>
-                  <% unless current_user.email == "guest@example.com" %>
-                    <% if current_user.following.include?(@userinfo) %>
-                      <%= link_to "언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: @userinfo)), 
-                                  method: :delete,  
-                                  class: "btn btn-link p-0 text-info" %>
-                    <% else %>
-                      <%= link_to "팔로우", relationships_path(followed_id: @userinfo), 
-                                  method: :post, 
-                                  class: "btn btn-link p-0 text-info" %>
-                    <% end %>
-                  <% end %>
-                <% end %>
-              </div>
-            <% end %>
-          </div>
-        </div>
-      </div>
-
-      <div class="card-body" style="margin: 0 0 13px;"><!-- 자기소개~에스엔에스 -->
-        <p class="mb-1">
-          <%= @userinfo.introduction.presence%>
-        </p>
-        <% if @userinfo.sns_link.present? %>
-          <% url = @userinfo.sns_link =~ /\Ahttp(s)?:\/\// ? @userinfo.sns_link : "http://#{@userinfo.sns_link}" %>
-          <% display_text = url.sub(/\Ahttps?:\/\//, "") %>
-          <p>
-            <%= link_to display_text, url, target: "_blank", rel: "noopener noreferrer" %>
-          </p>
-        <% end %>
-      </div>
-
-      <% if current_user == @userinfo%>
-        <div><!-- 좋아요,북마크 -->
-          <%= link_to collections_user_path(@userinfo), class: "btn" do %>
-            <i class="fa-solid fa-bookmark"></i>
-            <div>북마크</div>
-            <div><%= @userinfo.bookmarks.where(bookmarkable_type: "CardCollection").count %></div>
-          <% end %>
-
-          <%= link_to likes_user_path(@userinfo), class: "btn" do %>
-            <i class="fa-solid fa-heart"></i>
-            <div>좋아요</div>
-            <div><%= Like.where(user_id: @userinfo.id, likeable_type: "CardCollection").count %></div>
-          <% end %>
-        </div>
-      <% end %>
-    </div>
-
-    <div><!-- 카드하부파트(공백) -->
-    </div>
-
-  </div>
-
-  <div style="width: 8.333333333333332%; padding-left: 10px; padding-right: 10px;"><!-- 중간공간파트 -->
-  </div>
-
-  <div style="width: 66.66666666666666%; padding-left: 10px; padding-right: 10px;"><!-- 사진,좋아요,북마크파트 -->
-    <div style="max-width: 700px; margin: 0 auto; padding: 50px 0 0;">
-      <div style="margin: 0 0 60px;"><!-- 사진 -->
-        <div class="d-flex justify-content-between"><!-- 사진갯수, 전체보기버튼 -->
-          <h6>사진
-            <span>(갯수)</span>
-          </h6>
-          <div>
-            <%= link_to "전체보기", card_collections_user_path(@userinfo)%>
-          </div>
-        </div>
-
-        <div class="d-flex justify-content-between"><!-- 사진 표시 -->
-        
-          <% posts = @userinfo.card_collections.limit(3) %>
-            <% posts.each do |post| %>
-              <div style="width: 160px; height: 160px;">
-                <%= link_to card_collection_path(post) do %>
-                  <% if post.card_images.any? && post.card_images.first.image.attached? %>
-                    <%= image_tag url_for(post.card_images.first.image.variant(resize_to_fill: [160, 160]).processed), alt: "게시물 사진", class: "rounded" %>
-                  <% else %>
-                    <!-- 사진이 없는 경우 빈 박스 -->
-                    <div style="width: 160px; height: 160px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0;">
-                      <p>사진 없음</p>
-                    </div>
-                  <% end %>
-                <% end %>
-              </div>
-            <% end %>
-            <% (3 - posts.size).times do %>
-              <% if current_user == @userinfo %>
-                <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
-                  <%= link_to "+", new_card_collection_path, class: "btn btn-link" %>
+            <div style=" padding: 0px;min-height: 120px;     position: relative; margin: 0px 0px 20px"><!-- 프로필~설정 -->
+                <div style="width: 120px;
+                      height: 120px; position: relative;
+                      margin: 0px auto 24px; top: 0px;
+                  left: 0px;     border-radius: 100%;
+                  background-color: rgb(237, 237, 237);
+                  overflow: hidden;">
+                  <%= image_tag url_for(@userinfo.get_profile_image(120, 120)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 120px; height: 120px; object-fit: cover; border: 1px solid rgba(0, 0, 0, 0.1);" %>
                 </div>
-              <%else%>
-                <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
-                  +
-                </div>
-              <% end %>
-          <% end %>
-          <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
-            <%= link_to "더보기", card_collections_user_path(@userinfo), class: "btn btn-link" %>
-          </div>
-        </div>
-        <% if current_user == @userinfo %>
-          <%= link_to " + 사진 올리기", new_card_collection_path, class: "btn btn-info", style: "margin-top: 30px; width: 100%; line-height: 30px; padding: 14px 15px;" %>
-        <% end %>
-      </div>
 
-      <div style="margin: 0 0 60px;"><!-- 북마크 -->
-        <div class="d-flex justify-content-between"><!-- 북마크갯수, 전체보기버튼 -->
-          <h6>북마크
-            <span>(갯수)</span>
-          </h6>
-          <div>
-            <%= link_to "전체보기", collections_user_path(@userinfo)%>
-          </div>
-        </div>
+                <div style="text-align: center;"><!-- 그외 -->
+                  <div style="line-height: 1.15;         margin: 0px 0px 10px;
+                                font-size: 26px; font-weight: bold;     color: rgb(41, 41, 41);
+                            overflow-wrap: break-word;
+                            word-break: break-all;
+                        }">
+                    <%= @userinfo.nickname %>
+                  </div>
+  
+                  <div style="text-align: center;">
+                    <dl style="margin: 0px 0px 13px; display: block;
+                      font-size: 13px;
+                      font-weight: 400;
+                      line-height: 19px;
+                      color: rgb(130, 140, 148);"><!-- 팔로워 팔로잉 -->
+                      <dt style="display: inline-block;
+                        margin-right: 5px;">팔로워
+                      </dt>
 
-        <div class="d-flex justify-content-between"><!-- 사진 표시 -->
-        
-          <% posts = @userinfo.bookmarked_card_collections.limit(3) %>
-            <% posts.each do |post| %>
-              <div style="width: 160px; height: 160px;">
-                <%= link_to card_collection_path(post) do %>
-                  <% if post.card_images.any? && post.card_images.first.image.attached? %>
-                    <%= image_tag url_for(post.card_images.first.image.variant(resize_to_fill: [160, 160]).processed), alt: "게시물 사진", class: "rounded" %>
-                  <% else %>
-                    <!-- 사진이 없는 경우 빈 박스 -->
-                    <div style="width: 160px; height: 160px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0;">
-                      <p>사진 없음</p>
-                    </div>
-                  <% end %>
-                <% end %>
-              </div>
-            <% end %>
-            <% (3 - posts.size).times do %>
-              <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
-                +
-              </div>
-          <% end %>
-          <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
-            <%= link_to "더보기", collections_user_path(@userinfo), class: "btn btn-link" %>
-          </div>
-        </div>
-      </div>
+                      <dd style="display: inline-block;
+                        
+                        font-weight: bold;
+                        color: rgb(82, 91, 97);">
+
+                        <%= link_to follower_user_path(@userinfo), style: "opacity: 1;
+                        transition: opacity 0.1s; cursor: pointer;     touch-action: manipulation; color: inherit;
+                        text-decoration: none;" do %>
+                          <%= @userinfo.followers.count %>
+                        <% end %>
+                      </dd>
+
+                      <div style="display: inline-block; width:9px; height:9px; border-right: 1px solid rgba(0, 0, 0, 0.4);"></div>
+
+                      <dt style="display: inline-block;
+                        margin-right: 5px; margin-left: 9px;">
+                        팔로잉
+                      </dt>
+
+                      <dd style="display: inline-block;
+                        margin-right: 10px;
+                        font-weight: bold;
+                        color: rgb(82, 91, 97);">
+                        <%= link_to followee_user_path(@userinfo), style: "opacity: 1;
+                            transition: opacity 0.1s; cursor: pointer;     touch-action: manipulation; color: inherit;
+                            text-decoration: none;" do %>
+                          <%= @userinfo.following.count %>
+                        <% end %>
+                      </dd>
 
 
-      <% if current_user == @userinfo%>
-        <div style="margin: 0 0 60px;"><!-- 좋아요 -->
-          <div class="d-flex justify-content-between"><!-- 좋아요갯수, 전체보기버튼 -->
-            <h6>좋아요
-              <span>(갯수)</span>
-            </h6>
-            <div>
-              <%= link_to "전체보기", likes_user_path(@userinfo)%>
-            </div>
-          </div>
+                    </dl>
 
-          <div class="d-flex justify-content-between"><!-- 사진 표시 -->
-          
-            <% posts = @userinfo.liked_card_collections.limit(3) %>
-              <% posts.each do |post| %>
-                <div style="width: 160px; height: 160px;">
-                  <%= link_to card_collection_path(post) do %>
-                    <% if post.card_images.any? && post.card_images.first.image.attached? %>
-                      <%= image_tag url_for(post.card_images.first.image.variant(resize_to_fill: [160, 160]).processed), alt: "게시물 사진", class: "rounded" %>
+
+
+                    <% if current_user == @userinfo%>
+                      <div><!-- 설정버튼 -->
+                        <%= link_to "설정", edit_user_path(current_user), class: "btn",
+                        style: "margin: 0px;
+                                background: none;
+                                font-style: inherit;
+                                font-variant: inherit;
+                                font-stretch: inherit;
+                                font-family: inherit;
+                                font-optical-sizing: inherit;
+                                font-size-adjust: inherit;
+                                font-kerning: inherit;
+                                font-feature-settings: inherit;
+                                font-variation-settings: inherit;
+                                font-size: 12px;
+                                line-height: 18px;
+                                display: inline-flex;
+                                -webkit-box-pack: center;
+                                justify-content: center;
+                                -webkit-box-align: center;
+                                align-items: center;
+                                height: 33px;
+                                border-radius: 4px;
+                                padding: 0px 16px;
+                                font-weight: 400;
+                                box-sizing: border-box;
+                                text-align: center;
+                                color: rgb(47, 52, 56);
+                                border: 1px solid rgb(230, 230, 230);
+                                width: 56px;"%>
+                      </div>
                     <% else %>
-                      <!-- 사진이 없는 경우 빈 박스 -->
-                      <div style="width: 160px; height: 160px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0;">
-                        <p>사진 없음</p>
+                      <div class="ms-auto">
+                        <% if user_signed_in? %>
+                          <% unless current_user.email == "guest@example.com" %>
+                            <% if current_user.following.include?(@userinfo) %>
+                              <%= link_to "언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: @userinfo)), 
+                                          method: :delete,  
+                                          class: "btn",
+                                          style: "margin: 0px;
+                                                  background: none;
+                                                  font-style: inherit;
+                                                  font-variant: inherit;
+                                                  font-stretch: inherit;
+                                                  font-family: inherit;
+                                                  font-optical-sizing: inherit;
+                                                  font-size-adjust: inherit;
+                                                  font-kerning: inherit;
+                                                  font-feature-settings: inherit;
+                                                  font-variation-settings: inherit;
+                                                  font-size: 14px;
+                                                  line-height: 18px;
+                                                  display: inline-flex;
+                                                  -webkit-box-pack: center;
+                                                  justify-content: center;
+                                                  -webkit-box-align: center;
+                                                  align-items: center;
+                                                  height: 40px;
+                                                  border-radius: 4px;
+                                                  padding: 0px 16px;
+                                                  font-weight: 400;
+                                                  box-sizing: border-box;
+                                                  text-align: center;
+                                                  color: rgb(47, 52, 56);
+                                                  border: 1px solid rgb(230, 230, 230);
+                                                  width: 90px;"%>
+                            <% else %>
+                              <%= link_to "팔로우", relationships_path(followed_id: @userinfo), 
+                                          method: :post, 
+                                          class: "btn",
+                                          style: "margin: 0px;
+                                                  border: none;
+                                                  background: none rgb(10, 165, 255);
+                                                  font-style: inherit;
+                                                  font-variant: inherit;
+                                                  font-stretch: inherit;
+                                                  font-family: inherit;
+                                                  font-optical-sizing: inherit;
+                                                  font-size-adjust: inherit;
+                                                  font-kerning: inherit;
+                                                  font-feature-settings: inherit;
+                                                  font-variation-settings: inherit;
+                                                  font-size: 14px;
+                                                  line-height: 18px;
+                                                  display: inline-flex;
+                                                  -webkit-box-pack: center;
+                                                  justify-content: center;
+                                                  -webkit-box-align: center;
+                                                  align-items: center;
+                                                  height: 40px;
+                                                  border-radius: 4px;
+                                                  padding: 0px 16px;
+                                                  box-sizing: border-box;
+                                                  text-align: center;
+                                                  color: rgb(255, 255, 255);
+                                                  font-weight: 700;
+                                                  width: 80px;"%>
+                            <% end %>
+                          <% end %>
+                        <% end %>
                       </div>
                     <% end %>
+                  </div>
+                </div>
+            </div>
+
+
+            <div style="margin: 24px 0px;
+                text-align: center;     color: rgb(66, 66, 66);
+                font-size: 15px;
+                line-height: 1.4;
+                font-weight: 400;
+                word-break: break-word;"><!-- 자기소개~에스엔에스 -->
+              <p class="mb-1">
+                <%= @userinfo.introduction.presence%>
+              </p>
+              <% if @userinfo.sns_link.present? %>
+                <% url = @userinfo.sns_link =~ /\Ahttp(s)?:\/\// ? @userinfo.sns_link : "http://#{@userinfo.sns_link}" %>
+                <% display_text = url.sub(/\Ahttps?:\/\//, "") %>
+                <p style="margin: 2px 0px 0px;
+                          color: rgb(23, 120, 186);
+                          transition: opacity 0.1s; padding: 0px">
+                  <%= link_to display_text, url, target: "_blank", rel: "noopener noreferrer" %>
+                </p>
+              <% end %>
+            </div>
+
+            <% if current_user == @userinfo%>
+              <div style="padding: 24px 0px 6px;         border-top: 1px solid rgb(234, 235, 239);"><!-- 좋아요,북마크 -->
+                <div style="display: flex; color: rgb(41, 41, 41); justify-content: center;">
+                  <%= link_to collections_user_path(@userinfo), class: "btn" do %>
+                    <i class="fa-regular fa-bookmark" style="font-size: 28px;"></i>
+                    <div>북마크</div>
+                    <div><%= @userinfo.bookmarks.where(bookmarkable_type: "CardCollection").count %></div>
+                  <% end %>
+
+                  <%= link_to likes_user_path(@userinfo), class: "btn" do %>
+                    <i class="fa-regular fa-heart" style="font-size: 28px;"></i>
+                    <div>좋아요</div>
+                    <div><%= Like.where(user_id: @userinfo.id, likeable_type: "CardCollection").count %></div>
                   <% end %>
                 </div>
-              <% end %>
-              <% (3 - posts.size).times do %>
-                <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
-                  +
-                </div>
+              </div>
             <% end %>
-            <div style="width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;" class="rounded">
-              <%= link_to "더보기", likes_user_path(@userinfo), class: "btn btn-link" %>
-            </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="width: 8.333333333333332%; padding-left: 10px; padding-right: 10px;position: relative; padding-top: 30px;"><!-- 중간공간파트 -->
+  </div>
+
+  <div style="width: 66.66666666666666%; padding-left: 10px; padding-right: 10px;position: relative; padding-top: 30px;"><!-- 사진,좋아요,북마크파트 -->
+    <div style="width: 100%; margin: 0 auto;">
+
+      <div style="margin: 0 0 30px;"><!-- 사진 -->
+        <div class="d-flex justify-content-between"><!-- 사진갯수, 전체보기버튼 -->
+          <h6>사진
+            <span><%= @userinfo.card_collections.count%></span>
+          </h6>
+        </div>
+
+        
+        <div style="display: flex; flex-wrap: nowrap; gap: 18px; width: 100%; margin: 0 auto 40px; padding: 0;">
+          <% posts = @userinfo.card_collections.where.not(id: @userinfo).limit(4) %>
+          <% posts.each_with_index do |post, index| %>
+            <div class="gallery-item" style="flex: 0 0 calc((100% - (3 * 18px)) / 4); position: relative;">
+              <%= link_to card_collection_path(post), style: "text-decoration: none;" do %>
+                <% if post.card_images.any? && post.card_images.first.image.attached? %>
+                  <%= image_tag url_for(post.card_images.first.image.variant(resize_to_fill: [174, 174]).processed), 
+                                alt: "게시물 사진", 
+                                class: "rounded",
+                                style: "width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 4px;" %>
+                <% else %>
+                  <div class="rounded" style="width: 100%; aspect-ratio: 1; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+                    <p style="margin: 0; color: #999; font-size: 14px;">게시된 내용이 없습니다</p>
+                  </div>
+                <% end %>
+              <% end %>
+              <% if posts.size == 4 && index == 3 %>
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center;">
+                  <%= link_to "더보기", card_collections_user_path(@userinfo), style: "text-decoration: none; color: #fff; font-size: 16px; font-weight: bold;" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        
+          <% remaining = 4 - posts.size %>
+          <% if remaining > 0 %>
+            <% remaining.times do %>
+              <div class="gallery-item" style="flex: 0 0 calc((100% - (3 * 18px)) / 4); position: relative;">
+                <div class="rounded" style="width: 100%; aspect-ratio: 1; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+                  <p style="margin: 0; color: #999; font-size: 14px;">게시된 내용이 없습니다</p>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+
+
+        <% if current_user == @userinfo %>
+          <%= link_to " + 사진 올리기", new_card_collection_path, class: "btn btn-info", style: " 
+                            width: 100%;
+                              border: none;
+                              background: none rgb(10, 165, 255);
+                              font-style: inherit;
+                              font-variant: inherit;
+                              font-stretch: inherit;
+                              font-family: inherit;
+                              font-optical-sizing: inherit;
+                              font-size-adjust: inherit;
+                              font-kerning: inherit;
+                              font-feature-settings: inherit;
+                              font-variation-settings: inherit;
+                              font-size: 14px;
+                              line-height: 18px;
+                              display: inline-flex;
+                              -webkit-box-pack: center;
+                              justify-content: center;
+                              -webkit-box-align: center;
+                              align-items: center;
+                              height: 40px;
+                              border-radius: 4px;
+                              padding: 0px 16px;
+                              box-sizing: border-box;
+                              text-align: center;
+                              color: rgb(255, 255, 255);
+                              font-weight: 700;
+                              "%>
+        <% end %>
+      </div>
+
+      <% if current_user == @userinfo%>
+        <div style="margin: 0 0 30px;"><!-- 좋아요 -->
+          <div class="d-flex justify-content-between"><!-- 좋아요갯수, 전체보기버튼 -->
+            <h6>좋아요
+              <span><%= @userinfo.liked_card_collections.count %></span>
+            </h6>
+          </div>
+
+        <div style="display: flex; flex-wrap: nowrap; gap: 18px; width: 100%;">
+          <% posts = @userinfo.liked_card_collections.where.not(id: @userinfo).limit(4) %>
+          <% posts.each_with_index do |post, index| %>
+            <div class="gallery-item" style="flex: 0 0 calc((100% - (3 * 18px)) / 4); position: relative;">
+              <%= link_to card_collection_path(post), style: "text-decoration: none;" do %>
+                <% if post.card_images.any? && post.card_images.first.image.attached? %>
+                  <%= image_tag url_for(post.card_images.first.image.variant(resize_to_fill: [174, 174]).processed), 
+                                alt: "게시물 사진", 
+                                class: "rounded",
+                                style: "width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 4px;" %>
+                <% else %>
+                  <div class="rounded" style="width: 100%; aspect-ratio: 1; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+                    <p style="margin: 0; color: #999; font-size: 14px;">게시된 내용이 없습니다</p>
+                  </div>
+                <% end %>
+              <% end %>
+              <% if posts.size == 4 && index == 3 %>
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center;">
+                  <%= link_to "더보기", liked_card_collections_user_path(@userinfo), style: "text-decoration: none; color: #fff; font-size: 16px; font-weight: bold;" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        
+          <% remaining = 4 - posts.size %>
+          <% if remaining > 0 %>
+            <% remaining.times do %>
+              <div class="gallery-item" style="flex: 0 0 calc((100% - (3 * 18px)) / 4); position: relative;">
+                <div class="rounded" style="width: 100%; aspect-ratio: 1; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+                  <p style="margin: 0; color: #999; font-size: 14px;">게시된 내용이 없습니다</p>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+
+        </div>
       <% end %>
+
+      <div style="margin: 0 0 30px;"><!-- 북마크 -->
+        <div class="d-flex justify-content-between"><!-- 북마크갯수, 전체보기버튼 -->
+          <h6>북마크
+            <span><%= @userinfo.bookmarked_card_collections.count %></span>
+          </h6>
+        </div>
+
+        <div style="display: flex; flex-wrap: nowrap; gap: 18px; width: 100%;">
+          <% posts = @userinfo.bookmarked_card_collections.where.not(id: @userinfo).limit(4) %>
+          <% posts.each_with_index do |post, index| %>
+            <div class="gallery-item" style="flex: 0 0 calc((100% - (3 * 18px)) / 4); position: relative;">
+              <%= link_to card_collection_path(post), style: "text-decoration: none;" do %>
+                <% if post.card_images.any? && post.card_images.first.image.attached? %>
+                  <%= image_tag url_for(post.card_images.first.image.variant(resize_to_fill: [174, 174]).processed), 
+                                alt: "게시물 사진", 
+                                class: "rounded",
+                                style: "width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 4px;" %>
+                <% else %>
+                  <div class="rounded" style="width: 100%; aspect-ratio: 1; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+                    <p style="margin: 0; color: #999; font-size: 14px;">게시된 내용이 없습니다</p>
+                  </div>
+                <% end %>
+              <% end %>
+              <% if posts.size == 4 && index == 3 %>
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center;">
+                  <%= link_to "더보기", bookmarked_card_collections_user_path(@userinfo), style: "text-decoration: none; color: #fff; font-size: 16px; font-weight: bold;" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        
+          <% remaining = 4 - posts.size %>
+          <% if remaining > 0 %>
+            <% remaining.times do %>
+              <div class="gallery-item" style="flex: 0 0 calc((100% - (3 * 18px)) / 4); position: relative;">
+                <div class="rounded" style="width: 100%; aspect-ratio: 1; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+                  <p style="margin: 0; color: #999; font-size: 14px;">게시된 내용이 없습니다</p>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      
+
+      </div>
+      
     </div>
   </div>
 </div>
