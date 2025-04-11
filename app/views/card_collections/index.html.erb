@@ -14,20 +14,20 @@
 
             <div >
               <div style="display: flex;>
-                <%= link_to user_path(card_collection.user), class: "card-item-writer__link", style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
-                  <div style="font-size: 13px; font-weight: bold;"><%= card_collection.user.nickname %></div>
+                <%= link_to user_path(card_collection.user), class: "card-item-writer__link" do %>
+                  <div style="display: flex; align-items: center; font-size: 13px; font-weight: bold;"><%= card_collection.user.nickname %></div>
                 <% end %>
 
 
                 <% unless current_user == card_collection.user %>
                   <% unless current_user.email == "guest@example.com" %>
-                    <div style="margin-right: auto; margin-left: 5px;">
+                    <div style="margin-right: auto; margin-left: 8px;">
                       <% if current_user.following.include?(card_collection.user) %>
                         <%= link_to "언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: card_collection.user.id)), 
-                                    method: :delete, style: "font-size: 15px; padding: 0; color: #17a2b8; text-decoration: none;" %>
+                                    method: :delete, style: "font-size: 14px; padding: 0; color: rgb(10, 165, 255); text-decoration: none;" %>
                       <% else %>
                         <%= link_to "팔로우", relationships_path(followed_id: card_collection.user.id), 
-                                    method: :post, style: "font-size: 15px; padding: 0; color: #17a2b8; text-decoration: none;" %>
+                                    method: :post, style: "font-size: 14px; padding: 0; color: rgb(10, 165, 255); text-decoration: none;" %>
                       <% end %>
                     </div>
                   <% end %>
@@ -69,7 +69,7 @@
             <% if current_user.likes.exists?(likeable: card_collection) %>
               <% like = current_user.likes.find_by(likeable: card_collection) %>
               <%= link_to like_path(like), method: :delete, style: "text-decoration: none; color: #555; display: flex; align-items: center;" do %>
-                <i class="fa-solid fa-heart" style="font-size: 20px;"></i>
+                <i class="fa-solid fa-heart" style="font-size: 20px; color: rgb(10, 165, 255);"></i>
                 <span style="font-size: 14px; margin-left: 4px;"><%= card_collection.likes.count %></span>
               <% end %>
             <% else %>
@@ -83,7 +83,7 @@
             <% if current_user.bookmarks.exists?(bookmarkable: card_collection) %>
               <% bookmark = current_user.bookmarks.find_by(bookmarkable: card_collection) %>
               <%= link_to bookmark_path(bookmark), method: :delete, data: { confirm: "정말 북마크를 취소하시겠습니까?" }, style: "text-decoration: none; color: #555; display: flex; align-items: center;" do %>
-                <i class="fa-solid fa-bookmark" style="font-size: 20px;"></i>
+                <i class="fa-solid fa-bookmark" style="font-size: 20px; color: rgb(10, 165, 255);"></i>
                 <span style="font-size: 14px; margin-left: 4px;"><%= card_collection.bookmarks.count %></span>
               <% end %>
             <% else %>

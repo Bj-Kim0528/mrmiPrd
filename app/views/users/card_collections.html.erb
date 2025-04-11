@@ -233,10 +233,10 @@
         <div style="width: calc((100% - 20px) / 3); padding: 0 10px; margin-bottom: 30px; box-sizing: border-box;">
           <article class="card-collection-item" style="overflow: hidden; transition: box-shadow 0.2s ease;">
             <!-- 작성자 영역 -->
-            <div class="card-item-writer" style="padding: 10px; border-bottom: 1px solid #eaeaea;">
+            <div class="card-item-writer" style="padding-bottom: 5px;">
               <address style="margin: 0; display: flex; align-items: center;">
                 <%= link_to user_path(card_collection.user), style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
-                  <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover; margin-right: 10px;" %>
+                  <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 35px; height: 35px; object-fit: cover; margin-right: 10px;" %>
                 <% end %>
                 <div style="flex-grow: 1;">
                   <%= link_to user_path(card_collection.user), style: "text-decoration: none; color: inherit;" do %>
@@ -280,7 +280,7 @@
                 <% if current_user.likes.exists?(likeable: card_collection) %>
                   <% like = current_user.likes.find_by(likeable: card_collection) %>
                   <%= link_to like_path(like), method: :delete, style: "text-decoration: none; color: #555; display: flex; align-items: center;" do %>
-                    <i class="fa-solid fa-heart" style="font-size: 20px;"></i>
+                    <i class="fa-solid fa-heart" style="font-size: 20px; color: rgb(10, 165, 255);"></i>
                     <span style="font-size: 14px; margin-left: 4px;"><%= card_collection.likes.count %></span>
                   <% end %>
                 <% else %>
@@ -294,7 +294,7 @@
                 <% if current_user.bookmarks.exists?(bookmarkable: card_collection) %>
                   <% bookmark = current_user.bookmarks.find_by(bookmarkable: card_collection) %>
                   <%= link_to bookmark_path(bookmark), method: :delete, data: { confirm: "정말 북마크를 취소하시겠습니까?" }, style: "text-decoration: none; color: #555; display: flex; align-items: center;" do %>
-                    <i class="fa-solid fa-bookmark" style="font-size: 20px;"></i>
+                    <i class="fa-solid fa-bookmark" style="font-size: 20px; color: rgb(10, 165, 255);"></i>
                     <span style="font-size: 14px; margin-left: 4px;"><%= card_collection.bookmarks.count %></span>
                   <% end %>
                 <% else %>
