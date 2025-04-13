@@ -26,8 +26,8 @@
     </div>
 
     
-    <% if @card_collection.card_images.where.not(position: nil).any? %>
-      <% @card_collection.card_images.where.not(position: nil).order(:position).each do |card_image| %>
+    <% if @card_collection.card_images.any? %>
+      <% @card_collection.card_images.order(:position).each do |card_image| %>
         <div class="container" style="max-width: 720px; margin: 0 auto 40px; padding: 0; display: flex; flex-direction: column; gap: 24px; text-align: center;">
           <div>
             <%= link_to card_collection_path(@card_collection) do %>

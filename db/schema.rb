@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_04_02_021351) do
+ActiveRecord::Schema.define(version: 2025_04_13_173742) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -99,7 +99,6 @@ ActiveRecord::Schema.define(version: 2025_04_02_021351) do
     t.string "layout"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.text "photo_order"
     t.integer "view_count", default: 0, null: false
     t.integer "theme_id"
     t.index ["theme_id"], name: "index_card_collections_on_theme_id"

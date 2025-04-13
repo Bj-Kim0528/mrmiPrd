@@ -15,6 +15,12 @@ class CardCollectionsController < ApplicationController
   def create
     @card_collection = current_user.card_collections.build(card_collection_params)
     if @card_collection.save
+      # 저장 후, content와 image 둘 다 비어있거나 nil인 카드 이미지들을 삭제합니다.
+      @card_collection.card_images.each do |ci|
+        if (ci.content.blank? || ci.content.nil?) && !ci.image.attached?
+          ci.destroy
+        end
+      end
       redirect_to card_collection_path(@card_collection), notice: "카드 컬렉션이 성공적으로 생성되었습니다."
     else
       flash.now[:alert] = @card_collection.errors.full_messages.join(", ")
@@ -40,6 +46,12 @@ class CardCollectionsController < ApplicationController
         redirect_to edit_card_collection_path(@card_collection), notice: "이미지가 삭제되었습니다."
       else
         redirect_to card_collection_path(@card_collection), notice: "카드 컬렉션이 성공적으로 업데이트되었습니다."
+      end
+
+      @card_collection.card_images.each do |ci|
+        if (ci.content.blank? || ci.content.nil?) && !ci.image.attached?
+          ci.destroy
+        end
       end
     else
       flash.now[:alert] = @card_collection.errors.full_messages.join(", ")

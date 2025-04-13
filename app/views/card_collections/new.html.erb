@@ -1,68 +1,190 @@
-<% if @card_collection.errors.any? || @card_collection.card_images.any? { |ci| ci.errors.any? } %>
-  <div id="error_explanation" style="border: 1px solid red; padding: 10px; margin-bottom: 20px;">
-    <h2>
-      <%= pluralize(@card_collection.errors.count + @card_collection.card_images.map { |ci| ci.errors.count }.sum, "error") %> prohibited this card collection from being saved:
-    </h2>
-    <ul>
-      <% @card_collection.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      <% @card_collection.card_images.each do |ci| %>
-        <% ci.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
+<div style="width: 100%">
+  <%= form_with model: @card_collection, local: true, html: { multipart: true } do |f| %>
+    <div style="margin: 30px auto 0; padding: 0 30px; max-width: 1003px; box-sizing: border-box;">
+      <div class="d-flex justify-content-between" style="width: 100%; max-width: 1003px; margin: 30px auto 0; padding: 0 30px; position: relative;">
+        <!-- 기본 속성 입력 -->
+        <div class="d-flex">
+          <div style="margin-right: 10px;">
+            <%= f.label :layout, "レイアウト" %><br>
+            <%= f.select :layout, options_for_select(["1R", "1K/1DK", "1LDK/2DK", "2LDK", "3LDK以上"], @card_collection.layout) %>
+          </div>
 
-<%= form_with model: @card_collection, local: true, html: { multipart: true } do |f| %>
-  <!-- 기본 속성 입력 -->
-  <div>
-    <%= f.label :layout, "レイアウト" %><br>
-    <%= f.select :layout, options_for_select(["1R", "1K/1DK", "1LDK/2DK", "2LDK", "3LDK以上"], @card_collection.layout) %>
-  </div>
-  <div>
-    <%= f.label :theme_id, "テーマ" %><br>
-    <%= f.select :theme_id, options_from_collection_for_select(Theme.all, :id, :name, @card_collection.theme_id) %>
-  </div>
-
-  <!-- CardImage 입력 영역 (nested fields) -->
-  <div id="card_images_container">
-    <%= f.fields_for :card_images do |ci| %>
-      <div class="card-image-field" data-index="<%= ci.index %>">
-        <%= ci.file_field :image, accept: "image/*", onchange: "previewImage(this, 'preview_#{ci.index}')" %>
-        <div id="preview_<%= ci.index %>">
-          <% if ci.object.image.attached? %>
-            <%= image_tag url_for(ci.object.image), style: "max-width:200px; display:block;" %>
-          <% end %>
+          <div>
+            <%= f.label :theme_id, "テーマ" %><br>
+            <%= f.select :theme_id, options_from_collection_for_select(Theme.all, :id, :name, @card_collection.theme_id) %>
+          </div>
         </div>
-        <%= ci.text_area :content, placeholder: "사진의 내용" %>
+
+        
+        <div class="actions" style="margin-top: 20px;">
+          <%= f.submit "올리기" %>
+        </div>
       </div>
-    <% end %>
-  </div>
+    </div>
 
 
-  <div class="actions">
-    <%= f.submit "저장" %>
+    <!-- CardImage 입력 영역 (nested fields) -->
+    <div id="card_images_container" style="margin: 30px auto 0; padding: 0 30px; max-width: 1003px; box-sizing: border-box;">
+      <%= f.fields_for :card_images do |ci| %>
+        <div class="card-image-field" data-index="<%= ci.index %>" style="width: 100%; max-width: 1003px; margin: 30px auto 0; padding: 0 30px; position: relative;">
+          <div style="display: flex; align-items: flex-start; gap: 10px;">
+            <!-- 파일 업로드 컨테이너 -->
+            <div class="custom-file-upload rounded" id="custom-file-<%= ci.index %>" style="width: 50%; height: 400px; background-color: #ccc; display: flex; align-items: center; justify-content: center; position: relative;">
+              <!-- 파일 입력 필드 (보이지 않도록 opacity 0 적용) -->
+              <%= ci.file_field :image, accept: "image/*", id: "file_input_#{ci.index}", onchange: "previewImage(this, 'custom-file-#{ci.index}')" , style: "position: absolute; width: 100%; height: auto; opacity: 0; cursor: pointer; z-index: 1;" %>
+              <!-- 기본 커스텀 라벨 -->
+              <label for="file_input_<%= ci.index %>" id="file-label-<%= ci.index %>" style="cursor: pointer; font-weight: bold; color: #fff;">
+                PC에서 업로드하기
+              </label>
+              <!-- 버튼 영역: 사진 변경 및 삭제 -->
+              <div style="position: absolute; bottom: 10px; right: 10px; z-index: 3;">
+                <button type="button" onclick="document.getElementById('file_input_<%= ci.index %>').click();" style="margin-right: 5px; padding: 5px 10px; font-size: 12px;">사진 변경</button>
+                <button type="button" onclick="deletePreview(<%= ci.index %>);" style="padding: 5px 10px; font-size: 12px;">삭제</button>
+              </div>
+            </div>
+            <!-- 텍스트 영역 (너비 100%로 설정) -->
+            <div style="flex: 1;">
+              <%= ci.text_area :content, placeholder: "사진의 내용", style: "width: 100%; height: 150px;" %>
+            </div>
+          </div>          
+        </div>
+      <% end %>
+      <!-- 버튼 영역을 오른쪽 정렬 -->
+      <div style=" margin-right:30px; margin-bottom: 30px; display: flex; justify-content: flex-end;">
+        <button type="button" id="add_field_button">+</button>
+        <button type="button" id="remove_field_button">−</button>
+      </div>
+    </div>
+  <% end %>
+
+</div>
+
+<!-- 새 필드 템플릿 (숨김 상태) -->
+<div id="new_field_template" style="display: none;">
+  <div class="card-image-field" data-index="TEMPLATE">
+    <div style="display: flex; align-items: flex-start; gap: 10px;">
+      <div class="custom-file-upload rounded" id="custom-file-TEMPLATE" style="width: 200px; height: 300px; background-color: #ccc; display: flex; align-items: center; justify-content: center; position: relative;">
+        <input type="file" name="card_collection[card_images_attributes][TEMPLATE][image]" accept="image/*" id="file_input_TEMPLATE" onchange="previewImage(this, 'custom-file-TEMPLATE')" style="position: absolute; width: 100%; height: auto; opacity: 0; cursor: pointer; z-index: 1;">
+        <label for="file_input_TEMPLATE" id="file-label-TEMPLATE" style="cursor: pointer; font-weight: bold; color: #fff;">
+          PC에서 업로드하기
+        </label>
+        <div style="position: absolute; bottom: 10px; right: 10px; z-index: 3;">
+          <button type="button" onclick="document.getElementById('file_input_TEMPLATE').click();" style="margin-right: 5px; padding: 5px 10px; font-size: 12px;">사진 변경</button>
+          <button type="button" onclick="deletePreview('TEMPLATE');" style="padding: 5px 10px; font-size: 12px;">삭제</button>
+        </div>
+      </div>
+      <div style="flex: 1;">
+        <textarea name="card_collection[card_images_attributes][TEMPLATE][content]" placeholder="사진의 내용" style="width: 100%; height: 150px;"></textarea>
+      </div>
+    </div>
+    <button type="button" class="delete-field-button" onclick="deleteField(this)" style="margin-top: 5px;">삭제</button>
   </div>
-<% end %>
+</div>
 
 
 <script>
-  function previewImage(input, previewId) {
-    var previewDiv = document.getElementById(previewId);
-    previewDiv.innerHTML = "";
+  // 전역 플래그 변수를 사용하여 이벤트 리스너가 한 번만 등록되도록 함.
+  if (window.addFieldHandlerRegistered !== true) {
+    document.addEventListener("turbolinks:load", function() {
+      var fieldContainer = document.getElementById("card_images_container");
+      if (fieldContainer) {
+        var allFields = document.querySelectorAll(".card-image-field");
+        allFields.forEach(function(field) {
+          // 필드 내부에 <img> 태그가 존재하면 데이터가 있는 것으로 판단하고 보이게 함
+          if (field.querySelector("img")) {
+            field.style.display = "block";
+          } else {
+            field.style.display = "none";
+          }
+        });
+      }
+
+      var addButton = document.getElementById("add_field_button");
+      var removeButton = document.getElementById("remove_field_button");
+      var templateHTML = document.getElementById("new_field_template").innerHTML;
+      var allFields = document.querySelectorAll(".card-image-field");
+
+      if (addButton) {
+        addButton.addEventListener("click", function(e) {
+          var visibleFields = Array.from(document.querySelectorAll(".card-image-field")).filter(function(field) {
+            return field.style.display !== "none";
+          });
+          var nextIndex = visibleFields.length;
+          if (nextIndex < allFields.length) {
+            allFields[nextIndex].style.display = "block";
+          } else {
+            if (nextIndex < 10) {
+              var newHTML = templateHTML.replace(/TEMPLATE/g, nextIndex);
+              fieldContainer.insertAdjacentHTML('beforeend', newHTML);
+            } else {
+              alert("최대 10개까지 추가할 수 있습니다.");
+            }
+          }
+        });
+      }
+
+      if (removeButton) {
+        removeButton.addEventListener("click", function(e) {
+          var visibleFields = Array.from(document.querySelectorAll(".card-image-field")).filter(function(field) {
+            return field.style.display !== "none";
+          });
+          if (visibleFields.length > 1) {
+            visibleFields[visibleFields.length - 1].style.display = "none";
+          } else {
+            alert("최소 1개는 있어야 합니다.");
+          }
+        });
+      }
+    });
+    window.addFieldHandlerRegistered = true; // 플래그 변수 설정
+  }
+
+  function previewImage(input, containerId) {
+    var container = document.getElementById(containerId);
+    // 기존 이미지가 있다면 제거
+    var existingImg = container.querySelector("img");
+    if (existingImg) {
+      existingImg.remove();
+    }
     if (input.files && input.files[0]) {
       var reader = new FileReader();
       reader.onload = function(e) {
         var img = document.createElement("img");
         img.src = e.target.result;
-        img.style.maxWidth = "200px";
-        img.style.display = "block";
-        previewDiv.appendChild(img);
+        img.style.width = "100%";
+        img.style.height = "auto";
+        img.style.objectFit = "cover";
+        // 라벨 숨김 처리
+        var label = container.querySelector("label");
+        if (label) {
+          label.style.display = "none";
+        }
+        container.appendChild(img);
+        // 이미지 로딩 후 컨테이너의 높이를 auto로 설정
+        container.style.height = "auto";
       };
       reader.readAsDataURL(input.files[0]);
     }
   }
+
+  function deleteField(button) {
+    button.closest(".card-image-field").remove();
+  }
+
+  function deletePreview(index) {
+    var fileInput = document.getElementById('file_input_' + index);
+    fileInput.value = "";
+    var container = document.getElementById('custom-file-' + index);
+    var imgs = container.getElementsByTagName('img');
+    while (imgs[0]) {
+      imgs[0].parentNode.removeChild(imgs[0]);
+    }
+    var label = document.getElementById('file-label-' + index);
+    if (label) {
+      label.style.display = "block";
+    }
+    container.style.height = "400px";
+  }
 </script>
+
+
