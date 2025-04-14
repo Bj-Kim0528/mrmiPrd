@@ -26,10 +26,26 @@ class UsersController < ApplicationController
     end
 
     if @userinfo.update(user_params)
-      flash[:notice] = "You have updated user successfully." 
+      if params[:user][:remove_profile_image] == "true" && @userinfo.profile_image.attached?
+        @userinfo.profile_image.purge
+      end
       redirect_to user_path(@userinfo)
     else
       render :edit
+    end
+  end
+
+
+  def destroy
+    @user = User.find(params[:id])
+    # 실제 삭제 로직
+    # 예: user가 현재 로그인한 사용자와 일치하는지 확인 후 삭제
+    if current_user == @user
+      @user.destroy
+      reset_session  # 사용자를 로그아웃시키고 싶다면 세션 리셋
+      redirect_to root_path, notice: "탈퇴 처리되었습니다."
+    else
+      redirect_to user_path(@user), alert: "잘못된 요청입니다."
     end
   end
 

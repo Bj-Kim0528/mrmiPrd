@@ -124,16 +124,16 @@
                     border-radius: 4px;" %>
               </div>
             </div>
-<% if ci.object.image.attached? %>
-  <div class="card-image-deletion" style="position: absolute; bottom: 10px; right: 30px;">
-    <%= link_to "삭제", clear_card_image_path(ci.object),
-          method: :delete,
-          remote: true,
-          data: { confirm: "정말 삭제하시겠습니까? (삭제시 되돌릴 수 없습니다)" },
-          class: "btn",
-          style: "margin: 0; background: none; font-size: 14px; display: inline-flex; justify-content: center; align-items: center; height: 40px; border-radius: 4px; padding: 0 16px; font-weight: 400; box-sizing: border-box; text-align: center; color: rgb(47,52,56); border: 1px solid #e6e6e6; width: 80px;" %>
-  </div>
-<% end %>
+            <% if ci.object.image.attached? %>
+              <div class="card-image-deletion" style="position: absolute; bottom: 10px; right: 30px;">
+                <%= link_to "삭제", clear_card_image_path(ci.object),
+                      method: :delete,
+                      remote: true,
+                      data: { confirm: "정말 삭제하시겠습니까? (삭제시 되돌릴 수 없습니다)" },
+                      class: "btn",
+                      style: "margin: 0; background: none; font-size: 14px; display: inline-flex; justify-content: center; align-items: center; height: 40px; border-radius: 4px; padding: 0 16px; font-weight: 400; box-sizing: border-box; text-align: center; color: rgb(47,52,56); border: 1px solid #e6e6e6; width: 80px;" %>
+              </div>
+            <% end %>
 
 
 
