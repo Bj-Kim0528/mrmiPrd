@@ -57,7 +57,7 @@ Rails.application.routes.draw do
   
   resources :card_images, only: [] do
     member do
-      patch :clear
+      delete :clear
     end
   end
   

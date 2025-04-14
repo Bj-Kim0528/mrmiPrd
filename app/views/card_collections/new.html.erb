@@ -5,19 +5,53 @@
         <!-- 기본 속성 입력 -->
         <div class="d-flex">
           <div style="margin-right: 10px;">
-            <%= f.label :layout, "レイアウト" %><br>
+            <%= f.label :layout, "レイアウト", style: "font-weight: 700;
+            font-size: 16px;
+            line-height: 18px;" %><br>
             <%= f.select :layout, options_for_select(["1R", "1K/1DK", "1LDK/2DK", "2LDK", "3LDK以上"], @card_collection.layout) %>
           </div>
 
           <div>
-            <%= f.label :theme_id, "テーマ" %><br>
+            <%= f.label :theme_id, "テーマ", style: "font-weight: 700;
+                                  font-size: 16px;
+                                  line-height: 18px;" %><br>
             <%= f.select :theme_id, options_from_collection_for_select(Theme.all, :id, :name, @card_collection.theme_id) %>
           </div>
         </div>
 
         
         <div class="actions" style="margin-top: 20px;">
-          <%= f.submit "올리기" %>
+          <%= f.submit "올리기", style: "display: inline-block;
+                                  margin: 0;
+                                  padding: 0;
+                                  border: none;
+                                  background: none;
+                                  font: inherit;
+                                  font-size: 14px;
+                                  line-height: 18px;
+                                  display: -webkit-inline-box;
+                                  display: -webkit-inline-flex;
+                                  display: -ms-inline-flexbox;
+                                  display: inline-flex;
+                                  -webkit-box-pack: center;
+                                  -ms-flex-pack: center;
+                                  -webkit-justify-content: center;
+                                  justify-content: center;
+                                  -webkit-align-items: center;
+                                  -webkit-box-align: center;
+                                  -ms-flex-align: center;
+                                  align-items: center;
+                                  width: 132px;
+                                  height: 40px;
+                                  border-radius: 4px;
+                                  padding: 0 16px;
+                                  font-weight: 400;
+                                  box-sizing: border-box;
+                                  text-align: center;
+                                  color: #FFFFFF;
+                                  background-color: #0AA5FF;
+                                  outline: none;
+                                  overflow: hidden;"%>
         </div>
       </div>
     </div>
@@ -38,21 +72,40 @@
               </label>
               <!-- 버튼 영역: 사진 변경 및 삭제 -->
               <div style="position: absolute; bottom: 10px; right: 10px; z-index: 3;">
-                <button type="button" onclick="document.getElementById('file_input_<%= ci.index %>').click();" style="margin-right: 5px; padding: 5px 10px; font-size: 12px;">사진 변경</button>
-                <button type="button" onclick="deletePreview(<%= ci.index %>);" style="padding: 5px 10px; font-size: 12px;">삭제</button>
+                <button type="button" onclick="document.getElementById('file_input_<%= ci.index %>').click();" style="margin-right: 20px; padding: 0; border: none; background: none;">
+                  <i class="fa-solid fa-rotate" style="font-size: 20px; color: white;"></i>
+                </button>
+                <button type="button" onclick="deletePreview(<%= ci.index %>);" style="margin-right: 10px; padding: 0; border: none; background: none;">
+                  <i class="fa-solid fa-trash" style="font-size: 20px; color: white;"></i>
+                </button>
               </div>
             </div>
             <!-- 텍스트 영역 (너비 100%로 설정) -->
             <div style="flex: 1;">
-              <%= ci.text_area :content, placeholder: "사진의 내용", style: "width: 100%; height: 150px;" %>
+              <%= ci.text_area :content, placeholder: "어떤 사진인지 짧은 소개로 시작해보세요.
+              다양한 #태그도 추가할수 있어요.", style: "
+                    width: 100%;
+                    box-sizing: border-box;
+                    min-height: 152px;
+                    padding: 16px;
+                    display: inline-block;
+                    overflow-wrap: break-word;
+                    white-space: pre-line;
+                    font-size: 14px;
+                    line-height: 20px;
+                    z-index: 2;
+                    border: 1px solid rgb(230, 230, 230);
+                    border-radius: 4px;" %>
             </div>
           </div>          
         </div>
       <% end %>
       <!-- 버튼 영역을 오른쪽 정렬 -->
       <div style=" margin-right:30px; margin-bottom: 30px; display: flex; justify-content: flex-end;">
-        <button type="button" id="add_field_button">+</button>
-        <button type="button" id="remove_field_button">−</button>
+        <button type="button" id="add_field_button" style="margin-right: 10px; padding: 0; border: none; background: none; font-weight: bold; width:30px; border: 1px solid rgb(230, 230, 230);
+                    border-radius: 4px;"">+</button>
+        <button type="button" id="remove_field_button" style=" padding: 0; border: none; background: none; font-weight: bold; width:30px; border: 1px solid rgb(230, 230, 230);
+                    border-radius: 4px;"">−</button>
       </div>
     </div>
   <% end %>

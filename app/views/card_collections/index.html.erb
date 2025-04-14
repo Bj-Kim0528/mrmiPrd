@@ -3,7 +3,7 @@
     <div class="col-12 col-lg-4 col-xl-3" style="padding: 0 10px; margin-bottom: 30px;">
       <article class="card-collection-item" style="overflow: hidden; transition: box-shadow 0.2s ease;">
         <!-- 작성자 영역 -->
-        <div class="card-item-writer" style="padding: 10px; border-bottom: 1px solid #eaeaea;">
+        <div class="card-item-writer" style="padding: 10px;">
           <address style="margin: 0; display: flex;">
             <div class="card-item-writer__header" style="display: flex; align-items: center;">
 
@@ -48,11 +48,14 @@
           </address>
         </div>
 
-        <!-- 게시물 이미지 영역 -->
+
+        <!-- 게시물 이미지 영역 (원본 이미지를 불러오고 CSS로 크기 조절) -->
         <div class="card-collection-item__content" style="position: relative;">
           <% if card_collection.card_images.any? && card_collection.card_images.first.image.attached? %>
             <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
-              <%= image_tag url_for(card_collection.card_images.first.image.variant(resize_to_fill: [289, 289]).processed), alt: "투고 사진", class: "img-fluid", style: "border-radius: 0.4rem !important; width: 289px; height: 289px; display: block;" %>
+              <%= image_tag url_for(card_collection.card_images.first.image),
+                    alt: "투고 사진", class: "img-fluid",
+                    style: "border-radius: 0.4rem !important; width: 289px; height: 289px; object-fit: cover; display: block;" %>
             <% end %>
           <% else %>
             <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
@@ -62,6 +65,7 @@
             <% end %>
           <% end %>
         </div>
+        
 
         <!-- 액션 버튼 영역 -->
         <div class="card-item-action-list" style="display: flex; justify-content: space-around; margin-top: 10px;">
@@ -105,8 +109,10 @@
           </div>
         </div>
 
+
+      
         <!-- 게시글 내용 영역 -->
-        <div class="card-item-description" style="font-size: 15px; color: #333; line-height: 1.4; max-height: 3.5em; overflow: hidden; text-overflow: ellipsis; margin-top: 10px;">
+        <div class="card-item-description" style="font-size: 15px; color: #333; line-height: 1.4; max-height: 3.5em; overflow: hidden; text-overflow: ellipsis; margin-top: 5px; margin-left: 5px; margin-bottom: 5px;">
           <%
             text = card_collection.card_images.map(&:content).reject(&:blank?).join("\n\n")
             lines = text.split(/\r?\n/)
@@ -114,7 +120,8 @@
           %>
           <%= link_to card_collection_path(card_collection), style: "text-decoration: none; color: inherit; font-size: 13px;" do %>
             <div class="two-lines" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
-              <%= simple_format(displayed_text) %>
+              <%= simple_format(displayed_text, { style: "margin: 5px 0px; margin-left: 10px; padding: 0;" }, wrapper_tag: 'div') %>
+
             </div>
           <% end %>
         </div>
@@ -128,18 +135,19 @@
         <% sorted_comments = all_comments.sort_by(&:created_at) %>
         <% if sorted_comments.any? %>
           <% first_comment = sorted_comments.first %>
-          <div class="card-item-comment" style="display: flex; align-items: flex-start; margin-top: 10px">
+          <div class="card-item-comment" style="display: flex; align-items: flex-start; margin: 5px 0px; padding: 0; margin-left: 10px; ">
             <%= link_to user_path(first_comment.user), style: "text-decoration: none; display: flex; align-items: center;" do %>
               <%= image_tag url_for(first_comment.user.get_profile_image(24, 24)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 24px; height: 24px; object-fit: cover; margin-right: 10px;" %>
-              <strong style="font-size: 13px; font-style: normal;"><%= first_comment.user.nickname %></strong>
-            <% end %>
-            <%= link_to card_collection_path(card_collection), style: "text-decoration: none; color: inherit; margin-left: 10px; font-size: 11px;" do %>
-              <div style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; word-wrap: break-word;">
-                <%= simple_format(first_comment.comment)%>
-              </div>
+              <strong style="font-size: 12px; font-style: normal;"><%= first_comment.user.nickname %></strong>
+              <%= simple_format(
+                                  truncate(first_comment.comment, length: 25, omission: '...'),
+                                  { style: "margin-left: 10px; color: #333; font-size: 12px;" },
+                                  wrapper_tag: 'div'
+                                ) %>
             <% end %>
           </div>
         <% end %>
+
       </article>
     </div>
   <% end %>
