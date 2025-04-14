@@ -1,20 +1,84 @@
-<h1>이메일 인증</h1>
-<p>회원가입 시 발송된 이메일에서 인증번호를 확인하고, 아래에 입력해주세요.</p>
+<div style="width: 360px; margin: 0 auto; padding: 60px 0; box-sizing: border-box; text-align: center;">
+  <!-- 페이지 타이틀 -->
+  <h1 style="font-size: 20px; font-weight: 700; margin-bottom: 16px;">
+    이메일 인증
+  </h1>
+  <!-- 안내 문구 -->
+  <p style="font-size: 14px; color: #666; margin-bottom: 24px;">
+    회원가입 시 발송된 이메일에서 인증번호를 확인하고</br> 
+    아래에 입력해주세요.
+  </p>
 
-<%= form_with url: certificate_path, method: :post, local: true do |f| %>
-  <div class="field">
-    <%= f.label :email, "이메일" %><br />
-    <%= f.email_field :email, autofocus: true %>
-  </div>
-  <div class="field">
-    <%= f.label :password, "패스워드" %><br />
-    <%= f.password_field :password %>
-  </div>
-  <div class="field">
-    <%= f.label :confirmation_token, "인증번호" %><br />
-    <%= f.text_field :confirmation_token %>
-  </div>
-  <div class="actions">
-    <%= f.submit "Certificate" %>
-  </div>
-<% end %>
+  <!-- 이메일 인증 폼 (certificate_path를 이용) -->
+  <%= form_with url: certificate_path, method: :post, local: true do |f| %>
+    <div style="max-width: 343px; margin: 0 auto; padding: 0 30px; box-sizing: border-box; text-align: left;">
+
+      <!-- 이메일 입력 필드 -->
+      <div style="margin-bottom: 16px;">
+        <label for="user_email" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">
+          이메일
+        </label>
+        <%= f.email_field :email, autofocus: true, placeholder: "이메일 입력", 
+              style: "
+                width: 100%;
+                height: 44px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                padding: 0 10px;
+                font-size: 14px;
+                box-sizing: border-box;
+              " %>
+      </div>
+
+      <!-- 패스워드 입력 필드 -->
+      <div style="margin-bottom: 16px;">
+        <label for="user_password" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">
+          패스워드
+        </label>
+        <%= f.password_field :password, placeholder: "패스워드 입력", 
+              style: "
+                width: 100%;
+                height: 44px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                padding: 0 10px;
+                font-size: 14px;
+                box-sizing: border-box;
+              " %>
+      </div>
+
+      <!-- 인증번호 입력 필드 -->
+      <div style="margin-bottom: 16px;">
+        <label for="user_confirmation_token" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">
+          인증번호
+        </label>
+        <%= f.text_field :confirmation_token, placeholder: "인증번호 입력", 
+              style: "
+                width: 100%;
+                height: 44px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                padding: 0 10px;
+                font-size: 14px;
+                box-sizing: border-box;
+              " %>
+      </div>
+
+      <!-- 인증하기 버튼 -->
+      <div style="margin-bottom: 16px;">
+        <%= f.submit "인증하고 회원가입완료",
+              style: "
+                width: 100%;
+                height: 44px;
+                border: none;
+                border-radius: 4px;
+                background-color: #0AA5FF;
+                color: #fff;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+              " %>
+      </div>
+    </div>
+  <% end %>
+</div>

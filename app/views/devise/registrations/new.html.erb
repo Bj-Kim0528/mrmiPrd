@@ -1,45 +1,161 @@
-<h2>Sign up</h2>
+<div style="width: 360px; margin: 0 auto; padding: 60px 0;">
+  <!-- 상단 타이틀 -->
+  <h2 style="
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 24px;
+  ">
+    회원가입
+  </h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-
-  <div class="field">
-    <%= f.text_field :email_local, required: true, placeholder: "아이디 부분" %> @
-    <%= f.text_field :email_domain, required: true, placeholder: "example.com" %>
+  <!-- SNS 계정으로 간편 로그인/회원가입 -->
+  <div style="text-align: center; margin: 0 auto; font-size: 12px; color: #999; margin-bottom: 16px;">
+    SNS계정으로 간편 로그인/회원가입
+  </div>
+  <div style="display: flex; justify-content: center; gap: 16px; margin-bottom: 20px;">
+    <%- resource_class.omniauth_providers.each do |provider| %>
+      <% provider_name = case provider.to_s
+        when "google_oauth2" then "Google"
+        when "facebook" then "Facebook"
+        else provider.to_s.titleize
+      end %>
+      <%= button_to omniauth_authorize_path(resource_name, provider),
+            method: :post,
+            data: { turbo: false },
+            style: "background: transparent; border: none; padding: 0;" do %>
+        <!-- 예: 구글 로고 (googleLogo.jpg) -->
+        <%= image_tag asset_path("googleLogo.jpg"), alt: "#{provider_name} Sign in", style: "width: 40px; height: auto;" %>
+      <% end %>
+    <% end %>
   </div>
 
-  <div class="field">
-    <%= f.label :nickname %><br />
-    <%= f.text_field :nickname, value: resource.nickname %>
+  <!-- 회원가입 폼 -->
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <!-- 에러 메시지 표시 -->
+    <%= render "devise/shared/error_messages", resource: resource %>
+
+    <!-- 이메일 입력 -->
+    <div style="margin-bottom: 16px;">
+      <label for="user_email_local" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">이메일</label>
+      <div style="display: flex; gap: 4px;">
+        <%= f.text_field :email_local,
+                         required: true,
+                         placeholder: "이메일",
+                         style: "
+                           flex: 1;
+                           height: 44px;
+                           border: 1px solid #ccc;
+                           border-radius: 4px;
+                           padding: 0 10px;
+                           font-size: 14px;
+                         " %>
+        <span style="line-height: 44px;">@</span>
+        <%= f.text_field :email_domain,
+                         required: true,
+                         placeholder: "example.com",
+                         style: "
+                           flex: 1;
+                           height: 44px;
+                           border: 1px solid #ccc;
+                           border-radius: 4px;
+                           padding: 0 10px;
+                           font-size: 14px;
+                         " %>
+      </div>
+
+    </div>
+
+    <!-- 비밀번호 -->
+    <div style="margin-bottom: 16px;">
+      <label for="user_password" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">비밀번호</label>
+      <% if @minimum_password_length %>
+        <p style="margin: 4px 0 8px; font-size: 12px; color: #999;">
+          영문, 숫자를 포함한 <%= @minimum_password_length %>자 이상의 비밀번호를 입력해주세요.
+        </p>
+      <% end %>
+      <%= f.password_field :password,
+                           autocomplete: "new-password",
+                           placeholder: "비밀번호",
+                           style: "
+                             width: 100%;
+                             height: 44px;
+                             border: 1px solid #ccc;
+                             border-radius: 4px;
+                             padding: 0 10px;
+                             font-size: 14px;
+                           " %>
+    </div>
+
+    <!-- 비밀번호 확인 -->
+    <div style="margin-bottom: 16px;">
+      <label for="user_password_confirmation" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">비밀번호 확인</label>
+      <%= f.password_field :password_confirmation,
+                           autocomplete: "new-password",
+                           placeholder: "비밀번호 확인",
+                           style: "
+                             width: 100%;
+                             height: 44px;
+                             border: 1px solid #ccc;
+                             border-radius: 4px;
+                             padding: 0 10px;
+                             font-size: 14px;
+                           " %>
+    </div>
+
+    <!-- 닉네임 -->
+    <div style="margin-bottom: 16px;">
+      <label for="user_nickname" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">닉네임</label>
+      <%= f.text_field :nickname,
+                       value: resource.nickname,
+                       placeholder: "닉네임 (2~20자)",
+                       style: "
+                         width: 100%;
+                         height: 44px;
+                         border: 1px solid #ccc;
+                         border-radius: 4px;
+                         padding: 0 10px;
+                         font-size: 14px;
+                       " %>
+      <p style="font-size: 12px; color: #999; margin-top: 4px;">다른 유저와 겹치지 않도록 입력해주세요.(2~20자)</p>
+    </div>
+
+    <!-- 이용약관, 개인정보 처리방침 -->
+    <div style="margin-bottom: 16px;">
+      <%= f.check_box :terms_of_service, style: "margin-right: 6px;" %>
+      <%= f.label :terms_of_service, "이용 약관에 동의합니다", style: "font-size: 14px; color: #333;" %>
+    </div>
+    <div style="margin-bottom: 24px;">
+      <%= f.check_box :privacy_policy, style: "margin-right: 6px;" %>
+      <%= f.label :privacy_policy, "개인정보 처리방침에 동의합니다", style: "font-size: 14px; color: #333;" %>
+    </div>
+
+    <!-- 회원가입 버튼 -->
+    <div style="margin-bottom: 16px;">
+      <%= f.submit "이메일 인증하기",
+            style: "
+              width: 100%;
+              height: 44px;
+              border: none;
+              border-radius: 4px;
+              background-color: #0AA5FF;
+              color: #fff;
+              font-size: 16px;
+              font-weight: 600;
+              cursor: pointer;
+            " %>
+    </div>
+  <% end %>
+
+  <!-- 로그인 링크 -->
+  <div style="text-align: center; margin-top: 16px;">
+    <% if controller_name != 'sessions' %>
+      <%= link_to "로그인", new_session_path(resource_name),
+                  style: "color: #666; text-decoration: none; font-size: 14px;" %>
+    <% end %>
   </div>
+</div>
 
 
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-  </div>
 
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
 
-  <div class="field">
-    <%= f.check_box :terms_of_service %>
-    <%= f.label :terms_of_service, "이용 약관에 동의합니다" %>
-  </div>
 
-  <div class="field">
-    <%= f.check_box :privacy_policy %>
-    <%= f.label :privacy_policy, "개인정보 처리방침에 동의합니다" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>

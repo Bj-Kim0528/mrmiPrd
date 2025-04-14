@@ -108,14 +108,14 @@ class UsersController < ApplicationController
     @userinfo = User.find(params[:id])
     if @userinfo.guest?
       flash[:alert] = "잘못된 페이지 입니다."
-      redirect_to root_path
+      redirect_to root_path and return
     end
-
+  
     # 현재 비밀번호와 새 비밀번호, 비밀번호 확인을 받아 업데이트
     if @userinfo.update_with_password(user_password_params)
-      # 비밀번호 변경 후, 현재 세션 유지(Devise의 bypass_sign_in 사용)
-      bypass_sign_in(@userinfo)
-      redirect_to user_path(@userinfo), notice: "비밀번호가 성공적으로 변경되었습니다."
+      # 비밀번호 변경 후 현재 세션을 종료합니다.
+      sign_out(@userinfo)
+      redirect_to root_path, notice: "비밀번호가 성공적으로 변경되었습니다. 다시 로그인해주세요."
     else
       flash.now[:alert] = @userinfo.errors.full_messages.join(", ")
       render :edit_password
