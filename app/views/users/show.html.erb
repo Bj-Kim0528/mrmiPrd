@@ -244,7 +244,7 @@
             <div class="gallery-item" style="flex: 0 0 calc((100% - (3 * 18px)) / 4); position: relative;">
               <%= link_to card_collection_path(post), style: "text-decoration: none;" do %>
                 <% if post.card_images.any? && post.card_images.first.image.attached? %>
-                  <%= image_tag url_for(post.card_images.first.image.variant(resize_to_fill: [174, 174]).processed), 
+                  <%= image_tag url_for(post.card_images.first.image), 
                                 alt: "게시물 사진", 
                                 class: "rounded",
                                 style: "width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 4px;" %>
@@ -321,7 +321,7 @@
             <div class="gallery-item" style="flex: 0 0 calc((100% - (3 * 18px)) / 4); position: relative;">
               <%= link_to card_collection_path(post), style: "text-decoration: none;" do %>
                 <% if post.card_images.any? && post.card_images.first.image.attached? %>
-                  <%= image_tag url_for(post.card_images.first.image.variant(resize_to_fill: [174, 174]).processed), 
+                  <%= image_tag url_for(post.card_images.first.image), 
                                 alt: "게시물 사진", 
                                 class: "rounded",
                                 style: "width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 4px;" %>
@@ -367,7 +367,7 @@
             <div class="gallery-item" style="flex: 0 0 calc((100% - (3 * 18px)) / 4); position: relative;">
               <%= link_to card_collection_path(post), style: "text-decoration: none;" do %>
                 <% if post.card_images.any? && post.card_images.first.image.attached? %>
-                  <%= image_tag url_for(post.card_images.first.image.variant(resize_to_fill: [174, 174]).processed), 
+                  <%= image_tag url_for(post.card_images.first.image), 
                                 alt: "게시물 사진", 
                                 class: "rounded",
                                 style: "width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 4px;" %>

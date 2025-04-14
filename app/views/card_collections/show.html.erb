@@ -259,8 +259,10 @@
       <% @card_collection.card_collection_comments.order(created_at: :asc).each do |comment| %>
         <div class="comment" style="margin-bottom: 15px; padding-bottom: 10px; display: flex; align-items: flex-start; margin: 16px 0px;">
           <% if comment.deleted? %>
-            <p><strong>볼 수 없는 유저</strong></p>
-            <p>댓글이 삭제되었습니다</p>
+            <div>
+            <strong>볼 수 없는 유저</strong>
+            <p style="margin-left: 10px; margin-top: 8px; font-size: 15px">댓글이 삭제되었습니다</p>
+            </div>
           <% else %>
             <div>
               <%= image_tag comment.user.get_profile_image(50, 50), alt: "프로필 이미지", class: "rounded-circle", 
@@ -268,7 +270,7 @@
             </div>
             <div style="flex: 1 1 0%;">
               <strong><%= comment.user.nickname %></strong>
-              <div style="margin-top: 8px;"><%= simple_format(comment.comment) %></div>
+              <div style="margin-top: 8px;"><%= simple_format(comment.comment, {style: "font-size: 15px; margin-bottom: 8px;"}) %></div>
               
               
   

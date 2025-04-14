@@ -236,10 +236,13 @@
             <div class="card-collection-item__content" style="position: relative;">
               <% if card_collection.card_images.any? && card_collection.card_images.first.image.attached? %>
                 <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
-                  <%= image_tag url_for(card_collection.card_images.first.image.variant(resize_to_fill: [289, 289]).processed),
-                                alt: "투고 사진",
-                                class: "img-fluid rounded",
-                                style: "width: 100%; height: auto;" %>
+                  <!-- 정사각형 컨테이너: width 100%, padding-top 100%로 비율 유지 -->
+                  <div style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
+                    <%= image_tag url_for(card_collection.card_images.first.image),
+                                  alt: "투고 사진",
+                                  class: "img-fluid rounded",
+                                  style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" %>
+                  </div>
                 <% end %>
               <% else %>
                 <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
