@@ -1,5 +1,5 @@
 <!-- Hero Section -->
-<section style="width: 100%; height: 400px; background-image: url('/assets/cozy_interior_space.jpg'); background-size: cover; background-position: center; position: relative;">
+<section style="width: 100%; height: 400px; background-image: url('<%= asset_path("cozy_interior_space.jpg") %>'); background-size: cover; background-position: center; position: relative;">
   <div style="position: absolute; bottom: 40px; left: 40px; text-align: left;">
     <h1 style="font-size: 36px; font-weight: bold; color: #000;">공간이 곧 나를 말하다</h1>
     <h3 style="font-size: 26px; font-weight: bold; color: #000;">My Room, My Identity</h3>
@@ -27,7 +27,7 @@
 
   <!-- Image Right -->
   <div style="flex: 1 1 50%;">
-    <img src="/assets/interior_inspo_1.jpg" alt="감성 인테리어 예시1" style="width: 100%; height: auto; border-radius: 10px;">
+    <img src="<%= asset_path("interior_inspo_1.jpg") %>" alt="감성 인테리어 예시1" style="width: 100%; height: auto; border-radius: 10px;">
   </div>
 </section>
 
@@ -36,7 +36,7 @@
 <section style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; width:100%; max-width: 1136px; padding: 60px 20px;">
   <!-- Image Left -->
   <div style="flex: 1 1 50%; padding-right: 20px;">
-    <img src="/assets/interior_inspo_2.jpg" alt="감성 인테리어 예시2" style="width: 100%; height: auto; border-radius: 10px;">
+    <img src="<%= asset_path("interior_inspo_2.jpg") %>" alt="감성 인테리어 예시2" style="width: 100%; height: auto; border-radius: 10px;">
   </div>
 
   <!-- Text Right -->
