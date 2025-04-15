@@ -239,7 +239,7 @@
 
         
         <div style="display: flex; flex-wrap: nowrap; gap: 18px; width: 100%; margin: 0 auto 40px; padding: 0;">
-          <% posts = @userinfo.card_collections.where.not(id: @userinfo).limit(4) %>
+          <% posts = @userinfo.card_collections.limit(4) %>
           <% posts.each_with_index do |post, index| %>
             <div class="gallery-item" style="flex: 0 0 calc((100% - (3 * 18px)) / 4); position: relative;">
               <%= link_to card_collection_path(post), style: "text-decoration: none;" do %>
@@ -316,7 +316,7 @@
           </div>
 
         <div style="display: flex; flex-wrap: nowrap; gap: 18px; width: 100%;">
-          <% posts = @userinfo.liked_card_collections.where.not(id: @userinfo).limit(4) %>
+          <% posts = @userinfo.liked_card_collections.limit(4) %>
           <% posts.each_with_index do |post, index| %>
             <div class="gallery-item" style="flex: 0 0 calc((100% - (3 * 18px)) / 4); position: relative;">
               <%= link_to card_collection_path(post), style: "text-decoration: none;" do %>
@@ -362,7 +362,7 @@
         </div>
 
         <div style="display: flex; flex-wrap: nowrap; gap: 18px; width: 100%;">
-          <% posts = @userinfo.bookmarked_card_collections.where.not(id: @userinfo).limit(4) %>
+          <% posts = @userinfo.bookmarked_card_collections.limit(4) %>
           <% posts.each_with_index do |post, index| %>
             <div class="gallery-item" style="flex: 0 0 calc((100% - (3 * 18px)) / 4); position: relative;">
               <%= link_to card_collection_path(post), style: "text-decoration: none;" do %>
