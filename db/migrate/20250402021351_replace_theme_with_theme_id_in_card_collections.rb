@@ -12,9 +12,5 @@ class ReplaceThemeWithThemeIdInCardCollections < ActiveRecord::Migration[6.1]
     unless index_exists?(:card_collections, :theme_id)
       add_index :card_collections, :theme_id
     end
-    
-    unless foreign_key_exists?(:card_collections, :themes)
-      add_foreign_key :card_collections, :themes
-    end
   end
 end
