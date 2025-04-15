@@ -9,7 +9,12 @@ class ReplaceThemeWithThemeIdInCardCollections < ActiveRecord::Migration[6.1]
       add_column :card_collections, :theme_id, :integer
     end
     # 인덱스와 외래키 추가 (테마 테이블과 연결)
-    add_index :card_collections, :theme_id
-    add_foreign_key :card_collections, :themes
+    unless index_exists?(:card_collections, :theme_id)
+      add_index :card_collections, :theme_id
+    end
+    
+    unless foreign_key_exists?(:card_collections, :themes)
+      add_foreign_key :card_collections, :themes
+    end
   end
 end
