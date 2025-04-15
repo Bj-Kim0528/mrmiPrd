@@ -13,11 +13,12 @@
 </div>
 
 <!-- 고정 텍스트 콘텐츠 영역: 배경 이미지 위에 절대 배치 -->
-<div class="hero-content" style="position: absolute; top: 0; width: 100%; height: 400px; display: flex; align-items: center; justify-content: center; text-align: center; z-index: 1; color: white;">
+<div style="position: absolute; top: 0; width: 100%; height: 400px; display: flex; align-items: center; justify-content: center; text-align: center; z-index: 1; color: white;">
   <div>
-    <h1>나만의 공간을 자랑하세요</h1>
-    <p style="font-weight: 700">감각적인 인테리어 사진을 업로드하고 다른 사람들과 공유해보세요.</p>
-    <%= link_to "사진 보러가기", card_collections_path, class: "hero-button" %>
+    <h1 style="font-size: 36px; font-weight: bold;">나만의 공간을 자랑하세요</h1>
+    <p style="font-size: 18px; margin: 10px 0 20px; font-weight: 700;">감각적인 인테리어 사진을 업로드하고 다른 사람들과 공유해보세요.</p>
+    <%= link_to "사진 보러가기", card_collections_path, 
+          style: "background-color: #1e90ff; padding: 12px 25px; border-radius: 5px; color: white; text-decoration: none;" %>
   </div>
 </div>
 
