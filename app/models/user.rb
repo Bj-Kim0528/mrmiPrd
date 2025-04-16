@@ -25,7 +25,7 @@ class User < ApplicationRecord
 
   def validate_email_format
     unless email =~ /\A[^@\s]+@[a-zA-Z]+(\.[a-zA-Z]{2,})+\z/
-      errors.add(:base, "메일바리데이션(나중에수정)1")
+      errors.add(:base, "올바른 이메일 형식이 아닙니다")
     end
   end
 

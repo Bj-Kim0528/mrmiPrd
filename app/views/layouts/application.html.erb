@@ -298,13 +298,68 @@
       <% end %>
     </header>
 
-
-
-
     <div class="container">
       <div class="card" style="border: 0px">
         <%= yield %>
       </div>
     </div>
+
+    <% unless (controller_name == "card_collections" && (action_name == "new" || action_name == "edit")) || (["sessions", "registrations", "passwords", "confirmations"].include?(controller_name)) %>
+      <footer style="width: 100%; background-color: #f8f8f8; margin-top: 40px;">
+        <div style="max-width: 1256px; margin: 0 auto; padding: 80px 60px; display: flex; justify-content: space-between; color: #666; font-size: 14px;">
+          <!-- 왼쪽 고객센터 섹션 -->
+          <div style="flex: 1; margin-right: 40px; border-right: 1px solid #ddd;">
+            <h3 style="font-size: 16px; margin-bottom: 10px; font-weight: bold;">고객센터 &gt;</h3>
+            <p style="margin: 0; font-weight: 700; font-size: 20px;">080-xxxx-xxxx <br> (09:00 ~ 18:00)</p>
+            <p style="margin: 0;">점심: 12시~13시 미운영</p>
+            <p style="margin: 0;">평일, 공휴일 휴무</p>
+            <a href="https://mail.google.com/"
+              style="
+                display: inline-block;
+                margin-top: 8px;
+                background-color: #0AA5FF;
+                color: #fff;
+                text-decoration: none;
+                border: none;
+                border-radius: 4px;
+                padding: 8px 16px;
+                cursor: pointer;
+              "
+            >
+              이메일 문의
+            </a>
+          </div>
+        
+          <!-- 가운데 회사 정보/정책 링크 섹션 -->
+          <div style="flex: 2; border-right: 1px solid #ddd;">
+            <!-- 상단 링크들(회사소개, 채용정보, ...) -->
+            <div style="display: flex; gap: 16px; margin-bottom: 10px; font-weight: bold; ">
+              <a href="#" style="text-decoration: none; color: #666;">회사소개</a>
+              <a href="#" style="text-decoration: none; color: #666;">채용정보</a>
+              <a href="#" style="text-decoration: none; color: #666;">광고문의</a>
+              <a href="#" style="text-decoration: none; color: #666;">이용약관</a>
+              <a href="#" style="text-decoration: none; color: #666;">개인정보 처리방침</a>
+            </div>
+            <!-- 회사 정보 -->
+            <p style="margin: 0;">(주)MRMI | 도쿄 이타바시구</p>
+            <p style="margin: 0;">bjking102409@gmail.com | 사업자등록번호: portfolio| 통신판매업: portfolio</p>
+            <p style="margin: 0;">대표이사: 김병준 | 고객센터 운영시간: 평일 09:00-18:00</p>
+          </div>
+      
+          <!-- 오른쪽 인증마크/기타 링크 섹션 -->
+          <div style="flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center;">
+            <!-- 인증마크 또는 로고 -->
+            <div style="margin-bottom: 10px;">
+              <img src="<%= asset_path('mrmiLogo.png') %>" alt="mrmiLogo"
+                  style="width: 80px; height: auto; border-radius: 10%;" />
+            </div>
+            <!-- 하단 텍스트 -->
+            <p style="margin: 0; font-size: 12px; color: #999;">
+              &copy; <%= Time.current.year %> MRMI Prd. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
+    <% end %>
   </body>
 </html>

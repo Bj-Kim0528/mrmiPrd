@@ -15,16 +15,20 @@ class CardCollectionsController < ApplicationController
   def create
     @card_collection = current_user.card_collections.build(card_collection_params)
     if @card_collection.save
-      # 저장 후, content와 image 둘 다 비어있거나 nil인 카드 이미지들을 삭제합니다.
+      # 저장 후, 이미지가 첨부되지 않은 카드 이미지들을 삭제합니다.
       @card_collection.card_images.each do |ci|
-        if (ci.content.blank? || ci.content.nil?) && !ci.image.attached?
-          ci.destroy
-        end
+        ci.destroy unless ci.image.attached?
       end
-      redirect_to card_collection_path(@card_collection), notice: "카드 컬렉션이 성공적으로 생성되었습니다."
+  
+      if @card_collection.card_images.reload.any?
+        redirect_to card_collection_path(@card_collection), notice: "카드 컬렉션이 성공적으로 생성되었습니다."
+      else
+        @card_collection.destroy
+        redirect_to new_card_collection_path, alert: "유효한 이미지가 없어서 카드 컬렉션이 삭제되었습니다."
+      end
     else
       flash.now[:alert] = @card_collection.errors.full_messages.join(", ")
-      render :new
+      render :new and return  # render 후에 return을 추가하여 실행을 중단
     end
   end
 
@@ -34,15 +38,20 @@ class CardCollectionsController < ApplicationController
 
   def update
     if @card_collection.update(card_collection_params)
+      # 저장 후, 이미지가 첨부되지 않은 카드 이미지들을 삭제합니다.
       @card_collection.card_images.each do |ci|
-        if (ci.content.blank? || ci.content.nil?) && !ci.image.attached?
-          ci.destroy
-        end
+        ci.destroy unless ci.image.attached?
       end
-      redirect_to card_collection_path(@card_collection)
+
+      if @card_collection.card_images.reload.any?
+        redirect_to card_collection_path(@card_collection), notice: "카드 컬렉션이 성공적으로 생성되었습니다."
+      else
+        @card_collection.destroy
+        redirect_to new_card_collection_path, alert: "유효한 이미지가 없어서 카드 컬렉션이 삭제되었습니다."
+      end
     else
       flash.now[:alert] = @card_collection.errors.full_messages.join(", ")
-      render :edit
+      render :new and return  # render 후에 return을 추가하여 실행을 중단
     end
   end
 

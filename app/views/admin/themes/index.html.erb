@@ -1,28 +1,162 @@
-<h1>새 테마 추가</h1>
 
 
-<div>
-  <% @themes.where.not(name: ["お部屋写真", "その他"]).each do |theme| %>
-    <p>
-      <%= theme.name %>
-    </p>
-    <div>
-      <%= link_to "Edit", edit_admin_theme_path(theme) %>
-    </div>
-    <div>
-      <%= link_to 'Destroy', admin_theme_path(theme), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger btn-sm' %>
-    </div>
-  <% end %>
-</div>
+<div style="margin: 0px -10px; display: flex; flex-wrap: wrap; box-sizing: border-box; padding: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><!-- 전체 -->
 
-<div>
-  <%= form_with model: [:admin, @theme], local: true do |f| %>
-    <div>
-      <%= f.label :name, "테마 이름" %><br>
-      <%= f.text_field :name %>
+  <!-- 왼쪽: 프로필 카드 파트 -->
+  <div style="width: 25%; padding-left: 10px; padding-right: 10px; position: relative; padding-top: 30px;">
+    <div style="position: sticky; top: 160px; transition: top 0.1s;">
+      <div style="position: relative;  margin-bottom: 30px;">
+        <div>
+          <div style="padding: 30px 25px 18px; border-radius: 4px; border: 1px solid rgb(218, 220, 224); box-shadow: rgba(63, 71, 77, 0.06); position: relative;">
+            <div style="padding: 0px; min-height: 120px; position: relative; margin: 0 0 20px;">
+              <!-- 프로필 이미지 영역 -->
+              <div style="width: 120px; height: 120px; position: relative; margin: 0 auto 24px; top: 0px; left: 0px; border-radius: 100%; background-color: rgb(237, 237, 237); overflow: hidden;">
+                <%= image_tag(asset_path("livingroom.jpg"), alt: "프로필 이미지", class: "rounded-circle", style: "width: 120px; height: 120px; object-fit: cover; border: 1px solid rgba(0, 0, 0, 0.1);") %>
+              </div>
+              <!-- 사용자 닉네임 영역 -->
+              <div style="text-align: center;">
+                <div style="line-height: 1.15; margin: 0 0 10px; font-size: 20px; font-weight: bold; color: rgb(41, 41, 41); overflow-wrap: break-word; word-break: break-all;">
+                  <%= current_admin.email %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="padding: 10px;">
+        <h1 style="margin: 0 0 15px; font-size: 18px; line-height: 24px; font-weight: bold; color: #2f3438;">
+        새 테마 추가
+        </h1>
+        <!-- 프로필 이미지 -->
+        <%= form_with model: [:admin, @theme], local: true do |f| %>
+          <div class="d-flex" style="margin-bottom: 10px; align-items: center; justify-content: space-between">
+            <%= f.text_field :name, style: "width: 70%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; height: 35px;" %>
+            <%= f.submit "추가",                                    
+                  class: "btn",
+                  style: "margin: 0px;
+                          border: none;
+                          background: none rgb(10, 165, 255);
+                          font-style: inherit;
+                          font-variant: inherit;
+                          font-stretch: inherit;
+                          font-family: inherit;
+                          font-optical-sizing: inherit;
+                          font-size-adjust: inherit;
+                          font-kerning: inherit;
+                          font-feature-settings: inherit;
+                          font-variation-settings: inherit;
+                          font-size: 14px;
+                          line-height: 18px;
+                          display: inline-flex;
+                          -webkit-box-pack: center;
+                          justify-content: center;
+                          -webkit-box-align: center;
+                          align-items: center;
+                          height: 35px;
+                          border-radius: 4px;
+                          padding: 0px 10px;
+                          box-sizing: border-box;
+                          text-align: center;
+                          color: rgb(255, 255, 255);
+                          font-weight: 700;
+                          width: 60px;" %>
+          </div>
+        <% end %>
+      </div>
+
     </div>
-    <div>
-      <%= f.submit "추가", class: "btn btn-primary" %>
+  </div>
+
+  <!-- 중간: 빈 공간 파트 -->
+  <div style="width: 8.333333333333332%; padding-left: 10px; padding-right: 10px; position: relative; padding-top: 30px;"></div>
+
+  <!-- 오른쪽: 사진, 좋아요, 북마크 파트 -->
+  <div style="width: 66.66666666666666%; padding-left: 10px; padding-right: 10px; position: relative;">
+    <div style="max-width: 720px; margin: 0 auto 40px; padding: 0;">
+      <div style="padding: 0px 10px">
+        <div style="margin: 40px auto 60px; width: 100%; max-width: 600px; box-sizing: border-box;">
+
+      
+          <!-- 테마 리스트 영역 -->
+          <h1 style="margin: 0 0 30px; font-size: 18px; line-height: 24px; font-weight: bold; color: #2f3438;">
+            테마 리스트
+          </h1>
+          <div>
+            <% @themes.where.not(name: ["お部屋写真", "その他"]).each do |theme| %>
+              <div style="padding: 10px; margin-bottom: 10px; display: flex; justify-content: space-between;">
+                <h6 class="mb-0 d-inline" style="font-size: 15px;">
+                  <%= theme.name %>
+                </h6>
+                <div style="display: flex; gap: 10px;">
+                  <%= link_to "편집", edit_admin_theme_path(theme),                              
+                                      class: "btn",
+                                      style: "margin: 0px;
+                                              background: none;
+                                              font-style: inherit;
+                                              font-variant: inherit;
+                                              font-stretch: inherit;
+                                              font-family: inherit;
+                                              font-optical-sizing: inherit;
+                                              font-size-adjust: inherit;
+                                              font-kerning: inherit;
+                                              font-feature-settings: inherit;
+                                              font-variation-settings: inherit;
+                                              font-size: 14px;
+                                              line-height: 18px;
+                                              display: inline-flex;
+                                              -webkit-box-pack: center;
+                                              justify-content: center;
+                                              -webkit-box-align: center;
+                                              align-items: center;
+                                              height: 30px;
+                                              border-radius: 4px;
+                                              padding: 0px 10px;
+                                              font-weight: 400;
+                                              box-sizing: border-box;
+                                              text-align: center;
+                                              color: rgb(47, 52, 56);
+                                              border: 1px solid rgb(230, 230, 230);
+                                              width: 80px;" %>
+
+                  <%= link_to "삭제", admin_theme_path(theme),
+                              method: :delete,
+                              data: { confirm: '本当に削除しますか？' },
+                                        class: "btn",
+                                        style: "margin: 0px;
+                                                border: none;
+                                                background: none rgb(10, 165, 255);
+                                                font-style: inherit;
+                                                font-variant: inherit;
+                                                font-stretch: inherit;
+                                                font-family: inherit;
+                                                font-optical-sizing: inherit;
+                                                font-size-adjust: inherit;
+                                                font-kerning: inherit;
+                                                font-feature-settings: inherit;
+                                                font-variation-settings: inherit;
+                                                font-size: 14px;
+                                                line-height: 18px;
+                                                display: inline-flex;
+                                                -webkit-box-pack: center;
+                                                justify-content: center;
+                                                -webkit-box-align: center;
+                                                align-items: center;
+                                                height: 30px;
+                                                border-radius: 4px;
+                                                padding: 0px 10px;
+                                                box-sizing: border-box;
+                                                text-align: center;
+                                                color: rgb(255, 255, 255);
+                                                font-weight: 700;
+                                                width: 80px;"%>
+                </div>
+              </div>
+            <% end %>
+          </div>
+      
+        </div>
+      </div>
     </div>
-  <% end %>
+  </div>
 </div>

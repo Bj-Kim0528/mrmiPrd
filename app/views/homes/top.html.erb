@@ -1,12 +1,12 @@
 
-<div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="10000" style="position: relative; width: 100%; height: 400px;">
+<div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="8000" style="position: relative; width: 100%; height: 400px;">
   <!-- 배경 이미지 영역 -->
   <div class="carousel-inner" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-    <div class="carousel-item active" style="width: 100%; height: 100%; background-image: url('<%= asset_path("livingroom.jpg") %>'); background-size: cover; background-position: center;">
+    <div class="carousel-item active" style="width: 100%; height: 100%; background-image: url(<%= asset_path("livingroom.jpg") %>); background-size: cover; background-position: center;">
     </div>
-    <div class="carousel-item" style="width: 100%; height: 100%; background-image: url('<%= asset_path("modern_livingroom.jpg") %>'); background-size: cover; background-position: center;">
+    <div class="carousel-item" style="width: 100%; height: 100%; background-image: url(<%= asset_path("modern_livingroom.jpg") %>); background-size: cover; background-position: center;">
     </div>
-    <div class="carousel-item" style="width: 100%; height: 100%; background-image: url('<%= asset_path("modern_bathroom.jpg") %>'); background-size: cover; background-position: center;">
+    <div class="carousel-item" style="width: 100%; height: 100%; background-image: url(<%= asset_path("modern_bathroom.jpg") %>); background-size: cover; background-position: center;">
     </div>
   </div>
 </div>
@@ -146,32 +146,9 @@
           }, 50);
         }, 1000);
       }
-    }, 5000); // 10초마다 이동
+    }, 5000); 
   });
 
-
-  document.addEventListener('DOMContentLoaded', function(){
-    var heroCarousel = document.getElementById('heroCarousel');
-    var heroContent = document.querySelector('.hero-content');
-
-    // 초기 로드 시 active 슬라이드를 확인하여 색상 지정
-    function updateTextColor() {
-      var activeItem = heroCarousel.querySelector('.carousel-item.active');
-      var bgImage = window.getComputedStyle(activeItem).backgroundImage;
-      if(bgImage.indexOf('modern_livingroom.jpg') !== -1) {
-        heroContent.style.color = 'black';
-      } else {
-        heroContent.style.color = 'white';
-      }
-    }
-
-    updateTextColor();
-
-    // 슬라이드 전환 완료 후 이벤트 핸들러
-    heroCarousel.addEventListener('slid.bs.carousel', function(){
-      updateTextColor();
-    });
-  });
 </script>
 
 

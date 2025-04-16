@@ -1,20 +1,200 @@
-<h1>全ユーザー一覧</h1>
-<ul>
-  <% @users.each do |user| %>
-    <li>
-      <%= user.nickname %> - <%= user.email %> - アクティブ: <%= user.active? ? "有" : "無" %>
-    
 
-      <!-- 활성화 상태 토글 -->
-      <% if user.active? %>
-        <%= link_to '非アクティブにする', admin_user_path(user, user: { active: false }), method: :patch, data: { confirm: '本当に非アクティブにしますか？' } %>
-      <% else %>
-        <%= link_to 'アクティブにする', admin_user_path(user, user: { active: true }), method: :patch, data: { confirm: '本当にアクティブにしますか？' } %>
-      <% end %>
-      
-      <%= link_to 'コメント一覧', admin_user_card_collection_comments_path(user), class: "btn btn-link" %>
 
-      <%= link_to '削除', admin_user_path(user), method: :delete, data: { confirm: '本当に削除しますか？' } %>
-    </li>
-  <% end %>
-</ul>
+<div style="margin: 0px -10px; display: flex; flex-wrap: wrap; box-sizing: border-box; padding: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><!-- 전체 -->
+
+  <!-- 왼쪽: 프로필 카드 파트 -->
+  <div style="width: 25%; padding-left: 10px; padding-right: 10px; position: relative; padding-top: 30px;">
+    <div style="position: sticky; top: 160px; transition: top 0.1s;">
+      <div style="position: relative;">
+        <div>
+          <div style="padding: 30px 25px 18px; border-radius: 4px; border: 1px solid rgb(218, 220, 224); box-shadow: rgba(63, 71, 77, 0.06); position: relative;">
+            <div style="padding: 0px; min-height: 120px; position: relative; margin: 0 0 20px;">
+              <!-- 프로필 이미지 영역 -->
+              <div style="width: 120px; height: 120px; position: relative; margin: 0 auto 24px; top: 0px; left: 0px; border-radius: 100%; background-color: rgb(237, 237, 237); overflow: hidden;">
+                <%= image_tag(asset_path("livingroom.jpg"), alt: "프로필 이미지", class: "rounded-circle", style: "width: 120px; height: 120px; object-fit: cover; border: 1px solid rgba(0, 0, 0, 0.1);") %>
+              </div>
+              <!-- 사용자 닉네임 영역 -->
+              <div style="text-align: center;">
+                <div style="line-height: 1.15; margin: 0 0 10px; font-size: 20px; font-weight: bold; color: rgb(41, 41, 41); overflow-wrap: break-word; word-break: break-all;">
+                  <%= current_admin.email %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 중간: 빈 공간 파트 -->
+  <div style="width: 8.333333333333332%; padding-left: 10px; padding-right: 10px; position: relative; padding-top: 30px;"></div>
+
+  <!-- 오른쪽: 사진, 좋아요, 북마크 파트 -->
+  <div style="width: 66.66666666666666%; padding-left: 10px; padding-right: 10px; position: relative;">
+    <div style="max-width: 720px; margin: 0 auto 40px; padding: 0;">
+      <div style="padding: 0px 10px">
+        <div style="margin: 40px auto 60px; width: 100%; max-width: 600px;">
+          <h1 style="margin: 0 0 30px; font-size: 18px; line-height: 24px; font-weight: bold; color: #2f3438;">
+            유저리스트
+          </h1>
+          <% @users.each do |follower| %>
+            <div class="d-flex justify-content-between">
+              <!-- 프로필 이미지 -->
+              <div class="d-flex">
+                <div class="p-2">
+                  <%= link_to  admin_user_card_collection_comments_path(follower) do %>
+                    <%= image_tag(url_for(follower.get_profile_image(36, 36)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover;") %>
+                  <% end %>
+                </div>
+                <!-- 닉네임 및 소개 -->
+                <div class="p-2">
+                  <div class="d-flex align-items-center">
+                    <%= link_to  admin_user_card_collection_comments_path(follower) do %>
+                      <h6 class="mb-0 d-inline" style="font-size: 15px;"><%= follower.nickname %></h6>
+                    <% end %>
+                  </div>
+                  <div style="font-size: 12px;">
+                    <% if follower.introduction.present? %>
+                      <%= follower.introduction %>
+                    <% else %>
+                      作成された自己紹介はありません
+                    <% end %>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="ms-auto" style="display: flex; align-items: center;">
+                <%= link_to 'コメント一覧', admin_user_card_collection_comments_path(follower),
+                                        style: "margin: 0px;
+                                                border: none;
+                                                font-style: inherit;
+                                                font-variant: inherit;
+                                                font-stretch: inherit;
+                                                font-family: inherit;
+                                                font-optical-sizing: inherit;
+                                                font-size-adjust: inherit;
+                                                font-kerning: inherit;
+                                                font-feature-settings: inherit;
+                                                font-variation-settings: inherit;
+                                                font-size: 14px;
+                                                line-height: 18px;
+                                                display: inline-flex;
+                                                -webkit-box-pack: center;
+                                                justify-content: center;
+                                                -webkit-box-align: center;
+                                                align-items: center;
+                                                height: 30px;
+                                                border-radius: 4px;
+                                                padding: 0px 10px;
+                                                box-sizing: border-box;
+                                                text-align: center;
+                                                font-weight: 700;
+                                                width: 100px;
+                                                margin-left: 10px;
+                                                color: black;" %>
+            
+                <% if follower.active? %>
+                  <%= link_to '非アクティブ', admin_user_path(follower, user: { active: false }), method: :patch, data: { confirm: '本当に非アクティブにしますか？' },
+                              class: "btn",
+                              style: "margin: 0px;
+                                      background: none;
+                                      font-style: inherit;
+                                      font-variant: inherit;
+                                      font-stretch: inherit;
+                                      font-family: inherit;
+                                      font-optical-sizing: inherit;
+                                      font-size-adjust: inherit;
+                                      font-kerning: inherit;
+                                      font-feature-settings: inherit;
+                                      font-variation-settings: inherit;
+                                      font-size: 14px;
+                                      line-height: 18px;
+                                      display: inline-flex;
+                                      -webkit-box-pack: center;
+                                      justify-content: center;
+                                      -webkit-box-align: center;
+                                      align-items: center;
+                                      height: 30px;
+                                      border-radius: 4px;
+                                      padding: 0px 10px;
+                                      font-weight: 400;
+                                      box-sizing: border-box;
+                                      text-align: center;
+                                      color: rgb(47, 52, 56);
+                                      border: 1px solid rgb(230, 230, 230);
+                                      width: 100px;"%>
+                <% else %>
+                  <%= link_to 'アクティブ', admin_user_path(follower, user: { active: true }), method: :patch, data: { confirm: '本当にアクティブにしますか？' },
+                                    class: "btn",
+                                    style: "margin: 0px;
+                                            border: none;
+                                            background: none rgb(10, 165, 255);
+                                            font-style: inherit;
+                                            font-variant: inherit;
+                                            font-stretch: inherit;
+                                            font-family: inherit;
+                                            font-optical-sizing: inherit;
+                                            font-size-adjust: inherit;
+                                            font-kerning: inherit;
+                                            font-feature-settings: inherit;
+                                            font-variation-settings: inherit;
+                                            font-size: 14px;
+                                            line-height: 18px;
+                                            display: inline-flex;
+                                            -webkit-box-pack: center;
+                                            justify-content: center;
+                                            -webkit-box-align: center;
+                                            align-items: center;
+                                            height: 30px;
+                                            border-radius: 4px;
+                                            padding: 0px 10px;
+                                            box-sizing: border-box;
+                                            text-align: center;
+                                            color: rgb(255, 255, 255);
+                                            font-weight: 700;
+                                            width: 100px;"%>
+                <% end %>
+
+                <%= link_to '削除', admin_user_path(follower), method: :delete, data: { confirm: '本当に削除しますか？' },                                     
+                                    class: "btn",
+                                    style: "margin: 0px;
+                                            border: none;
+                                            background: none rgb(10, 165, 255);
+                                            font-style: inherit;
+                                            font-variant: inherit;
+                                            font-stretch: inherit;
+                                            font-family: inherit;
+                                            font-optical-sizing: inherit;
+                                            font-size-adjust: inherit;
+                                            font-kerning: inherit;
+                                            font-feature-settings: inherit;
+                                            font-variation-settings: inherit;
+                                            font-size: 14px;
+                                            line-height: 18px;
+                                            display: inline-flex;
+                                            -webkit-box-pack: center;
+                                            justify-content: center;
+                                            -webkit-box-align: center;
+                                            align-items: center;
+                                            height: 30px;
+                                            border-radius: 4px;
+                                            padding: 0px 10px;
+                                            box-sizing: border-box;
+                                            text-align: center;
+                                            color: rgb(255, 255, 255);
+                                            font-weight: 700;
+                                            width: 80px;
+                                            margin-left: 10px" %>
+
+
+              </div>
+
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -26,6 +26,6 @@ class Admin::SessionsController < Devise::SessionsController
   end
 
    def after_sign_out_path_for(resource_or_scope)
-    root_path # ログアウト後にリダイレクトするパス
+    admin_users_dashboard_path # ログアウト後にリダイレクトするパス
    end
 end
