@@ -105,9 +105,9 @@
   メール認証後の認証番号について
 </div>
 
-<div style="display: flex; justify-content: center; gap: 16px; font-size: 14px; margin-top: 13px;">
+<div style="display: flex; justify-content: center;  font-size: 14px; margin-top: 13px;">
   <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
     <%= link_to "認証番号を入力する", certification_path(resource_name), style: "color: #666; text-decoration: none; font-weight: 400;" %><br />
-    <%= link_to "認証番号を再発行する", resend_confirmation_path(resource_name), style: "color: #666; text-decoration: none; font-weight: 400;" %><br />
+    <%= link_to "認証番号を再発行する", resend_confirmation_path(resource_name), style: "color: #666; text-decoration: none; font-weight: 400; margin-left: 32px;" %><br />
   <% end %>
 </div>
