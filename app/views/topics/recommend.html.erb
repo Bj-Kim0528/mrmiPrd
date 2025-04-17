@@ -79,7 +79,7 @@
           </div>
 
           <!-- 게시글 내용 영역 -->
-          <div class="card-item-description" style="font-size: 15px; color: #333; line-height: 1.4; height: 3em; overflow: hidden; text-overflow: ellipsis; margin-top: 10px;">
+          <div class="card-item-description" style="font-size: 15px; color: #333; line-height: 1.4; max-height: 3.5em; overflow: hidden; text-overflow: ellipsis; margin-top: 5px; margin-left: 5px; margin-bottom: 5px;">
             <%
               text = card_collection.card_images.map(&:content).reject(&:blank?).join("\n\n")
               lines = text.split(/\r?\n/)
@@ -87,7 +87,8 @@
             %>
             <%= link_to card_collection_path(card_collection), style: "text-decoration: none; color: inherit; font-size: 13px;" do %>
               <div class="two-lines" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
-                <%= simple_format(displayed_text) %>
+                <%= simple_format(displayed_text, { style: "margin: 5px 0px; margin-left: 10px; padding: 0;" }, wrapper_tag: 'div') %>
+
               </div>
             <% end %>
           </div>
@@ -214,7 +215,7 @@
           
 
           <!-- 게시글 내용 영역 -->
-          <div class="card-item-description" style="font-size: 15px; color: #333; line-height: 1.4; height: 3em; overflow: hidden; text-overflow: ellipsis; margin-top: 10px;">
+          <div class="card-item-description" style="font-size: 15px; color: #333; line-height: 1.4; max-height: 3.5em; overflow: hidden; text-overflow: ellipsis; margin-top: 5px; margin-left: 5px; margin-bottom: 5px;">
             <%
               text = card_collection.card_images.map(&:content).reject(&:blank?).join("\n\n")
               lines = text.split(/\r?\n/)
@@ -222,7 +223,8 @@
             %>
             <%= link_to card_collection_path(card_collection), style: "text-decoration: none; color: inherit; font-size: 13px;" do %>
               <div class="two-lines" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
-                <%= simple_format(displayed_text) %>
+                <%= simple_format(displayed_text, { style: "margin: 5px 0px; margin-left: 10px; padding: 0;" }, wrapper_tag: 'div') %>
+
               </div>
             <% end %>
           </div>

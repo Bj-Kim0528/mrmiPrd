@@ -1,12 +1,13 @@
 class Admin::ThemesController < ApplicationController
   layout 'admin'
   before_action :authenticate_admin!  # 관리자 인증 (관리자 인증 메서드를 구현하세요)
-  before_action :set_theme, only: [:edit, :update, :destroy]
+  before_action :set_theme, only: [:update, :destroy]
 
-  # 테마 목록 보기 (선택사항)
+
   def index
-    @themes = Theme.order(:name)
-    @theme = Theme.new
+    @themes     = Theme.where.not(name: ["お部屋写真", "その他"])
+    @edit_theme = Theme.find_by(id: params[:edit_id])
+    @new_theme  = Theme.new
   end
 
   # 새 테마 생성
@@ -19,18 +20,17 @@ class Admin::ThemesController < ApplicationController
     end
   end
 
-  # 테마 수정 폼
-  def edit
-  end
-
-  # 테마 수정 업데이트
   def update
     if @theme.update(theme_params)
-      redirect_to admin_themes_path, notice: "테마가 성공적으로 수정되었습니다."
+      redirect_to admin_themes_path, notice: "테마가 업데이트되었습니다."
     else
-      render :edit
+      @themes     = Theme.where.not(name: ["お部屋写真", "その他"])
+      @edit_theme = @theme
+      @new_theme  = Theme.new
+      render :index
     end
   end
+
 
   # 테마 삭제
   def destroy

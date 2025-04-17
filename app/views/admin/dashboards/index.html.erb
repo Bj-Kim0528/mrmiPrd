@@ -29,7 +29,6 @@
   <!-- 중간: 빈 공간 파트 -->
   <div style="width: 8.333333333333332%; padding-left: 10px; padding-right: 10px; position: relative; padding-top: 30px;"></div>
 
-  <!-- 오른쪽: 사진, 좋아요, 북마크 파트 -->
   <div style="width: 66.66666666666666%; padding-left: 10px; padding-right: 10px; position: relative;">
     <div style="max-width: 720px; margin: 0 auto 40px; padding: 0;">
       <div style="padding: 0px 10px">
@@ -38,7 +37,7 @@
             유저리스트
           </h1>
           <% @users.each do |follower| %>
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between" style="border-bottom:1px solid #eee;">
               <!-- 프로필 이미지 -->
               <div class="d-flex">
                 <div class="p-2">
