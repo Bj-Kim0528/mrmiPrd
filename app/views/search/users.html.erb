@@ -1,25 +1,56 @@
-<%= link_to "메인 검색으로", searchs_path(query: @query) %>
-
+<div style="margin-top: 32px;  position: relative;">
+  <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between;">
+    <div style="display: flex; font-size: 24px; line-height: 28px; font-weight: 700; padding: 0px; margin: 0px; -webkit-box-align: center; align-items: center;">
+      検索結果: <%= @query %>
+    </div>
+    <%= link_to "検索に戻る", searchs_path(query: @query),
+                              class: "btn",
+                              style: "margin: 0px;
+                                      border: none;
+                                      background: none rgb(10, 165, 255);
+                                      font-style: inherit;
+                                      font-variant: inherit;
+                                      font-stretch: inherit;
+                                      font-family: inherit;
+                                      font-optical-sizing: inherit;
+                                      font-size-adjust: inherit;
+                                      font-kerning: inherit;
+                                      font-feature-settings: inherit;
+                                      font-variation-settings: inherit;
+                                      font-size: 14px;
+                                      line-height: 18px;
+                                      display: inline-flex;
+                                      -webkit-box-pack: center;
+                                      justify-content: center;
+                                      -webkit-box-align: center;
+                                      align-items: center;
+                                      height: 40px;
+                                      border-radius: 4px;
+                                      padding: 0px 16px;
+                                      box-sizing: border-box;
+                                      text-align: center;
+                                      color: rgb(255, 255, 255);
+                                      font-weight: 700;
+                                      width: 110px;" %>
+  </div>
+</div>
 
 <div style="margin-top: 32px;  position: relative;">
   <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between;">
     <div>
       <div style="display: flex; font-size: 20px; line-height: 28px; font-weight: 700; padding: 0px; margin: 0px; -webkit-box-align: center; align-items: center;">
-        ユーザ
+        ユーザー
       </div>
-      <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= @user_results.count %>명의 유저</span>
+      <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= @user_results.count %>人のユーザー</span>
     </div>
     
   </div>
-
-
 
   <div style="margin-top: 10px;">
     <% if @user_results.any? %>
     
       <div style="display: flex; flex-wrap: wrap; gap: 10px; width: 100%;">
         <% @user_results.each do |user| %>
-
 
           <div class="rounded" style="padding: 10px; text-align: center; width: calc(50% - 5px); box-sizing: border-box; padding: 0; border: 1px solid rgba(0, 0, 0, 0.1);">
             <div style="padding: 10px 10px 10px 18px; width: 100%;">
@@ -28,7 +59,7 @@
                 <%= link_to user_path(user) do %>
                   <div style="display: flex;">
                     <%= image_tag url_for(user.get_profile_image(100, 100)), 
-                            alt: "프로필 이미지", 
+                            alt: "プロフィール画像", 
                             class: "rounded-circle", 
                             style: "width: 60px; height: 60px; object-fit: cover; margin-bottom: 3px; margin-right: 5px;" %>
                     <div>
@@ -42,104 +73,56 @@
                         <% end %>
                       </div>
 
-                      <div style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); text-align: left;"><%= user.card_collections.count %>개의 콘텐츠</div>   
+                      <div style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); text-align: left;"><%= user.card_collections.count %>件のコンテンツ</div>   
                     </div>
-
-
                   </div>
-
-                  
-      
                 <% end %>
-
-
 
                 <% unless current_user.email == "guest@example.com" %>
                   <% unless current_user == user %>
                     <% if current_user.following.include?(user) %>
-                      <%= link_to "팔로잉", relationship_path(current_user.active_relationships.find_by(followed_id: user.id)), 
+                      <%= link_to "フォロー中", relationship_path(current_user.active_relationships.find_by(followed_id: user.id)), 
                                   method: :delete,  
                                   class: "btn",
                                   style: "margin: 0px;
-                                  background: none;
-                                  font-style: inherit;
-                                  font-variant: inherit;
-                                  font-stretch: inherit;
-                                  font-family: inherit;
-                                  font-optical-sizing: inherit;
-                                  font-size-adjust: inherit;
-                                  font-kerning: inherit;
-                                  font-feature-settings: inherit;
-                                  font-variation-settings: inherit;
-                                  font-size: 14px;
-                                  line-height: 18px;
-                                  display: inline-flex;
-                                  -webkit-box-pack: center;
-                                  justify-content: center;
-                                  -webkit-box-align: center;
-                                  align-items: center;
-                                  height: 40px;
-                                  border-radius: 4px;
-                                  padding: 0px 16px;
-                                  font-weight: 400;
-                                  box-sizing: border-box;
-                                  text-align: center;
-                                  color: rgb(47, 52, 56);
-                                  border: 1px solid rgb(230, 230, 230);
-                                  width: 80px;"%>
-                    <% else %>
-                      <%= link_to "팔로우", relationships_path(followed_id: user.id), 
-                                  method: :post, 
-                                  class: "btn",
-                                  style: "margin: 0px;
-                                          border: none;
-                                          background: none rgb(10, 165, 255);
-                                          font-style: inherit;
-                                          font-variant: inherit;
-                                          font-stretch: inherit;
-                                          font-family: inherit;
-                                          font-optical-sizing: inherit;
-                                          font-size-adjust: inherit;
-                                          font-kerning: inherit;
-                                          font-feature-settings: inherit;
-                                          font-variation-settings: inherit;
+                                          background: none;
+                                          font: inherit;
                                           font-size: 14px;
                                           line-height: 18px;
                                           display: inline-flex;
-                                          -webkit-box-pack: center;
                                           justify-content: center;
-                                          -webkit-box-align: center;
                                           align-items: center;
                                           height: 40px;
                                           border-radius: 4px;
                                           padding: 0px 16px;
-                                          box-sizing: border-box;
-                                          text-align: center;
-                                          color: rgb(255, 255, 255);
+                                          color: rgb(47, 52, 56);
+                                          border: 1px solid rgb(230, 230, 230);
+                                          width: 100px;" %>
+                    <% else %>
+                      <%= link_to "フォロー", relationships_path(followed_id: user.id), 
+                                  method: :post, 
+                                  class: "btn",
+                                  style: "margin: 0px;
+                                          background: rgb(10, 165, 255);
+                                          font: inherit;
+                                          font-size: 14px;
+                                          line-height: 18px;
+                                          display: inline-flex;
+                                          justify-content: center;
+                                          align-items: center;
+                                          height: 40px;
+                                          border-radius: 4px;
+                                          padding: 0px 16px;
+                                          color: #fff;
                                           font-weight: 700;
-                                          width: 80px;"%>
+                                          width: 90px;" %>
                     <% end %>   
                   <% end %>
                 <% end %> 
-
-
-
-
-
-
-
-
-
-
-
               </div>
 
-
-
-              <!-- このハッシュタグに関連するカードコレクションを表示 -->
+              <!-- このユーザーに関連するカードコレクションを表示 -->
               <% if user.card_collections.any? %>
-
-              
                 <div class="d-flex flex-wrap" style="width: 100%; justify-content: flex-start; gap: 8px;">
                   <% posts = user.card_collections.limit(4) %>
                   <% posts.each_with_index do |post, index| %>
@@ -157,12 +140,9 @@
                     </div>
                   <% end %>
                 </div>
-
-
-
               <% else %>
                 <div class="gallery-item" style="flex: 0 0 calc(25% - 8px); position: relative; height: 183px; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; border-radius: 4px;">
-                  <p style="margin: 0; color: #999; font-size: 14px;">해당 유저의 게시물이 없습니다</p>
+                  <p style="margin: 0; color: #999; font-size: 14px;">該当するユーザーの投稿はありません。</p>
                 </div>
               <% end %>
             </div>
@@ -170,11 +150,7 @@
         <% end %>
       </div>
     <% else %>
-      <p>검색어가 포함된 유저가 없습니다.</p>
+      <p>条件に一致するユーザーがいません。</p>
     <% end %>
   </div>
 </div>
-
-
-
-

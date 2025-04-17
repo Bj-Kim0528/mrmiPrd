@@ -17,7 +17,7 @@
                   left: 0px;     border-radius: 100%;
                   background-color: rgb(237, 237, 237);
                   overflow: hidden;">
-                  <%= image_tag url_for(@userinfo.get_profile_image(120, 120)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 120px; height: 120px; object-fit: cover; border: 1px solid rgba(0, 0, 0, 0.1);" %>
+                  <%= image_tag url_for(@userinfo.get_profile_image(120, 120)), alt: "プロフィール画像", class: "rounded-circle", style: "width: 120px; height: 120px; object-fit: cover; border: 1px solid rgba(0, 0, 0, 0.1);" %>
                 </div>
 
                 <div style="text-align: center;"><!-- 그외 -->
@@ -36,7 +36,7 @@
                       line-height: 19px;
                       color: rgb(130, 140, 148);"><!-- 팔로워 팔로잉 -->
                       <dt style="display: inline-block;
-                        margin-right: 5px;">팔로워
+                        margin-right: 5px;">フォロワー
                       </dt>
 
                       <dd style="display: inline-block;
@@ -55,7 +55,7 @@
 
                       <dt style="display: inline-block;
                         margin-right: 5px; margin-left: 9px;">
-                        팔로잉
+                        フォロー中
                       </dt>
 
                       <dd style="display: inline-block;
@@ -76,7 +76,7 @@
 
                     <% if current_user == @userinfo%>
                       <div><!-- 설정버튼 -->
-                        <%= link_to "설정", edit_user_path(current_user), class: "btn",
+                        <%= link_to "設定", edit_user_path(current_user), class: "btn",
                         style: "margin: 0px;
                                 background: none;
                                 font-style: inherit;
@@ -110,7 +110,7 @@
                         <% if user_signed_in? %>
                           <% unless current_user.email == "guest@example.com" %>
                             <% if current_user.following.include?(@userinfo) %>
-                              <%= link_to "언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: @userinfo)), 
+                              <%= link_to "フォロー解除", relationship_path(current_user.active_relationships.find_by(followed_id: @userinfo)), 
                                           method: :delete,  
                                           class: "btn",
                                           style: "margin: 0px;
@@ -141,7 +141,7 @@
                                                   border: 1px solid rgb(230, 230, 230);
                                                   width: 90px;"%>
                             <% else %>
-                              <%= link_to "팔로우", relationships_path(followed_id: @userinfo), 
+                              <%= link_to "フォロー", relationships_path(followed_id: @userinfo), 
                                           method: :post, 
                                           class: "btn",
                                           style: "margin: 0px;
@@ -206,13 +206,13 @@
                 <div style="display: flex; color: rgb(41, 41, 41); justify-content: center;">
                   <%= link_to collections_user_path(@userinfo), class: "btn" do %>
                     <i class="fa-regular fa-bookmark" style="font-size: 28px;"></i>
-                    <div>북마크</div>
+                    <div>ブックマーク</div>
                     <div><%= @userinfo.bookmarks.where(bookmarkable_type: "CardCollection").count %></div>
                   <% end %>
 
                   <%= link_to likes_user_path(@userinfo), class: "btn" do %>
                     <i class="fa-regular fa-heart" style="font-size: 28px;"></i>
-                    <div>좋아요</div>
+                    <div>いいね</div>
                     <div><%= Like.where(user_id: @userinfo.id, likeable_type: "CardCollection").count %></div>
                   <% end %>
                 </div>
@@ -238,7 +238,7 @@
                       line-height: 24px;
                       font-weight: bold;
                       color: #2f3438;">
-            팔로잉
+            フォロー中
           </h1>
           
           <% @followees.each do |follower| %>
@@ -249,7 +249,7 @@
                 <div class="p-2">
                   <%= link_to user_path(follower) do %>
                     <%= image_tag url_for(follower.get_profile_image(36, 36)),
-                                  alt: "프로필 이미지",
+                                  alt: "プロフィール画像",
                                   class: "rounded-circle",
                                   style: "width: 40px; height: 40px; object-fit: cover;" %>
                   <% end %>
@@ -278,9 +278,9 @@
                 <div class="ms-auto" style="display: flex; align-items: center;">
                 
                   <% if current_user.following.include?(follower) %>
-                    <%= link_to "팔로잉", relationship_path(current_user.active_relationships.find_by(followed_id: follower.id)),
+                    <%= link_to "フォロー中", relationship_path(current_user.active_relationships.find_by(followed_id: follower.id)),
                                 method: :delete,
-                                data: { confirm: "정말 언팔로우 하시겠습니까?" },
+                                data: { confirm: "本当にフォロー解除しますか？" },
                                 class: "btn",
                                 style: "margin: 0px;
                                         background: none;
@@ -308,9 +308,9 @@
                                         text-align: center;
                                         color: rgb(47, 52, 56);
                                         border: 1px solid rgb(230, 230, 230);
-                                        width: 80px;"%>
+                                        width: 100px;"%>
                   <% else %>
-                    <%= link_to "팔로우", relationships_path(followed_id: follower.id),
+                    <%= link_to "フォロー", relationships_path(followed_id: follower.id),
                                 method: :post,
                                       class: "btn",
                                       style: "margin: 0px;
@@ -339,7 +339,7 @@
                                               text-align: center;
                                               color: rgb(255, 255, 255);
                                               font-weight: 700;
-                                              width: 80px;"%>
+                                              width: 100px;"%>
                   <% end %>
                 </div>
               <% end %>
@@ -352,5 +352,3 @@
     </div>
   </div>
 </div>
-
-

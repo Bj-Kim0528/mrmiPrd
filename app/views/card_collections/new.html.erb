@@ -39,7 +39,7 @@
 
         
         <div class="actions" style="margin-top: 20px;">
-          <%= f.submit "올리기", style: "display: inline-block;
+          <%= f.submit "投稿する", style: "display: inline-block;
                                   margin: 0;
                                   padding: 0;
                                   border: none;
@@ -87,7 +87,7 @@
               <% else %>
                 <!-- 이미지가 없을 경우 업로드 안내 라벨 표시 -->
                 <label for="file_input_<%= ci.index %>" id="file-label-<%= ci.index %>" style="cursor: pointer; font-weight: bold; color: #fff;">
-                  PC에서 업로드하기
+                  PCからアップロードする
                 </label>
               <% end %>
               <!-- 파일 입력 필드를 항상 렌더링 (숨김 처리) -->
@@ -108,53 +108,45 @@
             <div style="width: 50%; position: relative;">
               <!-- 텍스트 영역 (너비 100%로 설정) -->
               <div style="flex: 1;">
-              <%= ci.text_area :content, placeholder: "어떤 사진인지 짧은 소개로 시작해보세요.
-              다양한 #태그도 추가할수 있어요.", style: "
-                    width: 100%;
-                    box-sizing: border-box;
-                    min-height: 152px;
-                    padding: 16px;
-                    display: inline-block;
-                    overflow-wrap: break-word;
-                    white-space: pre-line;
-                    font-size: 14px;
-                    line-height: 20px;
-                    z-index: 2;
-                    border: 1px solid rgb(230, 230, 230);
-                    border-radius: 4px;" %>
+                <%= ci.text_area :content, placeholder: "どんな写真かを簡単に紹介しましょう。
+                様々な#タグも追加できます。", style: "
+                      width: 100%;
+                      box-sizing: border-box;
+                      min-height: 152px;
+                      padding: 16px;
+                      display: inline-block;
+                      overflow-wrap: break-word;
+                      white-space: pre-line;
+                      font-size: 14px;
+                      line-height: 20px;
+                      z-index: 2;
+                      border: 1px solid rgb(230, 230, 230);
+                      border-radius: 4px;" %>
               </div>
             </div>
             <% if ci.object.image.attached? %>
               <div class="card-image-deletion" style="position: absolute; bottom: 10px; right: 30px;">
-                <%= link_to "삭제", clear_card_image_path(ci.object),
+                <%= link_to "削除", clear_card_image_path(ci.object),
                       method: :delete,
                       remote: true,
-                      data: { confirm: "정말 삭제하시겠습니까? (삭제시 되돌릴 수 없습니다)" },
+                      data: { confirm: "本当に削除しますか？（削除すると元に戻せません）" },
                       class: "btn",
                       style: "margin: 0; background: none; font-size: 14px; display: inline-flex; justify-content: center; align-items: center; height: 40px; border-radius: 4px; padding: 0 16px; font-weight: 400; box-sizing: border-box; text-align: center; color: rgb(47,52,56); border: 1px solid #e6e6e6; width: 80px;" %>
               </div>
             <% end %>
-
-
-
-
           </div>          
         </div>
       <% end %>
       <!-- + 버튼과 - 버튼 (오른쪽 정렬) -->
       <div style=" margin-right:30px; margin-bottom: 30px; display: flex; justify-content: flex-end;">
         <button type="button" id="add_field_button" style="margin-right: 10px; padding: 0; border: none; background: none; font-weight: bold; width:30px; border: 1px solid rgb(230, 230, 230);
-                    border-radius: 4px;"">+</button>
+                    border-radius: 4px;">+</button>
         <button type="button" id="remove_field_button" style=" padding: 0; border: none; background: none; font-weight: bold; width:30px; border: 1px solid rgb(230, 230, 230);
-                    border-radius: 4px;"">−</button>
+                    border-radius: 4px;">−</button>
       </div>
     </div>
   <% end %>
 </div>
-
-
-
-
 
 <!-- 새 필드 템플릿 (숨김) -->
 <div id="new_field_template" style="display: none;">
@@ -163,19 +155,19 @@
       <div class="custom-file-upload rounded" id="custom-file-TEMPLATE" style="width: 200px; height: 400px; background-color: #ccc; display: flex; align-items: center; justify-content: center; position: relative;">
         <input type="file" name="card_collection[card_images_attributes][TEMPLATE][image]" accept="image/*" id="file_input_TEMPLATE" onchange="previewImage(this, 'custom-file-TEMPLATE')" style="position: absolute; width: 100%; height: auto; opacity: 0; cursor: pointer; z-index: 1;">
         <label for="file_input_TEMPLATE" id="file-label-TEMPLATE" style="cursor: pointer; font-weight: bold; color: #fff;">
-          PC에서 업로드하기
+          PCからアップロードする
         </label>
         <!-- 버튼 영역: 사진 변경 및 삭제 -->
         <div style="position: absolute; bottom: 10px; right: 10px; z-index: 3;">
-          <button type="button" onclick="document.getElementById('file_input_TEMPLATE').click();" style="margin-right: 5px; padding: 5px 10px; font-size: 12px;">사진 변경</button>
-          <button type="button" onclick="deletePreview('TEMPLATE');" style="padding: 5px 10px; font-size: 12px;">삭제</button>
+          <button type="button" onclick="document.getElementById('file_input_TEMPLATE').click();" style="margin-right: 5px; padding: 5px 10px; font-size: 12px;">写真を変更</button>
+          <button type="button" onclick="deletePreview('TEMPLATE');" style="padding: 5px 10px; font-size: 12px;">削除</button>
         </div>
       </div>
       <div style="flex: 1;">
-        <textarea name="card_collection[card_images_attributes][TEMPLATE][content]" placeholder="사진의 내용" style="width: 100%; height: 150px;"></textarea>
+        <textarea name="card_collection[card_images_attributes][TEMPLATE][content]" placeholder="写真の内容" style="width: 100%; height: 150px;"></textarea>
       </div>
     </div>
-    <button type="button" class="delete-field-button" onclick="deleteField(this)" style="margin-top: 5px;">삭제</button>
+    <button type="button" class="delete-field-button" onclick="deleteField(this)" style="margin-top: 5px;">削除</button>
   </div>
 </div>
 
@@ -222,7 +214,7 @@
               var newHTML = templateHTML.replace(/TEMPLATE/g, nextIndex);
               fieldContainer.insertAdjacentHTML('beforeend', newHTML);
             } else {
-              alert("최대 10개까지 추가할 수 있습니다.");
+              alert("最大10件まで追加できます。");
             }
           }
         });
@@ -236,7 +228,7 @@
           if (visibleFields.length > 1) {
             visibleFields[visibleFields.length - 1].style.display = "none";
           } else {
-            alert("최소 1개는 있어야 합니다.");
+            alert("最低1件は必要です。");
           }
         });
       }

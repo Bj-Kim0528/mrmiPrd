@@ -1,4 +1,39 @@
-<%= link_to "메인 검색으로", searchs_path(query: @query) %>
+<div style="margin-top: 32px;  position: relative;">
+  <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between;">
+    <div style="display: flex; font-size: 24px; line-height: 28px; font-weight: 700; padding: 0px; margin: 0px; -webkit-box-align: center; align-items: center;">
+      検索結果: <%= @query %>
+    </div>
+    <%= link_to "検索に戻る", searchs_path(query: @query),
+                              class: "btn",
+                              style: "margin: 0px;
+                                      border: none;
+                                      background: none rgb(10, 165, 255);
+                                      font-style: inherit;
+                                      font-variant: inherit;
+                                      font-stretch: inherit;
+                                      font-family: inherit;
+                                      font-optical-sizing: inherit;
+                                      font-size-adjust: inherit;
+                                      font-kerning: inherit;
+                                      font-feature-settings: inherit;
+                                      font-variation-settings: inherit;
+                                      font-size: 14px;
+                                      line-height: 18px;
+                                      display: inline-flex;
+                                      -webkit-box-pack: center;
+                                      justify-content: center;
+                                      -webkit-box-align: center;
+                                      align-items: center;
+                                      height: 40px;
+                                      border-radius: 4px;
+                                      padding: 0px 16px;
+                                      box-sizing: border-box;
+                                      text-align: center;
+                                      color: rgb(255, 255, 255);
+                                      font-weight: 700;
+                                      width: 110px;" %>
+  </div>
+</div>
 
 <% if @content_results.any? %>
 <div class="row" style="margin-top: 32px; padding-top: 0px; padding-bottom: 5900px; transform: translateY(0px);">
@@ -11,25 +46,24 @@
             <div class="card-item-writer__header" style="display: flex; align-items: center;">
 
               <%= link_to user_path(card_collection.user), class: "card-item-writer__link", style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
-                <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover; margin-right: 10px;" %>
+                <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "プロフィール画像", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover; margin-right: 10px;" %>
               <% end %>
             </div>
 
-            <div >
-              <div style="display: flex;>
+            <div>
+              <div style="display: flex;">
                 <%= link_to user_path(card_collection.user), class: "card-item-writer__link", style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
                   <div style="font-size: 13px; font-weight: bold;"><%= card_collection.user.nickname %></div>
                 <% end %>
-
 
                 <% unless current_user == card_collection.user %>
                   <% unless current_user.email == "guest@example.com" %>
                     <div style="margin-right: auto; margin-left: 5px;">
                       <% if current_user.following.include?(card_collection.user) %>
-                        <%= link_to "언팔로우", relationship_path(current_user.active_relationships.find_by(followed_id: card_collection.user.id)), 
+                        <%= link_to "フォロー解除", relationship_path(current_user.active_relationships.find_by(followed_id: card_collection.user.id)), 
                                     method: :delete, style: "font-size: 15px; padding: 0; color: #17a2b8; text-decoration: none;" %>
                       <% else %>
-                        <%= link_to "팔로우", relationships_path(followed_id: card_collection.user.id), 
+                        <%= link_to "フォロー", relationships_path(followed_id: card_collection.user.id), 
                                     method: :post, style: "font-size: 15px; padding: 0; color: #17a2b8; text-decoration: none;" %>
                       <% end %>
                     </div>
@@ -37,14 +71,13 @@
                 <% end %>
               </div>
 
-              <div style="font-size: 12px; color: #666; margin-top: 0px; margin-bottom: 0px;"">
+              <div style="font-size: 12px; color: #666; margin-top: 0px; margin-bottom: 0px;">
                 <% if card_collection.user.introduction.present? %>
                   <%= card_collection.user.introduction %>
                 <% else %>
                   作成された自己紹介はありません
                 <% end %>
               </div>
-
 
             </div>
 
@@ -55,12 +88,12 @@
         <div class="card-collection-item__content" style="position: relative;">
           <% if card_collection.card_images.any? && card_collection.card_images.first.image.attached? %>
             <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
-              <%= image_tag url_for(card_collection.card_images.first.image.variant(resize_to_fill: [289, 289]).processed), alt: "투고 사진", class: "img-fluid", style: "border-radius: 0.4rem !important; width: 289px; height: 289px; display: block;" %>
+              <%= image_tag url_for(card_collection.card_images.first.image.variant(resize_to_fill: [289, 289]).processed), alt: "投稿写真", class: "img-fluid", style: "border-radius: 0.4rem !important; width: 289px; height: 289px; display: block;" %>
             <% end %>
           <% else %>
             <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
               <div style="width: 289px; height: 289px; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center;">
-                <p style="margin: 0;">사진이 업로드되지 않았습니다.</p>
+                <p style="margin: 0;">写真がアップロードされていません。</p>
               </div>
             <% end %>
           <% end %>
@@ -85,7 +118,7 @@
           <div>
             <% if current_user.bookmarks.exists?(bookmarkable: card_collection) %>
               <% bookmark = current_user.bookmarks.find_by(bookmarkable: card_collection) %>
-              <%= link_to bookmark_path(bookmark), method: :delete, data: { confirm: "정말 북마크를 취소하시겠습니까?" }, style: "text-decoration: none; color: #555; display: flex; align-items: center;" do %>
+              <%= link_to bookmark_path(bookmark), method: :delete, data: { confirm: "本当にブックマークを解除しますか？" }, style: "text-decoration: none; color: #555; display: flex; align-items: center;" do %>
                 <i class="fa-solid fa-bookmark" style="font-size: 20px;"></i>
                 <span style="font-size: 14px; margin-left: 4px;"><%= card_collection.bookmarks.count %></span>
               <% end %>
@@ -121,7 +154,6 @@
             </div>
           <% end %>
         </div>
-      
 
         <!-- 댓글 영역 (최초 댓글만 표시) -->
         <% all_comments = card_collection.card_collection_comments.where(deleted: false).to_a +
@@ -133,7 +165,7 @@
           <% first_comment = sorted_comments.first %>
           <div class="card-item-comment" style="display: flex; align-items: flex-start; margin-top: 10px">
             <%= link_to user_path(first_comment.user), style: "text-decoration: none; display: flex; align-items: center;" do %>
-              <%= image_tag url_for(first_comment.user.get_profile_image(24, 24)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 24px; height: 24px; object-fit: cover; margin-right: 10px;" %>
+              <%= image_tag url_for(first_comment.user.get_profile_image(24, 24)), alt: "プロフィール画像", class: "rounded-circle", style: "width: 24px; height: 24px; object-fit: cover; margin-right: 10px;" %>
               <strong style="font-size: 13px; font-style: normal;"><%= first_comment.user.nickname %></strong>
             <% end %>
             <%= link_to card_collection_path(card_collection), style: "text-decoration: none; color: inherit; margin-left: 10px; font-size: 11px;" do %>
@@ -149,6 +181,5 @@
 </div>
 
 <% else %>
-  <p>검색어가 포함된 컨텐츠가 없습니다.</p>
+  <p>該当するコンテンツがありません。</p>
 <% end %>
-

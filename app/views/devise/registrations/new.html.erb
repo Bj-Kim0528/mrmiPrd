@@ -5,12 +5,12 @@
     font-weight: 700;
     margin-bottom: 24px;
   ">
-    회원가입
+    会員登録
   </h2>
 
   <!-- SNS 계정으로 간편 로그인/회원가입 -->
   <div style="text-align: center; margin: 0 auto; font-size: 12px; color: #999; margin-bottom: 16px;">
-    SNS계정으로 간편 로그인/회원가입
+    SNSアカウントで簡単ログイン／会員登録
   </div>
   <div style="display: flex; justify-content: center; gap: 16px; margin-bottom: 20px;">
     <%- resource_class.omniauth_providers.each do |provider| %>
@@ -36,11 +36,11 @@
 
     <!-- 이메일 입력 -->
     <div style="margin-bottom: 16px;">
-      <label for="user_email_local" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">이메일</label>
+      <label for="user_email_local" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">メールアドレス</label>
       <div style="display: flex; gap: 4px;">
         <%= f.text_field :email_local,
                          required: true,
-                         placeholder: "이메일",
+                         placeholder: "メールアドレス",
                          style: "
                            flex: 1;
                            height: 44px;
@@ -62,20 +62,19 @@
                            font-size: 14px;
                          " %>
       </div>
-
     </div>
 
     <!-- 비밀번호 -->
     <div style="margin-bottom: 16px;">
-      <label for="user_password" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">비밀번호</label>
+      <label for="user_password" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">パスワード</label>
       <% if @minimum_password_length %>
         <p style="margin: 4px 0 8px; font-size: 12px; color: #999;">
-          영문, 숫자를 포함한 <%= @minimum_password_length %>자 이상의 비밀번호를 입력해주세요.
+          英字と数字を含む<%= @minimum_password_length %>文字以上のパスワードを入力してください。
         </p>
       <% end %>
       <%= f.password_field :password,
                            autocomplete: "new-password",
-                           placeholder: "비밀번호",
+                           placeholder: "パスワード",
                            style: "
                              width: 100%;
                              height: 44px;
@@ -88,10 +87,10 @@
 
     <!-- 비밀번호 확인 -->
     <div style="margin-bottom: 16px;">
-      <label for="user_password_confirmation" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">비밀번호 확인</label>
+      <label for="user_password_confirmation" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">パスワードの確認</label>
       <%= f.password_field :password_confirmation,
                            autocomplete: "new-password",
-                           placeholder: "비밀번호 확인",
+                           placeholder: "パスワードの確認",
                            style: "
                              width: 100%;
                              height: 44px;
@@ -104,10 +103,10 @@
 
     <!-- 닉네임 -->
     <div style="margin-bottom: 16px;">
-      <label for="user_nickname" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">닉네임</label>
+      <label for="user_nickname" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">ニックネーム</label>
       <%= f.text_field :nickname,
                        value: resource.nickname,
-                       placeholder: "닉네임 (2~20자)",
+                       placeholder: "ニックネーム（2〜20文字）",
                        style: "
                          width: 100%;
                          height: 44px;
@@ -116,22 +115,22 @@
                          padding: 0 10px;
                          font-size: 14px;
                        " %>
-      <p style="font-size: 12px; color: #999; margin-top: 4px;">다른 유저와 겹치지 않도록 입력해주세요.(2~20자)</p>
+      <p style="font-size: 12px; color: #999; margin-top: 4px;">他のユーザーと重複しないように入力してください。（2〜20文字）</p>
     </div>
 
     <!-- 이용약관, 개인정보 처리방침 -->
     <div style="margin-bottom: 16px;">
       <%= f.check_box :terms_of_service, style: "margin-right: 6px;" %>
-      <%= f.label :terms_of_service, "이용 약관에 동의합니다", style: "font-size: 14px; color: #333;" %>
+      <%= f.label :terms_of_service, "利用規約に同意します", style: "font-size: 14px; color: #333;" %>
     </div>
     <div style="margin-bottom: 24px;">
       <%= f.check_box :privacy_policy, style: "margin-right: 6px;" %>
-      <%= f.label :privacy_policy, "개인정보 처리방침에 동의합니다", style: "font-size: 14px; color: #333;" %>
+      <%= f.label :privacy_policy, "個人情報保護方針に同意します", style: "font-size: 14px; color: #333;" %>
     </div>
 
     <!-- 회원가입 버튼 -->
     <div style="margin-bottom: 16px;">
-      <%= f.submit "이메일 인증하기",
+      <%= f.submit "メール認証する",
             style: "
               width: 100%;
               height: 44px;
@@ -149,13 +148,8 @@
   <!-- 로그인 링크 -->
   <div style="text-align: center; margin-top: 16px;">
     <% if controller_name != 'sessions' %>
-      <%= link_to "로그인", new_session_path(resource_name),
+      <%= link_to "ログイン", new_session_path(resource_name),
                   style: "color: #666; text-decoration: none; font-size: 14px;" %>
     <% end %>
   </div>
 </div>
-
-
-
-
-

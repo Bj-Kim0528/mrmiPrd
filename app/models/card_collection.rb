@@ -19,6 +19,7 @@ class CardCollection < ApplicationRecord
   
   # 최대 10개의 이미지 제한 (CardImage 기준)
   validate :card_images_limit
+  validate :at_least_one_image_attached
 
   
   # 카드 컬렉션이 저장된 후, 카드 이미지의 내용에서 해시태그 추출
@@ -66,6 +67,14 @@ class CardCollection < ApplicationRecord
       card_collection_hashtags.create(hashtag: hashtag)
     end
   end
+
+  def at_least_one_image_attached
+    # nested attributes로 build된 상태에서도 작동하도록 `any? { |ci| ci.image.attached? }` 사용
+    unless card_images.any? { |ci| ci.image.attached? }
+      errors.add(:base, "少なくとも1つの画像をアップロードしてください")
+    end
+  end
+
 
   def update_card_images_positions
     count = 0

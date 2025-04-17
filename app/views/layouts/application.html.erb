@@ -14,9 +14,7 @@
   
   <body>
     <header style="position: sticky; top: 0; z-index: 999; background-color: #fff;">
-      <!-- 메인 네비게이션 (글로벌 헤더) -->
       <nav class="navbar p-0" style="width: 100%; border-bottom: 1px solid #ddd;">
-        <!-- 내부 컨테이너: 최대폭 1256px -->
         <div style="max-width: 1256px; margin: 0 auto; width: 100%; height: 80px; padding: 0px 60px; display: flex; align-items:center;">
           <div class="d-flex justify-content-between align-items-center" style="width: 100%;">
             <div class="d-flex justify-content-between" style="width: 15%; font-size:18px;">
@@ -51,16 +49,16 @@
                   <% if user_signed_in? %>
                     <div class="dropdown" style="margin: 0 20px 0 13px;">
                       <button data-bs-toggle="dropdown" style="border: none; background: transparent; padding: 0;">
-                        <%= image_tag url_for(current_user.get_profile_image(40, 40)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 35px; height: 35px; object-fit: cover;" %>
+                        <%= image_tag url_for(current_user.get_profile_image(40, 40)), alt: "プロフィール画像", class: "rounded-circle", style: "width: 35px; height: 35px; object-fit: cover;" %>
                       </button>
                       <ul class="dropdown-menu">
                         <% if current_user.email == "guest@example.com" %>
                           <li>
-                            <%= link_to "로그아웃", destroy_user_session_path, method: :delete, class: "nav-link" %>
+                            <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "nav-link" %>
                           </li>
                         <% else %>
                           <li>
-                            <%= link_to "로그아웃", destroy_user_session_path, method: :delete, class: "nav-link" %>
+                            <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "nav-link" %>
                           </li>
                           <li>
                             <%= link_to "マイページ", user_path(current_user), class: "nav-link" %>
@@ -90,7 +88,7 @@
                   <% if user_signed_in? %>
                     <% if current_user.email == "guest@example.com" %>
                       <%= link_to "投稿する", destroy_user_session_path, 
-                                  method: :delete, data: { confirm: "로그인후 투고를 작성해주세요" },
+                                  method: :delete, data: { confirm: "ログイン後に投稿してください" },
                                   class: "btn", 
                                   style: "display: inline-block;
                                           margin: 0;
@@ -234,7 +232,6 @@
         </div>
       </nav>
 
-      <!-- 두 번째(상단) 네비게이션 -->
       <% if user_signed_in?%>
         <% unless (controller_name == "card_collections" && (action_name == "new" || action_name == "edit")) %>
           <nav class="navbar p-0" style="width: 100%; border-bottom: 1px solid #ddd;">
@@ -242,17 +239,17 @@
               <% if controller_name == 'users' %>
                 <% if user_signed_in? && current_user.id.to_s == params[:id] %>
                   <div class="d-flex" style="justify-content: center;">
-                    <div class="d-flex" style="justify-content: space-between; align-items: center; width: 15%; height: 60px; font-size: 18px">
-                      <%= link_to "프로필", user_path(current_user), class: "nav-link #{'active' if current_page?(user_path(current_user))}", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
-                      <%= link_to "설정", edit_user_path(current_user), class: "nav-link #{'active' if current_page?(edit_user_path(current_user))}", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
+                    <div class="d-flex" style="justify-content: space-between; align-items: center; width: 20%; height: 60px; font-size: 18px">
+                      <%= link_to "プロフィール", user_path(current_user), class: "nav-link #{'active' if current_page?(user_path(current_user))}", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
+                      <%= link_to "設定", edit_user_path(current_user), class: "nav-link #{'active' if current_page?(edit_user_path(current_user))}", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
                     </div>
                   </div>
                 <% end %>
               <% else %>
                 <div class="d-flex">
-                  <%= link_to "홈", root_path, class: "nav-link active", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
-                  <%= link_to "전체사진", card_collections_path, class: "nav-link active", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
-                  <%= link_to "추천(방사진,그외)", recommend_path, class: "nav-link active", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
+                  <%= link_to "ホーム", root_path, class: "nav-link active", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
+                  <%= link_to "すべての写真", card_collections_path, class: "nav-link active", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
+                  <%= link_to "おすすめ（部屋の写真、その他）", recommend_path, class: "nav-link active", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
                   <%= link_to "#チャンネル", hashtag_channel_path, class: "nav-link active", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
                   <% Theme.where.not(name: ["お部屋写真", "その他"]).each do |theme| %>
                     <%= link_to theme.name, topic_path(theme.name), class: "nav-link #{'active' if params[:topic] == theme.name}", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
@@ -262,32 +259,31 @@
             </div>
           </nav>
 
-          <!-- 하위(서브) 네비게이션 -->
           <nav class="navbar p-0" style="width: 100%; border-bottom: 1px solid #ddd;">
             <div style="max-width: 1256px; margin: 0 auto; padding: 0 44px; width: 100%;">
               <% if controller_name == 'users' && ['edit', 'edit_password'].include?(action_name) %>
                 <div class="d-flex" style="justify-content: center;">
-                  <div class="d-flex" style="justify-content: space-between; width: 20%; font-weight: 700;">
-                    <%= link_to "프로필 수정", edit_user_path(current_user), class: "nav-link #{'active' if action_name == 'edit'}", style: "text-decoration: none; color: inherit;" %>
-                    <%= link_to "비밀번호 변경", edit_password_user_path(current_user), class: "nav-link #{'active' if action_name == 'edit_password'}", style: "text-decoration: none; color: inherit;" %>
+                  <div class="d-flex" style="justify-content: space-between; width: 25%; font-weight: 700;">
+                    <%= link_to "プロフィール編集", edit_user_path(current_user), class: "nav-link #{'active' if action_name == 'edit'}", style: "text-decoration: none; color: inherit;" %>
+                    <%= link_to "パスワード変更", edit_password_user_path(current_user), class: "nav-link #{'active' if action_name == 'edit_password'}", style: "text-decoration: none; color: inherit;" %>
                   </div>
                 </div>
               <% elsif controller_name == 'users' && ['show', 'card_collections', 'likes', 'collections', 'follower', 'followee'].include?(action_name) %>
                 <% if user_signed_in? && current_user.id.to_s == params[:id] %>
                   <div class="d-flex" style="justify-content: center;">
-                    <div class="d-flex" style="justify-content: space-between; width: 30%; font-weight: 700;">
-                      <%= link_to "모두보기", user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'all' || params[:sub].blank?}", style: "text-decoration: none; color: inherit;" %>
-                      <%= link_to "사진", card_collections_user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'card_collections'}", style: "text-decoration: none; color: inherit;" %>
-                      <%= link_to "좋아요", likes_user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'likes'}", style: "text-decoration: none; color: inherit;" %>
-                      <%= link_to "북마크", collections_user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'collections'}", style: "text-decoration: none; color: inherit;" %>
+                    <div class="d-flex" style="justify-content: space-between; width: 35%; font-weight: 700;">
+                      <%= link_to "すべて表示", user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'all' || params[:sub].blank?}", style: "text-decoration: none; color: inherit;" %>
+                      <%= link_to "写真", card_collections_user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'card_collections'}", style: "text-decoration: none; color: inherit;" %>
+                      <%= link_to "いいね", likes_user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'likes'}", style: "text-decoration: none; color: inherit;" %>
+                      <%= link_to "ブックマーク", collections_user_path(current_user), class: "nav-link #{'active' if params[:sub] == 'collections'}", style: "text-decoration: none; color: inherit;" %>
                     </div>
                   </div>
                 <% else %>
                     <div class="d-flex" style="justify-content: center;">
                       <div class="d-flex" style="justify-content: space-between; width: 25%; font-weight: 700;">
-                        <%= link_to "모두보기", user_path(@userinfo), class: "nav-link #{'active' if params[:sub] == 'all' || params[:sub].blank?}", style: "text-decoration: none; color: inherit;" %>
-                        <%= link_to "사진", card_collections_user_path(@userinfo), class: "nav-link #{'active' if params[:sub] == 'card_collections'}", style: "text-decoration: none; color: inherit;" %>
-                        <%= link_to "북마크", collections_user_path(@userinfo), class: "nav-link #{'active' if params[:sub] == 'collections'}", style: "text-decoration: none; color: inherit;" %>
+                        <%= link_to "すべて表示", user_path(@userinfo), class: "nav-link #{'active' if params[:sub] == 'all' || params[:sub].blank?}", style: "text-decoration: none; color: inherit;" %>
+                        <%= link_to "写真", card_collections_user_path(@userinfo), class: "nav-link #{'active' if params[:sub] == 'card_collections'}", style: "text-decoration: none; color: inherit;" %>
+                        <%= link_to "ブックマーク", collections_user_path(@userinfo), class: "nav-link #{'active' if params[:sub] == 'collections'}", style: "text-decoration: none; color: inherit;" %>
                       </div>
                     </div>
                 <% end %>
@@ -307,12 +303,11 @@
     <% unless (controller_name == "card_collections" && (action_name == "new" || action_name == "edit")) || (["sessions", "registrations", "passwords", "confirmations"].include?(controller_name)) %>
       <footer style="width: 100%; background-color: #f8f8f8; margin-top: 40px;">
         <div style="max-width: 1256px; margin: 0 auto; padding: 80px 60px; display: flex; justify-content: space-between; color: #666; font-size: 14px;">
-          <!-- 왼쪽 고객센터 섹션 -->
           <div style="flex: 1; margin-right: 40px; border-right: 1px solid #ddd;">
-            <h3 style="font-size: 16px; margin-bottom: 10px; font-weight: bold;">고객센터 &gt;</h3>
+            <h3 style="font-size: 16px; margin-bottom: 10px; font-weight: bold;">カスタマーセンター &gt;</h3>
             <p style="margin: 0; font-weight: 700; font-size: 20px;">080-xxxx-xxxx <br> (09:00 ~ 18:00)</p>
-            <p style="margin: 0;">점심: 12시~13시 미운영</p>
-            <p style="margin: 0;">평일, 공휴일 휴무</p>
+            <p style="margin: 0;">昼休み: 12時～13時は対応しておりません</p>
+            <p style="margin: 0;">平日、祝日は休業</p>
             <a href="https://mail.google.com/"
               style="
                 display: inline-block;
@@ -326,34 +321,28 @@
                 cursor: pointer;
               "
             >
-              이메일 문의
+              メールでのお問い合わせ
             </a>
           </div>
         
-          <!-- 가운데 회사 정보/정책 링크 섹션 -->
           <div style="flex: 2; border-right: 1px solid #ddd;">
-            <!-- 상단 링크들(회사소개, 채용정보, ...) -->
             <div style="display: flex; gap: 16px; margin-bottom: 10px; font-weight: bold; ">
-              <a href="#" style="text-decoration: none; color: #666;">회사소개</a>
-              <a href="#" style="text-decoration: none; color: #666;">채용정보</a>
-              <a href="#" style="text-decoration: none; color: #666;">광고문의</a>
-              <a href="#" style="text-decoration: none; color: #666;">이용약관</a>
-              <a href="#" style="text-decoration: none; color: #666;">개인정보 처리방침</a>
+              <a href="#" style="text-decoration: none; color: #666;">会社概要</a>
+              <a href="#" style="text-decoration: none; color: #666;">採用情報</a>
+              <a href="#" style="text-decoration: none; color: #666;">広告お問い合わせ</a>
+              <a href="#" style="text-decoration: none; color: #666;">利用規約</a>
+              <a href="#" style="text-decoration: none; color: #666;">プライバシーポリシー</a>
             </div>
-            <!-- 회사 정보 -->
-            <p style="margin: 0;">(주)MRMI | 도쿄 이타바시구</p>
-            <p style="margin: 0;">bjking102409@gmail.com | 사업자등록번호: portfolio| 통신판매업: portfolio</p>
-            <p style="margin: 0;">대표이사: 김병준 | 고객센터 운영시간: 평일 09:00-18:00</p>
+            <p style="margin: 0;">株式会社MRMI | 東京都板橋区</p>
+            <p style="margin: 0;">bjking102409@gmail.com | 事業者登録番号: portfolio | 通信販売業: portfolio</p>
+            <p style="margin: 0;">開発者: キム・ビョンジュン | お問い合わせ受付時間: 平日 09:00-18:00</p>
           </div>
       
-          <!-- 오른쪽 인증마크/기타 링크 섹션 -->
           <div style="flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center;">
-            <!-- 인증마크 또는 로고 -->
             <div style="margin-bottom: 10px;">
               <img src="<%= asset_path('mrmiLogo.png') %>" alt="mrmiLogo"
                   style="width: 80px; height: auto; border-radius: 10%;" />
             </div>
-            <!-- 하단 텍스트 -->
             <p style="margin: 0; font-size: 12px; color: #999;">
               &copy; <%= Time.current.year %> MRMI Prd. All rights reserved.
             </p>

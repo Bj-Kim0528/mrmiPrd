@@ -1,11 +1,11 @@
 <div style="width: 360px; margin: 0 auto; padding: 60px 0; box-sizing: border-box; text-align: center;">
   <!-- 페이지 타이틀 -->
   <h1 style="font-size: 20px; font-weight: 700; margin-bottom: 16px;">
-    이메일 인증
+    メール認証
   </h1>
   <!-- 안내 문구 -->
   <p style="font-size: 14px; color: #666; margin-bottom: 24px;">
-    회원가입 시 발송된 이메일에서 인증번호를 확인하고, 아래에 입력해주세요.
+    会員登録時に送信されたメールで認証番号を確認し、以下に入力してください。
   </p>
 
   <!-- 이메일 인증 폼 -->
@@ -14,9 +14,9 @@
       <!-- 인증번호 입력 필드 -->
       <div style="margin-bottom: 16px;">
         <label for="user_confirmation_token" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">
-          인증번호
+          認証番号
         </label>
-        <%= f.text_field :confirmation_token, autofocus: true, placeholder: "인증번호 입력", 
+        <%= f.text_field :confirmation_token, autofocus: true, placeholder: "認証番号を入力", 
               style: "
                 width: 100%;
                 height: 44px;
@@ -29,7 +29,7 @@
       </div>
       <!-- 인증하기 버튼 -->
       <div style="margin-bottom: 16px;">
-        <%= f.submit "인증하기",
+        <%= f.submit "認証する",
               style: "
                 width: 100%;
                 height: 44px;

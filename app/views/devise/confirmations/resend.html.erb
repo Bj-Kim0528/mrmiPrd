@@ -1,11 +1,11 @@
 <div style="width: 360px; margin: 0 auto; padding: 60px 0; box-sizing: border-box; text-align: center;">
   <!-- 페이지 타이틀 -->
   <h1 style="font-size: 20px; font-weight: 700; margin-bottom: 16px;">
-    인증 이메일 재발송
+    認証メール再送
   </h1>
   <!-- 안내 문구 -->
   <p style="font-size: 14px; color: #666; margin-bottom: 24px;">
-    이메일 주소를 입력하시면 인증 이메일을 재발송해드립니다.
+    メールアドレスを入力すると認証メールを再送信します。
   </p>
 
   <!-- 인증 이메일 재발송 폼 -->
@@ -14,9 +14,9 @@
       <!-- 이메일 입력 필드 -->
       <div style="margin-bottom: 16px;">
         <label for="user_email" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">
-          이메일 주소
+          メールアドレス
         </label>
-        <%= f.email_field :email, required: true, placeholder: "이메일 입력", style: "
+        <%= f.email_field :email, required: true, placeholder: "メールアドレスを入力", style: "
               width: 100%;
               height: 44px;
               border: 1px solid #ccc;
@@ -28,7 +28,7 @@
       </div>
       <!-- 인증 이메일 재발송 버튼 -->
       <div style="margin-bottom: 16px;">
-        <%= f.submit "인증 이메일 재발송", style: "
+        <%= f.submit "認証メールを再送信", style: "
               width: 100%;
               height: 44px;
               border: none;

@@ -4,9 +4,9 @@
     <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between;">
       <div>
         <h1 style="display: flex; font-size: 20px; line-height: 28px; font-weight: 700; padding: 0px; margin: 0px; -webkit-box-align: center; align-items: center;">#<%= @hashtag.name %></h1>
-        <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= @hashtag_bookmark_count %>명 활동 중</span>
+        <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= @hashtag_bookmark_count %>名が活動中</span>
         <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</span>
-        <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= @card_collection_count %>개의 콘텐츠</span>
+        <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= @card_collection_count %>件のコンテンツ</span>
       </div>
 
       <% if user_signed_in? %>
@@ -87,12 +87,12 @@
               <div class="card-collection-item__content" style="position: relative;">
                 <% if card_collection.card_images.any? && card_collection.card_images.first.image.attached? %>
                   <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
-                    <%= image_tag url_for(card_collection.card_images.first.image.variant(resize_to_fill: [289, 289]).processed), alt: "투고 사진", class: "img-fluid", style: "border-radius: 0.4rem !important; width: 289px; height: 289px; display: block;" %>
+                    <%= image_tag url_for(card_collection.card_images.first.image.variant(resize_to_fill: [289, 289]).processed), alt: "投稿写真", class: "img-fluid", style: "border-radius: 0.4rem !important; width: 289px; height: 289px; display: block;" %>
                   <% end %>
                 <% else %>
                   <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
                     <div style="width: 289px; height: 289px; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center;">
-                      <p style="margin: 0;">사진이 업로드되지 않았습니다.</p>
+                      <p style="margin: 0;">写真がアップロードされていません。</p>
                     </div>
                   <% end %>
                 <% end %>
@@ -101,7 +101,7 @@
                 <div style="position: absolute; right: 10px; bottom: 10px; display: flex; align-items: center;">
                   <% if current_user.bookmarks.exists?(bookmarkable: card_collection) %>
                     <% bookmark = current_user.bookmarks.find_by(bookmarkable: card_collection) %>
-                    <%= link_to bookmark_path(bookmark), method: :delete, data: { confirm: "정말 북마크를 취소하시겠습니까?" }, style: "text-decoration: none; color: #555; display: flex; align-items: center;" do %>
+                    <%= link_to bookmark_path(bookmark), method: :delete, data: { confirm: "本当にブックマークを取り消しますか？" }, style: "text-decoration: none; color: #555; display: flex; align-items: center;" do %>
                       <i class="fa-solid fa-bookmark" style="font-size: 30px; color: rgb(10, 165, 255);"></i>
                       <span style="font-size: 14px; margin-left: 4px; color: rgb(10, 165, 255);"><%= card_collection.bookmarks.count %></span>
                     <% end %>
@@ -133,7 +133,7 @@
                 <div style="display: flex; align-items: center;">
                   <div class="card-item-writer__header" style="align-items: center;">
                     <%= link_to user_path(card_collection.user), style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
-                      <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 18px; height: 18px; object-fit: cover; margin-right: 10px;" %>
+                      <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "プロフィール画像", class: "rounded-circle", style: "width: 18px; height: 18px; object-fit: cover; margin-right: 10px;" %>
                     <% end %>
                   </div>
                   <div>
@@ -166,8 +166,8 @@
     <% else %>
       <!-- 콘텐츠 없을 때 메시지 -->
       <p class="css-1vg6q84" style="font-size: 16px; line-height: 24px; margin-top: 10px; color: rgb(130, 140, 148); white-space: pre-wrap;">
-        곧 다양한 콘텐츠로 가득 채워질 공간이에요.
-        콘텐츠를 공유하면 더 빨리 소통을 시작할 수 있어요.
+        まもなくさまざまなコンテンツで満たされるスペースです。
+        コンテンツを共有すると、より早くコミュニケーションを始められます。
       </p>
     <% end %>
   </div>

@@ -13,10 +13,10 @@
           <% if @card_collection.user == current_user %>
             <div>
               <div style="padding: 16px; font-size: 16px; line-height: 20px;">
-                <%= link_to "수정하기", edit_card_collection_path(@card_collection) %>
+                <%= link_to "編集する", edit_card_collection_path(@card_collection) %>
               </div>
               <div style="padding: 16px; font-size: 16px; line-height: 20px;">
-                <%= link_to '삭제하기', card_collection_path(@card_collection), method: :delete, data: { confirm: '本当に削除しますか？' }, class: "text-danger" %>
+                <%= link_to '削除', card_collection_path(@card_collection), method: :delete, data: { confirm: '本当に削除しますか？' }, class: "text-danger" %>
               </div>
             </div>
           <% end %>
@@ -31,7 +31,7 @@
         <div class="container" style="max-width: 720px; margin: 0 auto 40px; padding: 0; display: flex; flex-direction: column; gap: 24px; text-align: center;">
           <% if card_image.image.attached? %>
             <%= image_tag url_for(card_image.image),
-                  alt: "투고 사진", 
+                  alt: "投稿写真", 
                   class: "img-fluid", 
                   style: "max-width: 720px; width: 100%; height: auto;" %>
           <% end %>
@@ -42,7 +42,7 @@
       <% end %>
     <% else %>
       <div class="container" style="max-width: 720px; margin: 0 auto 40px; padding: 0; text-align: center; margin-bottom: 40px;">
-        <%= link_to "사진을 업로드해주세요", edit_card_collection_path(@card_collection), class: "btn btn-primary" %>
+        <%= link_to "写真をアップロードしてください", edit_card_collection_path(@card_collection), class: "btn btn-primary" %>
       </div>
     <% end %>
     
@@ -56,38 +56,37 @@
       <% time_diff = Time.current - @card_collection.created_at %>
       <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);">
         <% if time_diff < 60.minutes %>
-          <%= (time_diff / 60).to_i %>분 전
+          <%= (time_diff / 60).to_i %>分前
         <% elsif time_diff < 24.hours %>
-          <%= (time_diff / 3600).to_i %>시간 전
+          <%= (time_diff / 3600).to_i %>時間前
         <% else %>
-          <%= (time_diff / 1.day).to_i %>일 전
+          <%= (time_diff / 1.day).to_i %>日前
         <% end %>
       </div>
 
       <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
 
-      <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);">좋아요</div>
+      <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);">いいね</div>
       <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;"><%= @card_collection.likes.count %></div>
 
       <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
 
-      <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);">스크랩</div>
+      <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);">ブックマーク</div>
       <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;"><%= @card_collection.bookmarks.count %></div>
 
       <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
 
-      <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);">조회수</div>
+      <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);">閲覧数</div>
       <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;"><%= @card_collection.view_count %></div>
     </div>
   </div>
 
-  <div class="d-flex justify-content-between" style="max-width: 720px; margin: 40px 0px";
-        padding: 0px;"">
-    <!-- 왼쪽 영역: 프로필 이미지와 사용자 정보 -->
+  <div class="d-flex justify-content-between" style="max-width: 720px; margin: 40px 0px"; padding: 0px;"">
+    <!-- 왼쪽 영역: プロフィール画像とユーザー情報 -->
     <div class="d-flex align-items-center">
       <div>
         <%= link_to user_path(@card_collection.user) do %>
-          <%= image_tag url_for(@card_collection.user.get_profile_image(40, 40)), alt: "프로필 이미지", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover;" %>
+          <%= image_tag url_for(@card_collection.user.get_profile_image(40, 40)), alt: "プロフィール画像", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover;" %>
         <% end %>
       </div>
 
@@ -101,16 +100,16 @@
           <% if @card_collection.user.introduction.present? %>
             <%= @card_collection.user.introduction %>
           <% else %>
-            작성된 자기소개가 없습니다.
+            自己紹介はまだ作成されていません
           <% end %>
         </span>
       </div>
     </div>
-    <!-- 오른쪽 영역: 팔로우 버튼 -->
+    <!-- 오른쪽 영역: フォローボタン -->
     <% unless current_user.email == "guest@example.com" %>
       <% unless current_user == @card_collection.user %>
         <% if current_user.following.include?(@card_collection.user) %>
-          <%= link_to "팔로잉", relationship_path(current_user.active_relationships.find_by(followed_id: @card_collection.user.id)), 
+          <%= link_to "フォロー中", relationship_path(current_user.active_relationships.find_by(followed_id: @card_collection.user.id)), 
                       method: :delete,  
                       class: "btn",
                       style: "margin: 0px;
@@ -135,13 +134,9 @@
                               border-radius: 4px;
                               padding: 0px 16px;
                               font-weight: 400;
-                              box-sizing: border-box;
-                              text-align: center;
-                              color: rgb(47, 52, 56);
-                              border: 1px solid rgb(230, 230, 230);
-                              width: 80px;"%>
+                              box-sizing: border-box; text-align: center; color: rgb(47, 52, 56); border: 1px solid rgb(230, 230, 230); width: 100px;"%>
         <% else %>
-          <%= link_to "팔로우", relationships_path(followed_id: @card_collection.user.id), 
+          <%= link_to "フォロー", relationships_path(followed_id: @card_collection.user.id), 
                       method: :post, 
                       class: "btn",
                       style: "margin: 0px;
@@ -170,7 +165,7 @@
                               text-align: center;
                               color: rgb(255, 255, 255);
                               font-weight: 700;
-                              width: 80px;"%>
+                              width: 100px;"%>
         <% end %>   
       <% end %>
     <% end %>
@@ -183,7 +178,7 @@
         <%= link_to card_collection_path(post), style: "text-decoration: none;" do %>
           <% if post.card_images.any? && post.card_images.first.image.attached? %>
             <%= image_tag url_for(post.card_images.first.image),
-                  alt: "게시물 사진", class: "rounded", 
+                  alt: "投稿写真", class: "rounded", 
                   style: "width: 174px; height: 174px; object-fit: cover;" %>
           <% else %>
             <div class="rounded" style="width: 174px; height: 174px; background-color: #f0f0f0;"></div>
@@ -191,7 +186,7 @@
         <% end %>
         <% if posts.size == 4 && index == 3 %>
           <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center;">
-            <%= link_to "더보기", card_collections_user_path(@card_collection.user), 
+            <%= link_to "もっと見る", card_collections_user_path(@card_collection.user), 
                       style: "text-decoration: none; color: #fff; font-size: 16px; font-weight: bold;" %>
           </div>
         <% end %>
@@ -199,40 +194,28 @@
     <% end %>
   </div>
 
-
-
-
-
   <div style="max-width: 720px; padding: 0px; margin-top: 76px;">
-    <!-- 댓글 수 표시 (삭제되지 않은 최상위 댓글) -->
     <% total_comments = @card_collection.card_collection_comments.where(deleted: false).count +
     CardCollectionReply.joins(:card_collection_comment)
                       .where(card_collection_comments: { card_collection_id: @card_collection.id }, deleted: false)
                       .count %>
     <h1 style="font-size: 20px; line-height: 28px; color: rgb(47, 52, 56); margin-bottom: 8px; font-weight: 700; margin-bottom: 24px;">コメント <%= total_comments %></h1>
 
-
-
     <div style="margin-bottom: 40px; margin-top: 8px;">
       <div style="display: flex; align-items: center;">
         <% unless current_user.email == "guest@example.com" %>
 
           <%= image_tag url_for(current_user.get_profile_image(40, 40)), 
-                alt: "프로필 이미지", 
+                alt: "プロフィール画像", 
                 style: "object-fit: cover; width: 30px; height: 30px; border-radius: 50%; margin-right: 12px; border: 0.5px solid rgba(0, 0, 0, 0.08);" %>
 
-        
-        
-          <!-- 입력 폼 컨테이너: 남은 영역을 차지 -->
           <div style="flex: 1; position: relative;">
             <%= form_with model: [@card_collection, @card_collection_comment], local: true do |f| %>
-              <!-- 댓글 입력창 -->
               <%= f.text_area :comment, rows: 1, placeholder: "コメントをここに", 
                     class: "rounded",
                     style: "width: 100%; height: 44px; border: 1px solid #ddd; padding: 0 16px; font-size: 15px; outline: none; resize: none; line-height: 44px; overflow: hidden; " %>
-              <!-- 입력 버튼: 오른쪽 중앙에 위치 (상하 중앙 정렬) -->
               <div style="position: absolute; right: 8px; top: 40%; transform: translateY(-40%);">
-                <%= f.submit "입력", 
+                <%= f.submit "送信", 
                         style: "background: none; border: none; font-size: 16px; color: #007bff; cursor: pointer; color: rgb(194, 200, 204); height: 30px; margin: 0px 0px 0px 12px;" %>
               </div>
             <% end %>
@@ -240,54 +223,42 @@
         <% else %>
           <%= link_to "ログインしてコメントする", destroy_user_session_path, 
                       method: :delete, 
-                      data: { confirm: "로그인후 코멘트를 작성해주세요" },
+                      data: { confirm: "ログイン後にコメントを投稿してください" },
                       class: "btn btn-primary", 
                       style: "width:100%; height: 40px; padding: 0 15px; display: flex; align-items: center; justify-content: center" %>
         <% end %>
       </div>
     </div>
 
- 
-
-
-
-
-
-
-    <!-- 최상위 댓글 목록 -->
     <div>
       <% @card_collection.card_collection_comments.order(created_at: :asc).each do |comment| %>
         <div class="comment" style="margin-bottom: 15px; padding-bottom: 10px; display: flex; align-items: flex-start; margin: 16px 0px;">
           <% if comment.deleted? %>
             <div>
-            <strong>볼 수 없는 유저</strong>
-            <p style="margin-left: 10px; margin-top: 8px; font-size: 15px">댓글이 삭제되었습니다</p>
+              <strong>閲覧できないユーザー</strong>
+              <p style="margin-left: 10px; margin-top: 8px; font-size: 15px">コメントが削除されました</p>
             </div>
           <% else %>
             <div>
-              <%= image_tag comment.user.get_profile_image(50, 50), alt: "프로필 이미지", class: "rounded-circle", 
+              <%= image_tag comment.user.get_profile_image(50, 50), alt: "プロフィール画像", class: "rounded-circle", 
                             style: "width: 30px; height: 30px; object-fit: cover; margin-right: 12px;" %>
             </div>
             <div style="flex: 1 1 0%;">
               <strong><%= comment.user.nickname %></strong>
               <div style="margin-top: 8px;"><%= simple_format(comment.comment, {style: "font-size: 15px; margin-bottom: 8px;"}) %></div>
-              
-              
-  
+
               <div class="ms-3 d-flex align-items-center">
                 <% time_diff = Time.current - comment.created_at %>
                 <div class="ms-3" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);">
                   <% if time_diff < 60.minutes %>
-                    <%= (time_diff / 60).to_i %>분 전
+                    <%= (time_diff / 60).to_i %>分前
                   <% elsif time_diff < 24.hours %>
-                    <%= (time_diff / 3600).to_i %>시간 전
+                    <%= (time_diff / 3600).to_i %>時間前
                   <% else %>
-                    <%= (time_diff / 1.day).to_i %>일 전
+                    <%= (time_diff / 1.day).to_i %>日前
                   <% end %>
                 </div>
 
-
-                <!-- 댓글 좋아요 버튼 -->
                 <% unless current_user.email == "guest@example.com" %>
                   <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
                 <% end %>
@@ -319,45 +290,38 @@
                   <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
                 <% end %>
 
-              
                 <% unless current_user.email == "guest@example.com" %>
                   <% unless comment.deleted? %>
-                    <!-- 답글달기 버튼 -->
                     <div style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);">
                       <a href="#" class="reply-toggle" data-comment-id="<%= comment.id %>" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);">
-                        답글달기
+                        返信する
                       </a>
                     </div>
-
                   <% end %>
                 <% end %>
 
                 <% if comment.user == current_user %>
                   <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
-
-                
                   <%= link_to "削除", card_collection_card_collection_comment_path(@card_collection, comment),
                               method: :delete,
-                              data: { confirm: "정말 삭제하시겠습니까?"},
+                              data: { confirm: "本当に削除しますか？" },
                               style: "margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"%>
                 <% end %>
 
               </div>
 
-
               <% unless comment.deleted? %>
-                <!-- 최상위 댓글에 대한 답글 작성 폼 (부모가 CardCollectionComment인 경우) -->
                 <div id="reply-form-<%= comment.id %>" class="reply-form" style="display: none; margin-left: 20px; position: relative;">
                   <p style="margin-bottom: 8px; font-size: 15px; color: #333;">
-                    <%= comment.user.nickname %> 에 대한 답글:
+                    <%= comment.user.nickname %>への返信:
                   </p>
                   <%= form_with model: [@card_collection, comment, CardCollectionReply.new], local: true do |f| %>
                     <%= f.hidden_field :card_collection_comment_id, value: comment.id %>
                     <div style="position: relative;">
-                      <%= f.text_area :comment, rows: 2, placeholder: "답글을 입력하세요", class: "rounded", 
+                      <%= f.text_area :comment, rows: 2, placeholder: "返信を入力してください", class: "rounded", 
                                                                                       style: "width: 100%; height: 44px; border: 1px solid #ddd; padding: 0 16px; font-size: 15px; outline: none; resize: none; line-height: 44px; overflow: hidden; " %>
                       <div style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%);">
-                        <%= f.submit "답글 작성", style: "background: none; border: none; font-size: 16px; color: #007bff; cursor: pointer; color: rgb(194, 200, 204); height: 30px; margin: 0px 0px 0px 12px;" %>
+                        <%= f.submit "返信を投稿", style: "background: none; border: none; font-size: 16px; color: #007bff; cursor: pointer; color: rgb(194, 200, 204); height: 30px; margin: 0px 0px 0px 12px;" %>
                       </div>
                     </div>
                   <% end %>
@@ -365,71 +329,62 @@
               <% end %>
             </div>
           <% end %>
-
- 
-
-  
         </div>
 
-        <!-- 답글 목록 (CardCollectionReply 모델 사용) -->
         <% if comment.card_collection_replies.any? %>
           <div class="child-replies" style="margin-left: 40px; border-radius: 4px; background-color: rgb(247, 249, 250);">
             <% comment.card_collection_replies.order(created_at: :asc).each do |reply| %>
               <div class="reply" style="margin-bottom: 15px; padding-bottom: 10px; display: flex; align-items: flex-start; margin: 16px 0px; ">
                 <% if reply.deleted? %>
                   <div>
-                  <strong>볼 수 없는 유저</strong>
-                  <p style="margin-left: 10px; margin-top: 8px; font-size: 15px">댓글이 삭제되었습니다</p>
+                    <strong>閲覧できないユーザー</strong>
+                    <p style="margin-left: 10px; margin-top: 8px; font-size: 15px">コメントが削除されました</p>
                   </div>
                 <% else %>
 
-
                   <div>
-                    <%= image_tag reply.user.get_profile_image(40, 40), alt: "프로필 이미지", class: "rounded-circle",  style: "width: 30px; height: 30px; object-fit: cover; margin-right: 12px;"  %>
+                    <%= image_tag reply.user.get_profile_image(40, 40), alt: "プロフィール画像", class: "rounded-circle",  style: "width: 30px; height: 30px; object-fit: cover; margin-right: 12px;"  %>
                   </div>
 
                   <div style="flex: 1 1 0%;">
                     <div style="margin-bottom: 8px;"><strong><%= reply.user.nickname %></strong></div>
 
-                    
-                      <!-- 답글의 헤더: 만약 답글의 부모 답글이 존재하면 그 작성자, 없으면 최상위 댓글 작성자 -->
-                      <div style="display: flex;">
-                        <div>
-
-                                    <% if reply.parent_reply.present? %>
-                                      <%= link_to user_path(reply.parent_reply.user), style: "margin-right: 5px; display: inline-block;
-                                      padding: 0px;
-                                      border: none;
-                                      background: none;
-                                      font: inherit;
-                                      color: rgb(10, 165, 255);" do%>
-                                        @<%= reply.parent_reply.user.nickname %>
-                                      <% end %>
-                                    <% else %>
-                                      <%= link_to user_path(comment.user), style: "margin-right: 5px; display: inline-block;
-                                      padding: 0px;
-                                      border: none;
-                                      background: none;
-                                      font: inherit;
-                                      color: rgb(10, 165, 255);" do %>
-                                        @<%=  comment.user.nickname %>
-                                      <% end %>
-                                    <% end %>
-                        </div>
-                        <span>
-                          <%= simple_format(reply.comment) %>
-                        </span>
+                    <div style="display: flex;">
+                      <div>
+                        <% if reply.parent_reply.present? %>
+                          <%= link_to user_path(reply.parent_reply.user), style: "margin-right: 5px; display: inline-block;
+                          padding: 0px;
+                          border: none;
+                          background: none;
+                          font: inherit;
+                          color: rgb(10, 165, 255);" do%>
+                            @<%= reply.parent_reply.user.nickname %>
+                          <% end %>
+                        <% else %>
+                          <%= link_to user_path(comment.user), style: "margin-right: 5px; display: inline-block;
+                          padding: 0px;
+                          border: none;
+                          background: none;
+                          font: inherit;
+                          color: rgb(10, 165, 255);" do %>
+                            @<%=  comment.user.nickname %>
+                          <% end %>
+                        <% end %>
                       </div>
+                      <span>
+                        <%= simple_format(reply.comment) %>
+                      </span>
+                    </div>
                     
                     <div class="ms-3 d-flex align-items-center">
                       <% time_diff = Time.current - reply.created_at %>
                       <div class="ms-3" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);">
                         <% if time_diff < 60.minutes %>
-                          <%= (time_diff / 60).to_i %>분 전
+                          <%= (time_diff / 60).to_i %>分前
                         <% elsif time_diff < 24.hours %>
-                          <%= (time_diff / 3600).to_i %>시간 전
+                          <%= (time_diff / 3600).to_i %>時間前
                         <% else %>
-                          <%= (time_diff / 1.day).to_i %>일 전
+                          <%= (time_diff / 1.day).to_i %>日前
                         <% end %>
                       </div>
 
@@ -437,23 +392,18 @@
                         <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
                       <% end %>
 
-                      <!-- 리플라이 좋아요 버튼 -->
                       <div>
                         <% unless current_user.email == "guest@example.com" %>
                           <% if current_user.likes.exists?(likeable: reply) %>
                             <% like = current_user.likes.find_by(likeable: reply) %>
                             <%= link_to like_path(like), method: :delete, class: "btn", style: "display: block; text-decoration: none; color: inherit; margin: 0px; padding: 0px;" do %>
                               <i class="fa-solid fa-heart" style="font-size: 13px; line-height: 18px;"></i>
-                              <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);">
-                                <%= reply.likes.count %>
-                              <span>
+                              <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= reply.likes.count %></span>
                             <% end %>
                           <% else %>
                             <%= link_to likes_path(likeable_type: "CardCollectionReply", likeable_id: reply.id), method: :post, class: "btn", style: "display: block; text-decoration: none; color: inherit; margin: 0px; padding: 0px;" do %>
                               <i class="fa-regular fa-heart" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"></i>
-                              <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);">
-                                <%= reply.likes.count %>
-                              <span>
+                              <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= reply.likes.count %></span>
                             <% end %>
                           <% end %>
                         <% end %>
@@ -465,42 +415,36 @@
 
                       <% unless current_user.email == "guest@example.com" %>
                         <% unless reply.deleted? %>
-                          <!-- 답글(자식 답글)에 대한 답글달기 버튼 -->
                           <div style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);">
                             <a href="#" class="reply-toggle" data-comment-id="<%= reply.id %>" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);">
-                              답글달기
+                              返信する
                             </a>
                           </div>
                         <% end %>
                       <% end %>
 
-
-
                       <% if reply.user == current_user %>
-
-                          <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
-
-                          <%= link_to "削除", card_collection_card_collection_comment_card_collection_reply_path(@card_collection, comment, reply),
-                                      method: :delete,
-                                      data: { confirm: "정말 삭제하시겠습니까?" },
-                                      style: "margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"%>
+                        <div class="ms-3 d-flex align-items-center" style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</div>
+                        <%= link_to "削除", card_collection_card_collection_comment_card_collection_reply_path(@card_collection, comment, reply),
+                                    method: :delete,
+                                    data: { confirm: "本当に削除しますか？" },
+                                    style: "margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);" %>
                       <% end %>
                     </div>
                     
                     <% unless reply.deleted? %>
-                      <!-- 답글(자식 답글)에 대한 답글 작성 폼 -->
                       <div id="reply-form-<%= reply.id %>" class="reply-form" style="display: none; margin-left: 20px; position: relative;">
                         <p style="margin-bottom: 8px; font-size: 15px; color: #333;">
-                          <%= reply.user.nickname %> 에 대한 답글:
+                          <%= reply.user.nickname %>への返信:
                         </p>
                         <%= form_with model: [@card_collection, reply.card_collection_comment, CardCollectionReply.new], local: true do |f| %>
                           <%= f.hidden_field :card_collection_comment_id, value: reply.card_collection_comment.id %>
                           <%= f.hidden_field :parent_reply_id, value: reply.id %>
                           <div style="position: relative;">
-                            <%= f.text_area :comment, rows: 1, placeholder: "답글을 입력하세요", class: "rounded", 
+                            <%= f.text_area :comment, rows: 1, placeholder: "返信を入力してください", class: "rounded", 
                                   style: "width: 100%; height: 44px; border: 1px solid #ddd; padding: 0 16px; font-size: 15px; outline: none; resize: none; line-height: 44px; overflow: hidden; " %>
                             <div style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%);">
-                              <%= f.submit "답글 작성", 
+                              <%= f.submit "返信を投稿", 
                                           style: "background: none; border: none; font-size: 16px; color: #007bff; cursor: pointer; color: rgb(194, 200, 204); height: 30px; margin: 0px 0px 0px 12px;" %>
                             </div>
                           </div>
@@ -509,112 +453,86 @@
                     <% end %>
                   </div>
                 <% end %>
-
               </div>
             <% end %>
           </div>
         <% end %>
-        
-
-
-
-
-
-
-
-
-
-
-      <% end %>
+        <% end %>
+      </div>
     </div>
 
-  </div>
-
-  <div style="position: absolute; top: 50px; right: 0px; width: calc(50% - 360px); max-width: 340px; height: 100%; padding: 0px 40px; box-sizing: border-box;">
-    <div style="position: sticky; top: 183px; transition: top 0.1s;">
-      <% unless current_user.email == "guest@example.com" %>
-        <div style="position: relative; display: flex; flex-direction: column; align-items: center;">
-          <!-- 원형 버튼 (하트 아이콘) -->
-          <div style="border: 1px solid rgb(194, 200, 204); background: rgb(247, 249, 250); box-shadow: rgba(63, 71, 77, 0.15) 0px 2px 6px; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 100%; box-sizing: border-box; transition: 0.2s;">
-            <% if current_user.likes.exists?(likeable: @card_collection) %>
-              <% like = current_user.likes.find_by(likeable: @card_collection) %>
-              <%= link_to like_path(like), method: :delete, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
-                <i class="fa-solid fa-heart" style="font-size: 24px;"></i>
+    <div style="position: absolute; top: 50px; right: 0px; width: calc(50% - 360px); max-width: 340px; height: 100%; padding: 0px 40px; box-sizing: border-box;">
+      <div style="position: sticky; top: 183px; transition: top 0.1s;">
+        <% unless current_user.email == "guest@example.com" %>
+          <div style="position: relative; display: flex; flex-direction: column; align-items: center;">
+            <div style="border: 1px solid rgb(194, 200, 204); background: rgb(247, 249, 250); box-shadow: rgba(63, 71, 77, 0.15) 0px 2px 6px; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 100%; box-sizing: border-box; transition: 0.2s;">
+              <% if current_user.likes.exists?(likeable: @card_collection) %>
+                <% like = current_user.likes.find_by(likeable: @card_collection) %>
+                <%= link_to like_path(like), method: :delete, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
+                  <i class="fa-solid fa-heart" style="font-size: 24px;"></i>
+                <% end %>
+              <% else %>
+                <%= link_to likes_path(likeable_type: "CardCollection", likeable_id: @card_collection.id), method: :post, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
+                  <i class="fa-regular fa-heart" style="font-size: 24px;"></i>
+                <% end %>
               <% end %>
-            <% else %>
-              <%= link_to likes_path(likeable_type: "CardCollection", likeable_id: @card_collection.id), method: :post, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
-                <i class="fa-regular fa-heart" style="font-size: 24px;"></i>
-              <% end %>
-            <% end %>
+            </div>
+            <span style="margin-top: 8px; font-size: 14px; color: #555;"><%= @card_collection.likes.count %></span>
           </div>
-          <!-- 좋아요 개수: 원 밖, 중앙 정렬 -->
-          <span style="margin-top: 8px; font-size: 14px; color: #555;"><%= @card_collection.likes.count %></span>
-        </div>
-      <% end %>
+        <% end %>
 
-      <% unless current_user.email == "guest@example.com" %>
-        <div style="position: relative; display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
-          <!-- 원형 버튼 (북마크 아이콘) -->
-          <div style="border: 1px solid rgb(194, 200, 204); background: rgb(247, 249, 250); box-shadow: rgba(63, 71, 77, 0.15) 0px 2px 6px; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 100%; box-sizing: border-box; transition: 0.2s;">
-            <% if current_user.bookmarks.exists?(bookmarkable: @card_collection) %>
-              <% bookmark = current_user.bookmarks.find_by(bookmarkable: @card_collection) %>
-              <%= link_to bookmark_path(bookmark), method: :delete, data: { confirm: "정말 북마크를 취소하시겠습니까?" }, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
-                <i class="fa-solid fa-bookmark" style="font-size: 24px;"></i>
+        <% unless current_user.email == "guest@example.com" %>
+          <div style="position: relative; display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
+            <div style="border: 1px solid rgb(194, 200, 204); background: rgb(247, 249, 250); box-shadow: rgba(63, 71, 77, 0.15) 0px 2px 6px; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 100%; box-sizing: border-box; transition: 0.2s;">
+              <% if current_user.bookmarks.exists?(bookmarkable: @card_collection) %>
+                <% bookmark = current_user.bookmarks.find_by(bookmarkable: @card_collection) %>
+                <%= link_to bookmark_path(bookmark), method: :delete, data: { confirm: "本当にブックマークを解除しますか？" }, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
+                  <i class="fa-solid fa-bookmark" style="font-size: 24px;"></i>
+                <% end %>
+              <% else %>
+                <%= link_to bookmarks_path(bookmarkable_type: "CardCollection", bookmarkable_id: @card_collection.id), method: :post, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
+                  <i class="fa-regular fa-bookmark" style="font-size: 24px;"></i>
+                <% end %>
               <% end %>
-            <% else %>
-              <%= link_to bookmarks_path(bookmarkable_type: "CardCollection", bookmarkable_id: @card_collection.id), method: :post, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
-                <i class="fa-regular fa-bookmark" style="font-size: 24px;"></i>
+            </div>
+            <span style="margin-top: 8px; font-size: 14px; color: #555;"><%= @card_collection.bookmarks.count %></span>
+          </div>
+        <% end %>
+
+        <% unless current_user.email == "guest@example.com" %>
+          <div style="position: relative; display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
+            <div style="border: 1px solid rgb(194, 200, 204); background: rgb(247, 249, 250); box-shadow: rgba(63, 71, 77, 0.15) 0px 2px 6px; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 100%; box-sizing: border-box; transition: 0.2s;">
+              <%= link_to "#", onclick: "window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); return false;", style: "display: block; text-decoration: none; color: inherit;" do %>
+                <i class="fa-regular fa-comment" style="font-size: 24px;"></i>
               <% end %>
-            <% end %>
+            </div>
+            <!-- 댓글 개수: 원 밖, 중앙 정렬 -->
+            <% total_comments = @card_collection.card_collection_comments.where(deleted: false).count +
+                                CardCollectionReply.joins(:card_collection_comment)
+                                                    .where(card_collection_comments: { card_collection_id: @card_collection.id }, deleted: false)
+                                                    .count %>
+            <span style="margin-top: 8px; font-size: 14px; color: #555;"><%= total_comments %></span>
           </div>
-          <!-- 북마크 개수: 원 밖, 중앙 정렬 -->
-          <span style="margin-top: 8px; font-size: 14px; color: #555;"><%= @card_collection.bookmarks.count %></span>
-        </div>
-      <% end %>
-
-      <% unless current_user.email == "guest@example.com" %>
-        <div style="position: relative; display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
-          <!-- 원형 버튼 (댓글 아이콘) -->
-          <div style="border: 1px solid rgb(194, 200, 204); background: rgb(247, 249, 250); box-shadow: rgba(63, 71, 77, 0.15) 0px 2px 6px; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 100%; box-sizing: border-box; transition: 0.2s;">
-            <%= link_to "#", onclick: "window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); return false;", style: "display: block; text-decoration: none; color: inherit;" do %>
-              <i class="fa-regular fa-comment" style="font-size: 24px;"></i>
-            <% end %>
-          </div>
-          <!-- 댓글 개수: 원 밖, 중앙 정렬 -->
-          <% total_comments = @card_collection.card_collection_comments.where(deleted: false).count +
-                              CardCollectionReply.joins(:card_collection_comment)
-                                                  .where(card_collection_comments: { card_collection_id: @card_collection.id }, deleted: false)
-                                                  .count %>
-          <span style="margin-top: 8px; font-size: 14px; color: #555;"><%= total_comments %></span>
-        </div>
-      <% end %>
-
-
-
-
-      
+        <% end %>
+    
     </div>
   </div>
 </div>
 
-
-
-
-
-  <script>
-    document.addEventListener("turbolinks:load", function() {
-      var replyToggles = document.querySelectorAll(".reply-toggle");
-      replyToggles.forEach(function(toggle) {
-        toggle.addEventListener("click", function(e) {
-          e.preventDefault();
-          var commentId = this.dataset.commentId;
-          var form = document.getElementById("reply-form-" + commentId);
-          if (form.style.display === "none" || form.style.display === "") {
-            form.style.display = "block";
-          } else {
-            form.style.display = "none";
-          }
-        });
+<script>
+  document.addEventListener("turbolinks:load", function() {
+    var replyToggles = document.querySelectorAll(".reply-toggle");
+    replyToggles.forEach(function(toggle) {
+      toggle.addEventListener("click", function(e) {
+        e.preventDefault();
+        var commentId = this.dataset.commentId;
+        var form = document.getElementById("reply-form-" + commentId);
+        if (form.style.display === "none" || form.style.display === "") {
+          form.style.display = "block";
+        } else {
+          form.style.display = "none";
+        }
       });
     });
-  </script>
+  });
+</script>

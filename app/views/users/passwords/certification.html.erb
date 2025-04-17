@@ -1,11 +1,11 @@
 <div style="width: 360px; margin: 0 auto; padding: 60px 0; box-sizing: border-box; text-align: center;">
   <!-- 페이지 타이틀 -->
   <h1 style="font-size: 20px; font-weight: 700; margin-bottom: 16px;">
-    비밀번호 재설정 인증번호 입력
+    パスワード再設定の認証番号入力
   </h1>
   <!-- 안내 문구 -->
   <p style="font-size: 14px; color: #666; margin-bottom: 24px;">
-    이메일로 받은 인증번호를 입력하세요.
+    メールで受け取った認証番号を入力してください。
   </p>
 
   <!-- 인증 폼 -->
@@ -14,9 +14,9 @@
       <!-- 인증번호 입력 필드 -->
       <div style="margin-bottom: 16px;">
         <label for="user_reset_password_token" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">
-          인증번호
+          認証番号
         </label>
-        <%= f.text_field :reset_password_token, autofocus: true, required: true, placeholder: "인증번호 입력", style: "
+        <%= f.text_field :reset_password_token, autofocus: true, required: true, placeholder: "認証番号を入力", style: "
               width: 100%;
               height: 44px;
               border: 1px solid #ccc;
@@ -28,7 +28,7 @@
       </div>
       <!-- 인증번호 확인 버튼 -->
       <div style="margin-bottom: 16px;">
-        <%= f.submit "인증번호 확인", style: "
+        <%= f.submit "認証番号を確認", style: "
               width: 100%;
               height: 44px;
               border: none;

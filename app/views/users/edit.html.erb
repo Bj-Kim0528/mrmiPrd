@@ -14,7 +14,6 @@
       </div>
     <% end %>
 
-
     <!-- 프로필 이미지 영역 -->
     <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 24px;">
       <div id="custom-file-profile"
@@ -55,23 +54,22 @@
                       text-decoration: none;
                       font-weight: 400;
               ">
-        이미지 삭제
+        画像を削除
       </button>
     </div>
 
     <!-- 프로필 이미지 삭제 여부 -->
     <%= f.hidden_field :remove_profile_image, id: "remove_profile_image", value: "false" %>
 
-
     <!-- 닉네임 -->
     <div style="margin-bottom: 16px;">
-      <label for="userinfo_nickname" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">닉네임</label>
+      <label for="userinfo_nickname" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">ニックネーム</label>
       <%= f.text_field :nickname, style: "width: 100%; height: 40px; padding: 0 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;" %>
     </div>
 
     <!-- 이메일 (비활성화) -->
     <div style="margin-bottom: 16px;">
-      <label for="userinfo_email" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">이메일</label>
+      <label for="userinfo_email" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">メールアドレス</label>
       <%= f.text_field :email,
             disabled: true,
             style: "width: 100%; height: 40px; padding: 0 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; background-color: #eee; color: #777; cursor: not-allowed;" %>
@@ -79,57 +77,56 @@
 
     <!-- 핸드폰 번호 -->
     <div style="margin-bottom: 16px;">
-      <label for="userinfo_phone_number" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">핸드폰 번호</label>
+      <label for="userinfo_phone_number" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">携帯電話番号</label>
       <%= f.text_field :phone_number, style: "width: 100%; height: 40px; padding: 0 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;" %>
     </div>
 
     <!-- 성별 -->
     <div style="margin-bottom: 16px;">
-      <span style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">성별</span>
+      <span style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">性別</span>
       <label style="font-size: 14px; margin-right: 8px;">
-        <%= f.radio_button :gender, "선택하지않음" %> 선택하지않음
+        <%= f.radio_button :gender, "선택하지않음" %> 未選択
       </label>
       <label style="font-size: 14px; margin-right: 8px;">
-        <%= f.radio_button :gender, "여성" %> 여성
+        <%= f.radio_button :gender, "여성" %> 女性
       </label>
       <label style="font-size: 14px;">
-        <%= f.radio_button :gender, "남성" %> 남성
+        <%= f.radio_button :gender, "남성" %> 男性
       </label>
     </div>
 
     <!-- 한줄 소개 -->
     <div style="margin-bottom: 16px;">
-      <label for="userinfo_introduction" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">한줄 소개</label>
+      <label for="userinfo_introduction" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">一言紹介</label>
       <%= f.text_area :introduction, rows: 2, style: "width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;" %>
     </div>
 
     <!-- SNS 링크 -->
     <div style="margin-bottom: 16px;">
-      <label for="userinfo_sns_link" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">SNS 링크</label>
+      <label for="userinfo_sns_link" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px;">SNSリンク</label>
       <%= f.text_field :sns_link, style: "width: 100%; height: 40px; padding: 0 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;" %>
     </div>
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px;">
-    <!-- 탈퇴하기 버튼 -->
-    <%= link_to "탈퇴하기", user_path(@userinfo),
-      method: :delete,
-      data: { confirm: "정말 탈퇴하시겠습니까?" },
-      style: "
-        font-size: 14px;
-        color: #999999;
-        text-decoration: none;
-        font-weight: 400;
-      "
-    %>
+      <!-- 탈퇴하기 버튼 -->
+      <%= link_to "退会する", user_path(@userinfo),
+        method: :delete,
+        data: { confirm: "本当に退会しますか？" },
+        style: "
+          font-size: 14px;
+          color: #999999;
+          text-decoration: none;
+          font-weight: 400;
+        "
+      %>
     </div>
 
     <!-- 업데이트 버튼 -->
     <div style="margin-bottom: 16px; margin-top: 10px;">
-      <%= f.submit "완료", style: "width: 100%; height: 44px; border: none; color: #FFFFFF; background-color: #0AA5FF; font-size: 16px; border-radius: 4px; cursor: pointer;" %>
+      <%= f.submit "完了", style: "width: 100%; height: 44px; border: none; color: #FFFFFF; background-color: #0AA5FF; font-size: 16px; border-radius: 4px; cursor: pointer;" %>
     </div>
   </div>
 <% end %>
-
 
 <script>
 // 이미지 미리보기 함수 (프로필 이미지 전용)
@@ -176,7 +173,7 @@ function deleteProfileImage() {
     
     // fallback 이미지(no_image.jpg) 추가
     var fallbackImg = document.createElement("img");
-    fallbackImg.src = "<%= asset_path('no_image.jpg') %>";  // Asset 경로를 Rails 헬퍼로 처리
+    fallbackImg.src = "<%= asset_path('no_image.jpg') %>";
     fallbackImg.style.width = "100%";
     fallbackImg.style.height = "100%";
     fallbackImg.style.objectFit = "cover";

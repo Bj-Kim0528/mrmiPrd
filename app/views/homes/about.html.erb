@@ -1,69 +1,65 @@
 <!-- Hero Section -->
 <section style="width: 100%; height: 400px; background-image: url('<%= asset_path("cozy_interior_space.jpg") %>'); background-size: cover; background-position: center; position: relative;">
   <div style="position: absolute; bottom: 40px; left: 40px; text-align: left;">
-    <h1 style="font-size: 36px; font-weight: bold; color: #000;">공간이 곧 나를 말하다</h1>
+    <h1 style="font-size: 36px; font-weight: bold; color: #000;">空間は私を語る</h1>
     <h3 style="font-size: 26px; font-weight: bold; color: #000;">My Room, My Identity</h3>
-    <p style="font-size: 18px; margin: 10px 0 20px; color: #000;">이 플랫폼은 당신의 공간을 이야기하고, 다른 사람들의 영감을 받을 수 있는 공간입니다.</p>
-    <%= link_to "사진 둘러보기", "/card_collections",  class: "hero-button" %>
+    <p style="font-size: 18px; margin: 10px 0 20px; color: #000;">このプラットフォームは、あなたの空間を語り、他の人のインスピレーションを得られる場所です。</p>
+    <%= link_to "写真を見る", "/card_collections", class: "hero-button" %>
   </div>
 </section>
-
-
 
 <!-- About Description with Right Image -->
 <section style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; width:100%; max-width: 1136px; padding: 60px 20px; padding-bottom: 0px">
   <!-- Text Left -->
   <div style="flex: 1 1 50%; padding-right: 20px;">
     <p style="font-size: 16px; line-height: 1.8; color: #333;">
-      <strong style="color: #000;">MRMI는 “나의 공간에 나의 이야기를 담는다”는 가치를 토대로,</strong><br>
-      자취를 시작하는 대학생부터 가족이 함께 사는 모든 분들에게 따뜻하고 감성적인 인테리어 아이디어를 나누기 위해 만들어졌습니다.
+      <strong style="color: #000;">MRMIは「私の空間に私のストーリーを込める」という価値を基に、</strong><br>
+      一人暮らしを始める大学生から家族で暮らすすべての人々に<br>温かく感性豊かなインテリアアイデアを共有するために作られました。
     </p>
     <p style="font-size: 16px; line-height: 1.8; color: #333;">
-      이곳에서 여러분은 개성과 취향을 반영한 다양한 공간 꾸미기 팁을 찾고,<br>
-      서로의 경험을 나누며 함께 성장할 수 있습니다.<br>
-      내 방 한 편 한 편이 내가 누구인지를 보여줄 수 있도록, <strong>mrmi가 늘 곁에서 함께합니다.</strong>
+      ここでは、個性や好みを反映したさまざまな空間コーディネートのヒントを見つけ、<br>
+      お互いの経験を共有しながら一緒に成長できます。<br>
+      部屋のひとつひとつが私という存在を映し出せるように、<strong>MRMIはいつもあなたのそばにいます。</strong>
     </p>
   </div>
 
   <!-- Image Right -->
   <div style="flex: 1 1 50%;">
-    <img src="<%= asset_path("interior_inspo_1.jpg") %>" alt="감성 인테리어 예시1" style="width: 100%; height: auto; border-radius: 10px;">
+    <img src="<%= asset_path("interior_inspo_1.jpg") %>" alt="感性インテリア例1" style="width: 100%; height: auto; border-radius: 10px;">
   </div>
 </section>
-
 
 <!-- FAQ Section with Left Image -->
 <section style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; width:100%; max-width: 1136px; padding: 60px 20px;">
   <!-- Image Left -->
   <div style="flex: 1 1 50%; padding-right: 20px;">
-    <img src="<%= asset_path("interior_inspo_2.jpg") %>" alt="감성 인테리어 예시2" style="width: 100%; height: auto; border-radius: 10px;">
+    <img src="<%= asset_path("interior_inspo_2.jpg") %>" alt="感性インテリア例2" style="width: 100%; height: auto; border-radius: 10px;">
   </div>
 
   <!-- Text Right -->
   <div style="flex: 1 1 50%; padding-left: 20px;">
-    <h2 style="font-size: 24px; margin-bottom: 30px;">자주 묻는 질문들</h2>
+    <h2 style="font-size: 24px; margin-bottom: 30px;">よくある質問</h2>
 
     <div style="margin-top: 20px;">
-      <h3 style="font-size: 18px; font-weight: 600;">사진은 누구나 업로드할 수 있나요?</h3>
-      <p style="font-size: 15px; line-height: 1.6; color: #444;">네, 회원가입 후 누구나 자신의 공간을 업로드할 수 있어요.</p>
+      <h3 style="font-size: 18px; font-weight: 600;">誰でも写真をアップロードできますか？</h3>
+      <p style="font-size: 15px; line-height: 1.6; color: #444;">はい、会員登録後は誰でも自分の空間をアップロードできます。</p>
     </div>
 
     <div style="margin-top: 20px;">
-      <h3 style="font-size: 18px; font-weight: 600;">저작권은 어떻게 되나요?</h3>
-      <p style="font-size: 15px; line-height: 1.6; color: #444;">사진의 저작권은 원작자에게 있으며, 동의 없이 무단 도용은 금지됩니다.</p>
+      <h3 style="font-size: 18px; font-weight: 600;">著作権はどうなりますか？</h3>
+      <p style="font-size: 15px; line-height: 1.6; color: #444;">写真の著作権は原作者に帰属し、無断使用は禁じられています。</p>
     </div>
 
     <div style="margin-top: 20px;">
-      <h3 style="font-size: 18px; font-weight: 600;">추천은 어떤 기준으로 이루어지나요?</h3>
-      <p style="font-size: 15px; line-height: 1.6; color: #444;">업로드된 사진의 조회수, 좋아요 갯수, 북마크 갯수, 등을 바탕으로 추천 알고리즘이 작동해요.</p>
+      <h3 style="font-size: 18px; font-weight: 600;">おすすめはどのような基準で行われますか？</h3>
+      <p style="font-size: 15px; line-height: 1.6; color: #444;">アップロードされた写真の閲覧数、いいね数、ブックマーク数などを基におすすめアルゴリズムが動作します。</p>
     </div>
   </div>
 </section>
 
-
 <!-- Contact Section -->
 <section style="max-width: 800px; margin: 60px auto; padding: 0 20px; text-align: center;">
-  <h2 style="font-size: 24px; margin-bottom: 20px;">문의</h2>
+  <h2 style="font-size: 24px; margin-bottom: 20px;">お問い合わせ</h2>
   <ul style="list-style: none; padding: 0; font-size: 16px;">
     <li style="margin: 10px 0;">
       <strong>Email:</strong>

@@ -1,12 +1,11 @@
-
 <div style="width: 360px; margin: 0 auto; padding: 60px 0; text-align: center; box-sizing: border-box;">
   <!-- 페이지 타이틀 -->
   <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 16px;">
-    비밀번호 재설정
+    パスワード再設定
   </h2>
   <!-- 안내 문구 -->
   <p style="font-size: 14px; color: #666; margin-bottom: 24px;">
-    가입한 이메일 주소를 입력해주세요.
+    登録したメールアドレスを入力してください。
   </p>
 
   <!-- Devise의 비밀번호 재설정 폼 -->
@@ -20,7 +19,7 @@
         <%= f.email_field :email,
               autofocus: true,
               autocomplete: "email",
-              placeholder: "이메일",
+              placeholder: "メールアドレス",
               style: "
                 flex: 1;
                 height: 44px;
@@ -34,7 +33,7 @@
 
       <!-- "이메일로 인증코드 받기" 버튼 -->
       <div class="actions" style="margin-bottom: 24px;">
-        <%= f.submit "이메일로 인증코드 받기", style: "
+        <%= f.submit "メールで認証コードを受け取る", style: "
           display: block;
           width: 100%;
           height: 44px;
@@ -52,7 +51,7 @@
 
   <!-- 추가 안내 문구 및 고객센터 정보 -->
   <p style="font-size: 14px; color: #666; margin-bottom: 8px;">
-    회원가입 시 입력한 정보가 기억나지 않는다면?
+    会員登録時に入力した情報がわからない場合は？
   </p>
   <div>
     <p style="
@@ -62,7 +61,7 @@
       font-weight: 600;
       margin: 0;
     ">
-      고객센터에 문의해주세요<br>
+      カスタマーセンターにお問い合わせください<br>
       (bjking102409@gmail.com)
     </p>
   </div>
