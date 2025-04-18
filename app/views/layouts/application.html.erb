@@ -12,187 +12,224 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
   </head>
   
-  <body style="display: flex; flex-direction: column; min-height: 100vh; margin: 0;">
+  <body class= "d-flex flex-column justify-content-center" style="min-height: 100vh; margin: 0;">
     <header style="position: sticky; top: 0; z-index: 999; background-color: #fff;">
-      <nav class="navbar p-0" style="width: 100%; border-bottom: 1px solid #ddd;">
-        <div style="max-width: 1256px; margin: 0 auto; width: 100%; height: 80px; padding: 0px 60px; display: flex; align-items:center;">
-          <div class="d-flex justify-content-between align-items-center" style="width: 100%;">
-            <div class="d-flex justify-content-between" style="width: 15%; font-size:18px;">
+      <nav style="border-bottom: 1px solid #ddd;">
+        <div class="container d-flex align-items-center" style="margin: 0 auto; padding-right: 15px; padding-left: 15px; height: 80px;">
+          <% unless user_signed_in? %>
+            <div class="d-flex d-sm-none align-items-center justify-content-between" style="width: 100%;">
               <div>
-                <%= link_to "MRMI", root_path, class: "navbar-brand", style: "text-decoration: none; color: inherit; font-weight: bold;" %>
+                <%= link_to "MRMI", root_path, class: "navbar-brand", style: "color: inherit; font-weight: bold; margin-right: 30px;" %>
               </div>
-              <% unless (controller_name == "card_collections" && (action_name == "new" || action_name == "edit")) %>
-                <div>
-                  <%= link_to "About", about_path, class: "navbar-brand", style: "text-decoration: none; color: inherit; font-weight: bold;" %>
+
+              <div style="font-size: 10px;">
+                <div class="d-flex d-sm-none align-items-center justify-content-between" style="width: 100%;">
+                  <div class="dropdown ms-2">
+                    <button class="btn btn-link nav-link dropdown-toggle"
+                            type="button"
+                            id="xsMenuDropdown"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            style="text-decoration: none; color: inherit; font-weight: 700; margin-left: 0px;">
+                      メニュー
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="xsMenuDropdown">
+                      <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+                        <%= link_to "About", about_path, 
+                        class: "d-flex align-items-center dropdown-item", 
+                        style: ";color: #2F3438;" %>
+                      <% end %>
+
+                      <li>
+                        <%= link_to "ゲストログイン", users_guest_sign_in_path, method: :post, 
+                        class: "d-flex align-items-center dropdown-item", 
+                        style: "color: #2F3438;" %>
+                      </li>
+                      <li>
+                        <%= link_to "ログイン", new_user_session_path,
+                        class: "d-flex align-items-center dropdown-item", 
+                        style: "color: #2F3438;" %>
+                      </li>
+                      <li>
+                        <%= link_to "会員登録", new_user_registration_path,
+                        class: "d-flex align-items-center dropdown-item", 
+                        style: "color: #2F3438;" %>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
+
+
+              </div>
+          
+            </div>
+          <% else %>
+            <div class="d-flex d-sm-none align-items-center justify-content-center" style="width: 100%;">
+              <div>
+                <%= link_to "MRMI", root_path, class: "navbar-brand", style: "color: inherit; font-weight: bold;" %>
+              </div>
+            </div>
+          <% end %>
+          
+          <div class="d-none d-sm-flex align-items-center justify-content-between" style="width: 100%;">
+            <div class="d-flex align-items-center justify-content-between" style="width: 15%;">   
+              <div>
+                <%= link_to "MRMI", root_path, class: "navbar-brand", style: "color: inherit; font-weight: bold; margin-right: 50px;" %>
+              </div>
+
+              <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+                <%= link_to "About", about_path,
+                            class: "navbar-brand fw-bold d-none d-md-inline-block",
+                            style: "color: inherit; font-weight: bold;" %>
               <% end %>
             </div>
+            
+              
             <% unless (controller_name == "card_collections" && (action_name == "new" || action_name == "edit")) %>
-              <div class="d-flex align-items-center justify-content-end" style="width:68%;">
+
+              <div class="d-flex align-items-center">
                 <% if user_signed_in? %>
-                  <div style="margin-right: 20px;">
-                    <div style="width: 350px; position: relative;">
-                      <%= form_with url: searchs_path, method: :get, local: true, html: { style: "width: 100%; position: relative;" } do |f| %>
-                        <button type="submit" 
-                                style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
-                                      background: none; border: none; padding: 0; cursor: pointer;">
-                          <i class="fa-solid fa-magnifying-glass" style="font-size: 23.7px; color: #666;"></i>
+                  <div class="d-none d-sm-flex" style="margin-right: 20px;">
+                    <div class="position-relative" style="width: 300px;">
+                      <%= form_with url: searchs_path, method: :get, local: true, html: { style: "width:100%;position:relative;" } do |f| %>
+                        <button type="submit"
+                                style="position:absolute;left:10px;top:50%;transform:translateY(-50%);background:none;border:none;padding:0;cursor:pointer;">
+                          <i class="fa-solid fa-magnifying-glass" style="font-size:23.7px;color:#666;"></i>
                         </button>
-                        <%= f.search_field :query, placeholder: "Search", "aria-label" => "Search", 
-                              style: "width: 100%; padding-left: 40px; height: 36px; border: 1px solid #ccc; border-radius: 4px;" %>
+                        <%= f.search_field :query,
+                              placeholder: "Search",
+                              aria: { label: "Search" },
+                              style: "width:100%;padding-left:40px;height:36px;border:1px solid #ccc;border-radius:4px;" %>
                         <%= f.hidden_field :search_affect_type, value: "Typing" %>
                       <% end %>
                     </div>
                   </div>
-                <% end %>
-                <div class="d-flex align-items-center">
-                  <% if user_signed_in? %>
-                    <div class="dropdown" style="margin: 0 20px 0 13px;">
-                      <button data-bs-toggle="dropdown" style="border: none; background: transparent; padding: 0;">
-                        <%= image_tag url_for(current_user.get_profile_image(40, 40)), alt: "プロフィール画像", class: "rounded-circle", style: "width: 35px; height: 35px; object-fit: cover;" %>
-                      </button>
-                      <ul class="dropdown-menu">
-                        <% if current_user.email == "guest@example.com" %>
-                          <li>
-                            <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "nav-link" %>
-                          </li>
-                        <% else %>
-                          <li>
-                            <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "nav-link" %>
-                          </li>
-                          <li>
-                            <%= link_to "マイページ", user_path(current_user), class: "nav-link" %>
+
+                  <div class="d-none d-sm-flex dropdown" style="margin:0 20px;">
+                    <button data-bs-toggle="dropdown" class="btn btn-link p-0 border-0">
+                      <%= image_tag current_user.get_profile_image(40,40),
+                                    class: "rounded-circle", style:"width:35px;height:35px;" %>
+                    </button>
+                    
+                    <% if current_user.email == "guest@example.com" %>
+                      <ul class="dropdown-menu dropdown-menu-end">
+                        <!-- xs 에만 보이는 About -->
+                        <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+                          <li class="d-block d-md-none">
+                            <%= link_to "About", about_path, class: "dropdown-item" %>
                           </li>
                         <% end %>
+                    
+                        <!-- xs 에만 보이는 投稿する -->
+                        <li class="d-block d-md-none">
+                          <% if current_user.email == "guest@example.com" %>
+                            <%= link_to "投稿する", destroy_user_session_path,
+                                        method: :delete,
+                                        data: { confirm: "ログイン後に投稿してください" },
+                                        class: "dropdown-item" %>
+                          <% else %>
+                            <%= link_to "投稿する", new_card_collection_path,
+                                        class: "dropdown-item" %>
+                          <% end %>
+                        </li>
+                    
+                        <li class="d-md-none">
+                          <hr class="dropdown-divider">
+                        </li>
+                        <!-- 기존 로그아웃/마이페이지 항목 -->
+                        <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
                       </ul>
-                    </div>
-                  <% else %>
-                    <div class="d-flex" style="font-size: 14px">
-                      <%= link_to "ゲストログイン", users_guest_sign_in_path, method: :post, class: "d-flex align-items-center", style: "font-size: 14px;
-                        line-height: 18px;
-                        color: #2F3438;
-                        padding: 0 10px;" %>
-                      <%= link_to "ログイン", new_user_session_path,  class: "d-flex align-items-center", style: "font-size: 14px;
-                        line-height: 18px;
-                        color: #2F3438;
-                        padding: 0 10px;
-                        border-left: 1px solid #EAEDEF;" %>
-                      <%= link_to "会員登録", new_user_registration_path, class: "d-flex align-items-center", style: "font-size: 14px;
-                        line-height: 18px;
-                        color: #2F3438;
-                        padding: 0 10px;
-                        border-left: 1px solid #EAEDEF;" %>
-                    </div>
-                  <% end %>
-                  <div style="margin: 0 10px;"></div>
-                  <% if user_signed_in? %>
-                    <% if current_user.email == "guest@example.com" %>
-                      <%= link_to "投稿する", destroy_user_session_path, 
-                                  method: :delete, data: { confirm: "ログイン後に投稿してください" },
-                                  class: "btn", 
-                                  style: "display: inline-block;
-                                          margin: 0;
-                                          padding: 0;
-                                          border: none;
-                                          background: none;
-                                          font: inherit;
-                                          font-size: 14px;
-                                          line-height: 18px;
-                                          display: -webkit-inline-box;
-                                          display: -webkit-inline-flex;
-                                          display: -ms-inline-flexbox;
-                                          display: inline-flex;
-                                          -webkit-box-pack: center;
-                                          -ms-flex-pack: center;
-                                          -webkit-justify-content: center;
-                                          justify-content: center;
-                                          -webkit-align-items: center;
-                                          -webkit-box-align: center;
-                                          -ms-flex-align: center;
-                                          align-items: center;
-                                          width: auto;
-                                          height: 40px;
-                                          border-radius: 4px;
-                                          padding: 0 16px;
-                                          font-weight: 400;
-                                          box-sizing: border-box;
-                                          text-align: center;
-                                          color: #FFFFFF;
-                                          background-color: #0AA5FF;
-                                          outline: none;
-                                          overflow: hidden;" %>
                     <% else %>
-                      <%= link_to "投稿する", new_card_collection_path, 
-                                            class: "btn", 
-                                            style: "display: inline-block;
-                                                    margin: 0;
-                                                    padding: 0;
-                                                    border: none;
-                                                    background: none;
-                                                    font: inherit;
-                                                    font-size: 14px;
-                                                    line-height: 18px;
-                                                    display: -webkit-inline-box;
-                                                    display: -webkit-inline-flex;
-                                                    display: -ms-inline-flexbox;
-                                                    display: inline-flex;
-                                                    -webkit-box-pack: center;
-                                                    -ms-flex-pack: center;
-                                                    -webkit-justify-content: center;
-                                                    justify-content: center;
-                                                    -webkit-align-items: center;
-                                                    -webkit-box-align: center;
-                                                    -ms-flex-align: center;
-                                                    align-items: center;
-                                                    width: auto;
-                                                    height: 40px;
-                                                    border-radius: 4px;
-                                                    padding: 0 16px;
-                                                    font-weight: 400;
-                                                    box-sizing: border-box;
-                                                    text-align: center;
-                                                    color: #FFFFFF;
-                                                    background-color: #0AA5FF;
-                                                    outline: none;
-                                                    overflow: hidden;" %>
+                      <ul class="dropdown-menu dropdown-menu-end">
+                        <!-- xs 에만 보이는 About -->
+                        <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+                          <li class="d-block d-md-none">
+                            <%= link_to "About", about_path, class: "dropdown-item" %>
+                          </li>
+                        <% end %>
+                    
+                        <!-- xs 에만 보이는 投稿する -->
+                        <li class="d-block d-md-none">
+                          <% if current_user.email == "guest@example.com" %>
+                            <%= link_to "投稿する", destroy_user_session_path,
+                                        method: :delete,
+                                        data: { confirm: "ログイン後に投稿してください" },
+                                        class: "dropdown-item" %>
+                          <% else %>
+                            <%= link_to "投稿する", new_card_collection_path,
+                                        class: "dropdown-item" %>
+                          <% end %>
+                        </li>
+                    
+                        <li class="d-md-none">
+                          <hr class="dropdown-divider">
+                        </li>
+                        <!-- 기존 로그아웃/마이페이지 항목 -->
+                        <li><%= link_to "マイページ", user_path(current_user), class: "dropdown-item" %></li>
+                        <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
+                      </ul>
                     <% end %>
-                  <% else %>
-                    <%= link_to "投稿する", new_user_session_path, 
-                                          class: "btn", 
-                                          style: "display: inline-block;
-                                                  margin: 0;
-                                                  padding: 0;
-                                                  border: none;
-                                                  background: none;
-                                                  font: inherit;
-                                                  font-size: 14px;
-                                                  line-height: 18px;
-                                                  display: -webkit-inline-box;
-                                                  display: -webkit-inline-flex;
-                                                  display: -ms-inline-flexbox;
-                                                  display: inline-flex;
-                                                  -webkit-box-pack: center;
-                                                  -ms-flex-pack: center;
-                                                  -webkit-justify-content: center;
-                                                  justify-content: center;
-                                                  -webkit-align-items: center;
-                                                  -webkit-box-align: center;
-                                                  -ms-flex-align: center;
-                                                  align-items: center;
-                                                  width: auto;
-                                                  height: 40px;
-                                                  border-radius: 4px;
-                                                  padding: 0 16px;
-                                                  font-weight: 400;
-                                                  box-sizing: border-box;
-                                                  text-align: center;
-                                                  color: #FFFFFF;
-                                                  background-color: #0AA5FF;
-                                                  outline: none;
-                                                  overflow: hidden;" %>
-                  <% end %>
-                </div>
-              </div>
+
+                  </div>
+
+                  <%= link_to "投稿する",
+                      (user_signed_in? && current_user.email != "guest@example.com") ? new_card_collection_path : new_user_session_path,
+                      class: "btn ms-3 d-none d-md-inline-flex",
+                      method: (user_signed_in? && current_user.email == "guest@example.com") ? :delete : :get,
+                      data: (user_signed_in? && current_user.email == "guest@example.com") ? { confirm: "ログイン後に投稿してください" } : {},
+                      style: "display: inline-block;
+                      margin: 0;
+                      padding: 0;
+                      border: none;
+                      background: none;
+                      font: inherit;
+                      font-size: 14px;
+                      line-height: 18px;
+                      display: -webkit-inline-box;
+                      display: -webkit-inline-flex;
+                      display: -ms-inline-flexbox;
+                      display: inline-flex;
+                      -webkit-box-pack: center;
+                      -ms-flex-pack: center;
+                      -webkit-justify-content: center;
+                      justify-content: center;
+                      -webkit-align-items: center;
+                      -webkit-box-align: center;
+                      -ms-flex-align: center;
+                      align-items: center;
+                      width: auto;
+                      height: 40px;
+                      border-radius: 4px;
+                      padding: 0 16px;
+                      font-weight: 400;
+                      box-sizing: border-box;
+                      text-align: center;
+                      color: #FFFFFF;
+                      background-color: #0AA5FF;
+                      outline: none;
+                      overflow: hidden;"%>
+
+                <% else %>
+
+                  <div class="d-flex" style="font-size: 14px;">
+                    <%= link_to "ゲストログイン", users_guest_sign_in_path, method: :post, class: "d-flex align-items-center", style: "font-size: 14px;
+                      line-height: 18px;
+                      color: #2F3438;
+                      padding: 0 10px;" %>
+                    <%= link_to "ログイン", new_user_session_path,  class: "d-flex align-items-center", style: "font-size: 14px;
+                      line-height: 18px;
+                      color: #2F3438;
+                      padding: 0 10px;
+                      border-left: 1px solid #EAEDEF;" %>
+                    <%= link_to "会員登録", new_user_registration_path, class: "d-flex align-items-center", style: "font-size: 14px;
+                      line-height: 18px;
+                      color: #2F3438;
+                      padding: 0 10px;
+                      border-left: 1px solid #EAEDEF;" %>
+                  </div>
+                  
+                <% end %>
+
             <% else %>
               <%= link_to "戻る", card_collections_path, 
                           class: "btn", 
@@ -228,36 +265,245 @@
                                   outline: none;
                                   overflow: hidden;" %>
             <% end %>
+
+            
           </div>
         </div>
       </nav>
 
       <% if user_signed_in?%>
         <% unless (controller_name == "card_collections" && (action_name == "new" || action_name == "edit")) %>
-          <nav class="navbar p-0" style="width: 100%; border-bottom: 1px solid #ddd;">
-            <div style="max-width: 1256px; margin: 0 auto; padding: 0 44px; width: 100%;">
-              <% if controller_name == 'users' %>
+        <nav style="border-bottom: 1px solid #ddd;">
+          <div class="container d-flex align-items-center" style="margin: 0 auto; padding-right: 15px; padding-left: 15px;">
+            <% if controller_name == 'users' %>
+              <div class="d-flex align-items-center justify-content-center" style="width: 100%;">
+              
                 <% if user_signed_in? && current_user.id.to_s == params[:id] %>
-                  <div class="d-flex" style="justify-content: center;">
-                    <div class="d-flex" style="justify-content: space-between; align-items: center; width: 20%; height: 60px; font-size: 18px">
+                  <div class="d-flex justify-content-center" >
+                    <div class="d-flex" style="justify-content: space-between; align-items: center; height: 60px; font-size: 18px">
                       <%= link_to "プロフィール", user_path(current_user), class: "nav-link #{'active' if current_page?(user_path(current_user))}", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
                       <%= link_to "設定", edit_user_path(current_user), class: "nav-link #{'active' if current_page?(edit_user_path(current_user))}", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
                     </div>
                   </div>
                 <% end %>
-              <% else %>
-                <div class="d-flex">
-                  <%= link_to "ホーム", root_path, class: "nav-link active", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
-                  <%= link_to "すべての写真", card_collections_path, class: "nav-link active", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
-                  <%= link_to "おすすめ（部屋の写真、その他）", recommend_path, class: "nav-link active", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
-                  <%= link_to "#チャンネル", hashtag_channel_path, class: "nav-link active", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
-                  <% Theme.where.not(name: ["お部屋写真", "その他"]).each do |theme| %>
-                    <%= link_to theme.name, topic_path(theme.name), class: "nav-link #{'active' if params[:topic] == theme.name}", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
-                  <% end %>
+              </div>
+            <% else %>
+              <!-- LG 이상(≥992px): 모든 링크 노출 -->
+              <div class="d-none d-lg-flex">
+                <%= link_to "ホーム", root_path,
+                            class: "nav-link active",
+                            style: "text-decoration: none; color: inherit; font-weight: 700; padding-left: 0px; margin-left: 0px;" %>
+                <%= link_to "すべての写真", card_collections_path,
+                            class: "nav-link active",
+                            style: "text-decoration: none; color: inherit; font-weight: 700;" %>
+                <%= link_to "おすすめ（部屋の写真、その他）", recommend_path,
+                            class: "nav-link active",
+                            style: "text-decoration: none; color: inherit; font-weight: 700;" %>
+                <%= link_to "#チャンネル", hashtag_channel_path,
+                            class: "nav-link active",
+                            style: "text-decoration: none; color: inherit; font-weight: 700;" %>
+
+                <% Theme.where.not(name: ["お部屋写真","その他"]).each do |theme| %>
+                  <%= link_to theme.name,
+                              topic_path(theme.name),
+                              class: "nav-link #{'active' if params[:topic]==theme.name}",
+                              style: "text-decoration: none; color: inherit; font-weight: 700;" %>
+                <% end %>
+              </div>
+
+              <!-- MD 이상(≥768px, <992px): "すべての写真", "おすすめ", "#チャンネル"만 노출, 나머지는 토글 -->
+              <div class="d-none d-md-flex d-lg-none align-items-center">
+                <%= link_to "すべての写真", card_collections_path,
+                            class: "nav-link active",
+                            style: "text-decoration: none; color: inherit; margin-left:16px; font-weight: 700; padding-left: 0px; margin-left: 0px;" %>
+                <%= link_to "おすすめ（部屋の写真、その他）", recommend_path,
+                            class: "nav-link active",
+                            style: "text-decoration: none; color: inherit; font-weight: 700;" %>
+                <%= link_to "#チャンネル", hashtag_channel_path,
+                            class: "nav-link active",
+                            style: "text-decoration: none; color: inherit; font-weight: 700;" %>
+
+                <div class="dropdown ms-2">
+                  <button class="btn btn-link nav-link dropdown-toggle p-0"
+                          type="button"
+                          id="mdThemesDropdown"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                          style="text-decoration: none; color: inherit; font-weight: 700;">
+                    その他
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="mdThemesDropdown">
+                    <% Theme.where.not(name: ["お部屋写真","その他"]).each do |theme| %>
+                      <li>
+                        <%= link_to theme.name,
+                                    topic_path(theme.name),
+                                    class: "dropdown-item #{'active' if params[:topic]==theme.name}" %>
+                      </li>
+                    <% end %>
+                  </ul>
                 </div>
-              <% end %>
+              </div>
+
+              <!-- SM 이상(≥576px, <768px): "すべての写真", "#チャンネル"만 노출, "おすすめ"과 나머지 테마는 토글 -->
+              <div class="d-none d-sm-flex d-md-none align-items-center">
+                <%= link_to "すべての写真", card_collections_path,
+                            class: "nav-link active",
+                            style: "text-decoration: none; color: inherit; margin-left:16px; font-weight: 700; padding-left: 0px; margin-left: 0px;" %>
+                <%= link_to "#チャンネル", hashtag_channel_path,
+                            class: "nav-link active",
+                            style: "text-decoration: none; color: inherit; font-weight: 700;" %>
+
+                <div class="dropdown ms-2">
+                  <button class="btn btn-link nav-link dropdown-toggle p-0"
+                          type="button"
+                          id="smMenuDropdown"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                          style="text-decoration: none; color: inherit; font-weight: 700;">
+                    メニュー
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="smMenuDropdown">
+                    <li>
+                      <%= link_to "おすすめ（部屋の写真、その他）", recommend_path,
+                                  class: "dropdown-item" %>
+                    </li>
+                    <% Theme.where.not(name: ["お部屋写真","その他"]).each do |theme| %>
+                      <li>
+                        <%= link_to theme.name,
+                                    topic_path(theme.name),
+                                    class: "dropdown-item #{'active' if params[:topic]==theme.name}" %>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- XS(<576px): "すべての写真"만 노출, 나머지는 토글 -->
+              <div class="d-flex d-sm-none align-items-center justify-content-between" style="width: 100%;">
+                <div class="dropdown ms-2">
+                  <button class="btn btn-link nav-link dropdown-toggle"
+                          type="button"
+                          id="xsMenuDropdown"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                          style="text-decoration: none; color: inherit; font-weight: 700; margin-left: 0px;">
+                    メニュー
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="xsMenuDropdown">
+                    <li>
+                      <%= link_to "すべての写真", card_collections_path,
+                                  class: "dropdown-item"%>
+                    </li>
+                    <li>
+                      <%= link_to "おすすめ（部屋の写真、その他）", recommend_path,
+                                  class: "dropdown-item" %>
+                    </li>
+                    <li>
+                      <%= link_to "#チャンネル", hashtag_channel_path,
+                                  class: "dropdown-item" %>
+                    </li>
+
+                    <% Theme.where.not(name: ["お部屋写真","その他"]).each do |theme| %>
+                      <li>
+                        <%= link_to theme.name,
+                                    topic_path(theme.name),
+                                    class: "dropdown-item #{'active' if params[:topic]==theme.name}" %>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
+
+                <div class="d-flex">
+                  <div>
+                    <div class="d-flex aling-items-center", style="width: 180px; position: relative; ">
+                      <%= form_with url: searchs_path, method: :get, local: true, html: { style: "width:100%;position:relative;" } do |f| %>
+                        <button type="submit"
+                                style="position:absolute; left:10px; top:50%; transform:translateY(-50%); background:none; border:none; padding:0; cursor:pointer;">
+                          <i class="fa-solid fa-magnifying-glass" style="font-size:15px;color:#666;"></i>
+                        </button>
+                        <%= f.search_field :query,
+                              class: "d-flex aling-items-center",
+                              placeholder: "Search",
+                              aria: { label: "Search" },
+                              style: "width:100%;padding-left:30px;height:30px;border:1px solid #ccc;border-radius:4px;" %>
+                        <%= f.hidden_field :search_affect_type, value: "Typing" %>
+                      <% end %>
+                    </div>
+                  </div>
+
+                  <div class="dropdown" style="margin:0 20px;">
+                    <button data-bs-toggle="dropdown" class="btn btn-link p-0 border-0">
+                      <%= image_tag current_user.get_profile_image(40,40),
+                                    class: "rounded-circle", style:"width:35px;height:35px;" %>
+                    </button>
+                    
+                    <% if current_user.email == "guest@example.com" %>
+                      <ul class="dropdown-menu dropdown-menu-end">
+                        <!-- xs 에만 보이는 About -->
+                        <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+                          <li class="d-block d-md-none">
+                            <%= link_to "About", about_path, class: "dropdown-item" %>
+                          </li>
+                        <% end %>
+                    
+                        <!-- xs 에만 보이는 投稿する -->
+                        <li class="d-block d-md-none">
+                          <% if current_user.email == "guest@example.com" %>
+                            <%= link_to "投稿する", destroy_user_session_path,
+                                        method: :delete,
+                                        data: { confirm: "ログイン後に投稿してください" },
+                                        class: "dropdown-item" %>
+                          <% else %>
+                            <%= link_to "投稿する", new_card_collection_path,
+                                        class: "dropdown-item" %>
+                          <% end %>
+                        </li>
+                    
+                        <li class="d-md-none">
+                          <hr class="dropdown-divider">
+                        </li>
+                        <!-- 기존 로그아웃/마이페이지 항목 -->
+                        <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
+                      </ul>
+                    <% else %>
+                      <ul class="dropdown-menu dropdown-menu-end">
+                        <!-- xs 에만 보이는 About -->
+                        <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+                          <li class="d-block d-md-none">
+                            <%= link_to "About", about_path, class: "dropdown-item" %>
+                          </li>
+                        <% end %>
+                    
+                        <!-- xs 에만 보이는 投稿する -->
+                        <li class="d-block d-md-none">
+                          <% if current_user.email == "guest@example.com" %>
+                            <%= link_to "投稿する", destroy_user_session_path,
+                                        method: :delete,
+                                        data: { confirm: "ログイン後に投稿してください" },
+                                        class: "dropdown-item" %>
+                          <% else %>
+                            <%= link_to "投稿する", new_card_collection_path,
+                                        class: "dropdown-item" %>
+                          <% end %>
+                        </li>
+                    
+                        <li class="d-md-none">
+                          <hr class="dropdown-divider">
+                        </li>
+                        <!-- 기존 로그아웃/마이페이지 항목 -->
+                        <li><%= link_to "マイページ", user_path(current_user), class: "dropdown-item" %></li>
+                        <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
+                      </ul>
+                    <% end %>
+
+                  </div>
+                </div>
+              </div>
+
+            <% end %>
             </div>
-          </nav>
+          </div>
+        </nav>
 
           <nav class="navbar p-0" style="width: 100%; border-bottom: 1px solid #ddd;">
             <div style="max-width: 1256px; margin: 0 auto; padding: 0 44px; width: 100%;">
