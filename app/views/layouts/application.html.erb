@@ -19,21 +19,21 @@
           <% unless user_signed_in? %>
             <div class="d-flex d-sm-none align-items-center justify-content-between" style="width: 100%;">
               <div>
-                <%= link_to "MRMI", root_path, class: "navbar-brand", style: "color: inherit; font-weight: bold; margin-right: 30px;" %>
+                <%= link_to "MRMI", root_path, class: "navbar-brand", style: "color: inherit; font-weight: bold; margin-right: 30px; padding-left: 12px" %>
               </div>
 
               <div style="font-size: 10px;">
                 <div class="d-flex d-sm-none align-items-center justify-content-between" style="width: 100%;">
                   <div class="dropdown ms-2">
-                    <button class="btn btn-link nav-link dropdown-toggle"
+                    <div class="btn btn-link dropdown-toggle"
                             type="button"
                             id="xsMenuDropdown"
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                             style="text-decoration: none; color: inherit; font-weight: 700; margin-left: 0px;">
-                      メニュー
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="xsMenuDropdown">
+                      <i class="fa-solid fa-bars" style="font-size: 20px"></i>
+                    </div>
+                            <ul class="dropdown-menu" aria-labelledby="xsMenuDropdown">
                       <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
                         <%= link_to "About", about_path, 
                         class: "d-flex align-items-center dropdown-item", 
