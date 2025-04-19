@@ -1,5 +1,15 @@
 <!-- Hero Section -->
-<section style="width: 100%; height: 400px; background-image: url('<%= asset_path("cozy_interior_space.jpg") %>'); background-size: cover; background-position: center; position: relative;">
+<section class="d-block d-lg-none" style="width: 100%; height: 400px; background-image: url('<%= asset_path("cozy_interior_space.jpg") %>'); background-size: cover; background-position: center; position: relative;">
+  <div style="position: absolute; bottom: 40px; left: 40px; text-align: left;">
+    <h1 style="font-size: 30px; font-weight: bold; color: #000;">空間は私を語る</h1>
+    <h3 style="font-size: 22px; font-weight: bold; color: #000;">My Room, My Identity</h3>
+    <p style="font-size: 14px; margin: 10px 0 20px; color: #000;">このプラットフォームは、あなたの空間を語り、<br>他の人のインスピレーションを得られる場所です。</p>
+    <%= link_to "写真を見る", "/card_collections", class: "hero-button" %>
+  </div>
+</section>
+
+
+<section class="d-none d-lg-block" style="width: 100%; height: 400px; background-image: url('<%= asset_path("cozy_interior_space.jpg") %>'); background-size: cover; background-position: center; position: relative;">
   <div style="position: absolute; bottom: 40px; left: 40px; text-align: left;">
     <h1 style="font-size: 36px; font-weight: bold; color: #000;">空間は私を語る</h1>
     <h3 style="font-size: 26px; font-weight: bold; color: #000;">My Room, My Identity</h3>
@@ -8,8 +18,33 @@
   </div>
 </section>
 
-<!-- About Description with Right Image -->
-<section style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; width:100%; max-width: 1136px; padding: 60px 20px; padding-bottom: 0px">
+<section class="d-block d-lg-none container px-3 py-5">
+  <!-- Text Block -->
+  <div class="mb-4" style="font-size:14px;">
+    <p class="fs-6 lh-lg text-dark mb-3">
+      <strong class="text-body-emphasis">MRMIは「私の空間に私のストーリーを込める」という価値を基に、</strong><br>
+      一人暮らしを始める大学生から家族で暮らすすべての人々に<br>
+      温かく感性豊かなインテリアアイデアを共有するために作られました。
+    </p>
+    <p class="fs-6 lh-lg text-dark">
+      ここでは、個性や好みを反映したさまざまな空間コーディネートのヒントを見つけ、<br>
+      お互いの経験を共有しながら一緒に成長できます。<br>
+      部屋のひとつひとつが私という存在を映し出せるように、
+      <strong class="text-body-emphasis">MRMIはいつもあなたのそばにいます。</strong>
+    </p>
+  </div>
+
+  <!-- Image Block -->
+  <div>
+    <img src="<%= asset_path('interior_inspo_1.jpg') %>"
+         alt="感性インテリア例1"
+         class="img-fluid rounded">
+  </div>
+</section>
+
+<!-- About Section – LG 이상: Flex 레이아웃 -->
+
+<section class="d-none d-lg-flex" style="flex-wrap: wrap; justify-content: center; align-items: center; width:100%; max-width: 1136px; padding: 60px 20px; padding-bottom: 0px">
   <!-- Text Left -->
   <div style="flex: 1 1 50%; padding-right: 20px;">
     <p style="font-size: 16px; line-height: 1.8; color: #333;">
@@ -29,8 +64,10 @@
   </div>
 </section>
 
+
+
 <!-- FAQ Section with Left Image -->
-<section style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; width:100%; max-width: 1136px; padding: 60px 20px;">
+<section class="d-none d-lg-flex" style="flex-wrap: wrap; justify-content: center; align-items: center; width:100%; max-width: 1136px; padding: 60px 20px;">
   <!-- Image Left -->
   <div style="flex: 1 1 50%; padding-right: 20px;">
     <img src="<%= asset_path("interior_inspo_2.jpg") %>" alt="感性インテリア例2" style="width: 100%; height: auto; border-radius: 10px;">
@@ -57,8 +94,34 @@
   </div>
 </section>
 
+
+<!-- FAQ Section with Left Image -->
+<section class="d-flex d-lg-none" style="flex-wrap: wrap; justify-content: center; align-items: center; width:100%; max-width: 1136px; padding: 60px 20px;">
+  <!-- Image Left -->
+  <div class="d-none d-sm-flex" style="flex: 1 1 50%; padding-right: 20px;">
+    <img src="<%= asset_path("interior_inspo_2.jpg") %>" alt="感性インテリア例2" style="width: 100%; height: auto; border-radius: 10px;">
+  </div>
+
+  <!-- Text Right -->
+  <div style="flex: 1 1 50%; padding-left: 20px;">
+  <h2 style="font-size: 24px; margin-bottom: 20px;">お問い合わせ</h2>
+  <ul style="list-style: none; padding: 0; font-size: 16px;">
+    <li style="margin: 10px 0;">
+      <strong>Email:</strong>
+      <a href="mailto:contact@yourinterior.com" style="color: #0AA5FF; text-decoration: none;">bjking102409@gmail.com</a>
+    </li>
+    <li style="margin: 10px 0;">
+      <strong>Instagram:</strong>
+      <a href="https://instagram.com/yourinterior" target="_blank" style="color: #0AA5FF; text-decoration: none;">@MRMI</a>
+    </li>
+  </ul>
+
+
+  </div>
+</section>
+
 <!-- Contact Section -->
-<section style="max-width: 800px; margin: 60px auto; padding: 0 20px; text-align: center;">
+<section class="d-none d-lg-block" style="max-width: 800px; margin: 60px auto; padding: 0 20px; text-align: center;">
   <h2 style="font-size: 24px; margin-bottom: 20px;">お問い合わせ</h2>
   <ul style="list-style: none; padding: 0; font-size: 16px;">
     <li style="margin: 10px 0;">

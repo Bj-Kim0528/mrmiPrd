@@ -19,7 +19,7 @@
 <div style="width: 100%">
   <%= form_with model: @card_collection, local: true, html: { multipart: true } do |f| %>
     <div style="margin: 30px auto 0; padding: 0 30px; max-width: 1003px; box-sizing: border-box;">
-      <div class="d-flex justify-content-between" style="width: 100%; max-width: 1003px; margin: 30px auto 0; padding: 0 30px; position: relative;">
+      <div class="d-none d-md-flex justify-content-between" style="width: 100%; max-width: 1003px; margin: 30px auto 0; padding: 0 30px; position: relative;">
         <!-- 기본 속성 입력 -->
         <div class="d-flex">
           <div style="margin-right: 10px;">
@@ -72,13 +72,137 @@
                                   overflow: hidden;"%>
         </div>
       </div>
+
+      <div class="d-block d-md-none" style="width: 100%; max-width: 1003px; margin: 30px auto 0; padding: 0 30px; position: relative;">
+        <div class="actions d-flex justify-content-end" style="margin-top: 20px;">
+          <%= f.submit "投稿する", style: "display: inline-block;
+                                  margin: 0;
+                                  padding: 0;
+                                  border: none;
+                                  background: none;
+                                  font: inherit;
+                                  font-size: 14px;
+                                  line-height: 18px;
+                                  display: -webkit-inline-box;
+                                  display: -webkit-inline-flex;
+                                  display: -ms-inline-flexbox;
+                                  display: inline-flex;
+                                  -webkit-box-pack: center;
+                                  -ms-flex-pack: center;
+                                  -webkit-justify-content: center;
+                                  justify-content: center;
+                                  -webkit-align-items: center;
+                                  -webkit-box-align: center;
+                                  -ms-flex-align: center;
+                                  align-items: center;
+                                  width: 100%;
+                                  height: 40px;
+                                  border-radius: 4px;
+                                  padding: 0 16px;
+                                  font-weight: 400;
+                                  box-sizing: border-box;
+                                  text-align: center;
+                                  color: #FFFFFF;
+                                  background-color: #0AA5FF;
+                                  outline: none;
+                                  overflow: hidden;"%>
+        </div>
+        <!-- 기본 속성 입력 -->
+        <div class="row g-3 mb-4">
+          <!-- 레이아웃 -->
+          <div class="col-12 col-md-6">
+            <%= f.label :layout, "レイアウト", class: "form-label fw-bold",
+                                            style: "font-weight: 700;
+                                                      font-size: 16px;
+                                                      line-height: 18px;"%>
+            <%= f.select :layout,
+                  options_for_select(["1R", "1K/1DK", "1LDK/2DK", "2LDK", "3LDK以上"], @card_collection.layout),
+                  {},
+                  class: "form-select form-select-lg w-100" %>
+          </div>
+
+          <!-- 테마 -->
+          <div class="col-12 col-md-6">
+            <%= f.label :theme_id, "テーマ", class: "form-label fw-bold",
+                                            style: "font-weight: 700;
+                                                      font-size: 16px;
+                                                      line-height: 18px;"%>
+            <%= f.select :theme_id,
+                  options_from_collection_for_select(Theme.all, :id, :name, @card_collection.theme_id),
+                  {},
+                  class: "form-select form-select-lg w-100" %>
+          </div>
+        </div>
+
+        
+
+      </div>
     </div>
 
     <!-- CardImage 입력 영역 (nested fields) -->
     <div id="card_images_container" style="margin: 30px auto 0; padding: 0 30px; max-width: 1003px; box-sizing: border-box;">
       <%= f.fields_for :card_images do |ci| %>
         <div class="card-image-field" data-index="<%= ci.index %>" style="width: 100%; max-width: 1003px; margin: 30px auto 0; padding: 0 30px; position: relative;">
-          <div style="display: flex; align-items: flex-start; gap: 10px;">
+          <div class="d-block d-md-none">
+            <!-- 파일 업로드 컨테이너 -->
+
+            <div id="custom-file-<%= ci.index %>" class="custom-file-upload rounded" style="width: 100%; height: <%= ci.object.image.attached? ? 'auto' : '400px' %>; <%= ci.object.image.attached? ? '' : 'background-color: #ccc;' %> display: flex; align-items: center; justify-content: center; position: relative;">
+              <% if ci.object.image.attached? %>
+                <%= image_tag(ci.object.image, style: "width: 100%; height: auto; cursor: pointer; z-index: 1;") %>
+              <% else %>
+                <!-- 이미지가 없을 경우 업로드 안내 라벨 표시 -->
+                <label for="file_input_<%= ci.index %>" id="file-label-<%= ci.index %>" style="cursor: pointer; font-weight: bold; color: #fff; font-size:12px;">
+                  PCからアップロードする
+                </label>
+              <% end %>
+              <!-- 파일 입력 필드를 항상 렌더링 (숨김 처리) -->
+              <%= ci.file_field :image, accept: "image/*", id: "file_input_#{ci.index}", onchange: "previewImage(this, 'custom-file-#{ci.index}')" , style: "position: absolute; width: 100%; height: auto; opacity: 0; cursor: pointer; z-index: 1;" %>
+              <div style="position: absolute; bottom: 10px; right: 10px; z-index: 3;">
+                <button type="button" onclick="document.getElementById('file_input_<%= ci.index %>').click();" style="margin-right: 20px; padding: 0; border: none; background: none;">
+                  <i class="fa-solid fa-rotate" style="font-size: 20px; color: white;"></i>
+                </button>
+                <% unless ci.object.image.attached? %>
+                  <button type="button" onclick="deletePreview(<%= ci.index %>);" style="margin-right: 10px; padding: 0; border: none; background: none;">
+                    <i class="fa-solid fa-trash" style="font-size: 20px; color: white;"></i>
+                  </button>
+                <% end %>
+              </div>
+            </div>
+
+            <div>
+              <div style="width: 100%; position: relative; margin-top: 20px;">
+                <!-- 텍스트 영역 (너비 100%로 설정) -->
+                <div style="flex: 1;">
+                  <%= ci.text_area :content, placeholder: "どんな写真かを簡単に紹介しましょう。
+                  様々な#タグも追加できます。", style: "
+                        width: 100%;
+                        box-sizing: border-box;
+                        min-height: 152px;
+                        padding: 16px;
+                        display: inline-block;
+                        overflow-wrap: break-word;
+                        white-space: pre-line;
+                        font-size: 12px;
+                        line-height: 20px;
+                        z-index: 2;
+                        border: 1px solid rgb(230, 230, 230);
+                        border-radius: 4px;" %>
+                </div>
+              </div>
+              <% if ci.object.image.attached? %>
+                <div class="card-image-deletion">
+                  <%= link_to "削除", clear_card_image_path(ci.object),
+                        method: :delete,
+                        remote: true,
+                        data: { confirm: "本当に削除しますか？（削除すると元に戻せません）" },
+                        class: "btn",
+                        style: "margin: 0; background: none; font-size: 14px; display: inline-flex; justify-content: center; align-items: center; height: 40px; border-radius: 4px; padding: 0 16px; font-weight: 400; box-sizing: border-box; text-align: center; color: rgb(47,52,56); border: 1px solid #e6e6e6; width: 80px;" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="d-none d-md-flex" style="align-items: flex-start; gap: 10px;">
             <!-- 파일 업로드 컨테이너 -->
 
             <div id="custom-file-<%= ci.index %>" class="custom-file-upload rounded" style="width: 50%; height: <%= ci.object.image.attached? ? 'auto' : '400px' %>; <%= ci.object.image.attached? ? '' : 'background-color: #ccc;' %> display: flex; align-items: center; justify-content: center; position: relative;">
@@ -104,44 +228,46 @@
               </div>
             </div>
 
-            <div style="width: 50%; position: relative;">
-              <!-- 텍스트 영역 (너비 100%로 설정) -->
-              <div style="flex: 1;">
-              <%= ci.text_area :content, placeholder: "どんな写真かを簡単に紹介しましょう。
-              様々な#タグも追加できます。", style: "
-                    width: 100%;
-                    box-sizing: border-box;
-                    min-height: 152px;
-                    padding: 16px;
-                    display: inline-block;
-                    overflow-wrap: break-word;
-                    white-space: pre-line;
-                    font-size: 14px;
-                    line-height: 20px;
-                    z-index: 2;
-                    border: 1px solid rgb(230, 230, 230);
-                    border-radius: 4px;" %>
+            <div style="width: 50%;">
+              <div style="position: relative;">
+                <!-- 텍스트 영역 (너비 100%로 설정) -->
+                <div style="flex: 1;">
+                  <%= ci.text_area :content, placeholder: "どんな写真かを簡単に紹介しましょう。
+                  様々な#タグも追加できます。", style: "
+                        width: 100%;
+                        box-sizing: border-box;
+                        min-height: 152px;
+                        padding: 16px;
+                        display: inline-block;
+                        overflow-wrap: break-word;
+                        white-space: pre-line;
+                        font-size: 14px;
+                        line-height: 20px;
+                        z-index: 2;
+                        border: 1px solid rgb(230, 230, 230);
+                        border-radius: 4px;" %>
+                </div>
               </div>
+              <% if ci.object.image.attached? %>
+                <div class="d-flex justify-content-end card-image-deletion">
+                  <%= link_to "削除", clear_card_image_path(ci.object),
+                        method: :delete,
+                        remote: true,
+                        data: { confirm: "本当に削除しますか？（削除すると元に戻せません）" },
+                        class: "btn",
+                        style: "margin: 0; background: none; font-size: 14px; display: inline-flex; justify-content: center; align-items: center; height: 40px; border-radius: 4px; padding: 0 16px; font-weight: 400; box-sizing: border-box; text-align: center; color: rgb(47,52,56); border: 1px solid #e6e6e6; width: 80px;" %>
+                </div>
+              <% end %>
             </div>
-            <% if ci.object.image.attached? %>
-              <div class="card-image-deletion" style="position: absolute; bottom: 10px; right: 30px;">
-                <%= link_to "削除", clear_card_image_path(ci.object),
-                      method: :delete,
-                      remote: true,
-                      data: { confirm: "本当に削除しますか？（削除すると元に戻せません）" },
-                      class: "btn",
-                      style: "margin: 0; background: none; font-size: 14px; display: inline-flex; justify-content: center; align-items: center; height: 40px; border-radius: 4px; padding: 0 16px; font-weight: 400; box-sizing: border-box; text-align: center; color: rgb(47,52,56); border: 1px solid #e6e6e6; width: 80px;" %>
-              </div>
-            <% end %>
-          </div>          
+          </div>
         </div>
       <% end %>
       <!-- + 버튼과 - 버튼 (오른쪽 정렬) -->
       <div style=" margin-right:30px; margin-bottom: 30px; display: flex; justify-content: flex-end;">
         <button type="button" id="add_field_button" style="margin-right: 10px; padding: 0; border: none; background: none; font-weight: bold; width:30px; border: 1px solid rgb(230, 230, 230);
-                    border-radius: 4px;"">+</button>
+                    border-radius: 4px;">+</button>
         <button type="button" id="remove_field_button" style=" padding: 0; border: none; background: none; font-weight: bold; width:30px; border: 1px solid rgb(230, 230, 230);
-                    border-radius: 4px;"">−</button>
+                    border-radius: 4px;">−</button>
       </div>
     </div>
   <% end %>

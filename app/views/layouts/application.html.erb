@@ -66,7 +66,7 @@
           <% else %>
             <div class="d-flex d-sm-none align-items-center justify-content-center" style="width: 100%;">
               <div>
-                <%= link_to "MRMI", root_path, class: "navbar-brand", style: "color: inherit; font-weight: bold;" %>
+                <%= link_to "MRMI", root_path, class: "navbar-brand m-0", style: "color: inherit; font-weight: bold; font-size: 24px;" %>
               </div>
             </div>
           <% end %>
@@ -274,8 +274,8 @@
       <% if user_signed_in?%>
         <% unless (controller_name == "card_collections" && (action_name == "new" || action_name == "edit")) %>
           <% unless controller_name == 'users' && action_name == 'show' && params[:id] != current_user.id.to_s %>
-            <nav>
-              <div class="container d-flex align-items-center border-bottom" style="margin: 0 auto; padding-right: 15px; padding-left: 15px;">
+            <nav class="border-bottom">
+              <div class="container d-flex align-items-center" style="margin: 0 auto; padding-right: 15px; padding-left: 15px;">
                 <% if controller_name == 'users' %>
                   <div class="d-flex align-items-center justify-content-center" style="width: 100%;">
                   
@@ -707,72 +707,73 @@
               </div>
             </nav>
           <% end %>
-
-          <nav class="border-bottom">
-            <div class="container px-3 overflow-auto">
-              <ul class="nav justify-content-center flex-nowrap">
-                <% if controller_name == 'users' && ['edit', 'edit_password'].include?(action_name) %>
-                  <li class="nav-item me-3">
-                    <%= link_to "プロフィール編集",
-                                edit_user_path(current_user),
-                                class: "nav-link #{'active' if action_name == 'edit'} text-nowrap" %>
-                  </li>
-                  <li class="nav-item">
-                    <%= link_to "パスワード変更",
-                                edit_password_user_path(current_user),
-                                class: "nav-link #{'active' if action_name == 'edit_password'} text-nowrap" %>
-                  </li>
-          
-                <% elsif controller_name == 'users' && ['show', 'card_collections', 'likes', 'collections', 'follower', 'followee'].include?(action_name) %>
-                  <% if user_signed_in? && current_user.id.to_s == params[:id] %>
+          <% if controller_name == 'users'%>
+            <nav class="border-bottom">
+              <div class="container px-3 overflow-auto">
+                <ul class="nav justify-content-center flex-nowrap">
+                  <% if controller_name == 'users' && ['edit', 'edit_password'].include?(action_name) %>
                     <li class="nav-item me-3">
-                      <%= link_to "すべて表示",
-                                  user_path(current_user),
-                                  class: "nav-link #{'active' if params[:sub] == 'all' || params[:sub].blank?} text-nowrap",
-                                  style: "text-decoration: none; color: inherit;" %>
-                    </li>
-                    <li class="nav-item me-3">
-                      <%= link_to "写真",
-                                  card_collections_user_path(current_user),
-                                  class: "nav-link #{'active' if params[:sub] == 'card_collections'} text-nowrap",
-                                  style: "text-decoration: none; color: inherit;" %>
-                    </li>
-                    <li class="nav-item me-3">
-                      <%= link_to "いいね",
-                                  likes_user_path(current_user),
-                                  class: "nav-link #{'active' if params[:sub] == 'likes'} text-nowrap",
-                                  style: "text-decoration: none; color: inherit;" %>
+                      <%= link_to "プロフィール編集",
+                                  edit_user_path(current_user),
+                                  class: "nav-link #{'active' if action_name == 'edit'} text-nowrap" %>
                     </li>
                     <li class="nav-item">
-                      <%= link_to "ブックマーク",
-                                  collections_user_path(current_user),
-                                  class: "nav-link #{'active' if params[:sub] == 'collections'} text-nowrap",
-                                  style: "text-decoration: none; color: inherit;" %>
+                      <%= link_to "パスワード変更",
+                                  edit_password_user_path(current_user),
+                                  class: "nav-link #{'active' if action_name == 'edit_password'} text-nowrap" %>
                     </li>
-                  <% else %>
-                    <li class="nav-item me-3">
-                      <%= link_to "すべて表示",
-                                  user_path(@userinfo),
-                                  class: "nav-link #{'active' if params[:sub] == 'all' || params[:sub].blank?} text-nowrap",
-                                  style: "text-decoration: none; color: inherit;" %>
-                    </li>
-                    <li class="nav-item me-3">
-                      <%= link_to "写真",
-                                  card_collections_user_path(@userinfo),
-                                  class: "nav-link #{'active' if params[:sub] == 'card_collections'} text-nowrap",
-                                  style: "text-decoration: none; color: inherit;" %>
-                    </li>
-                    <li class="nav-item">
-                      <%= link_to "ブックマーク",
-                                  collections_user_path(@userinfo),
-                                  class: "nav-link #{'active' if params[:sub] == 'collections'} text-nowrap",
-                                  style: "text-decoration: none; color: inherit;" %>
-                    </li>
+            
+                  <% elsif controller_name == 'users' && ['show', 'card_collections', 'likes', 'collections', 'follower', 'followee'].include?(action_name) %>
+                    <% if user_signed_in? && current_user.id.to_s == params[:id] %>
+                      <li class="nav-item me-3">
+                        <%= link_to "すべて表示",
+                                    user_path(current_user),
+                                    class: "nav-link #{'active' if params[:sub] == 'all' || params[:sub].blank?} text-nowrap",
+                                    style: "text-decoration: none; color: inherit;" %>
+                      </li>
+                      <li class="nav-item me-3">
+                        <%= link_to "写真",
+                                    card_collections_user_path(current_user),
+                                    class: "nav-link #{'active' if params[:sub] == 'card_collections'} text-nowrap",
+                                    style: "text-decoration: none; color: inherit;" %>
+                      </li>
+                      <li class="nav-item me-3">
+                        <%= link_to "いいね",
+                                    likes_user_path(current_user),
+                                    class: "nav-link #{'active' if params[:sub] == 'likes'} text-nowrap",
+                                    style: "text-decoration: none; color: inherit;" %>
+                      </li>
+                      <li class="nav-item">
+                        <%= link_to "ブックマーク",
+                                    collections_user_path(current_user),
+                                    class: "nav-link #{'active' if params[:sub] == 'collections'} text-nowrap",
+                                    style: "text-decoration: none; color: inherit;" %>
+                      </li>
+                    <% else %>
+                      <li class="nav-item me-3">
+                        <%= link_to "すべて表示",
+                                    user_path(@userinfo),
+                                    class: "nav-link #{'active' if params[:sub] == 'all' || params[:sub].blank?} text-nowrap",
+                                    style: "text-decoration: none; color: inherit;" %>
+                      </li>
+                      <li class="nav-item me-3">
+                        <%= link_to "写真",
+                                    card_collections_user_path(@userinfo),
+                                    class: "nav-link #{'active' if params[:sub] == 'card_collections'} text-nowrap",
+                                    style: "text-decoration: none; color: inherit;" %>
+                      </li>
+                      <li class="nav-item">
+                        <%= link_to "ブックマーク",
+                                    collections_user_path(@userinfo),
+                                    class: "nav-link #{'active' if params[:sub] == 'collections'} text-nowrap",
+                                    style: "text-decoration: none; color: inherit;" %>
+                      </li>
+                    <% end %>
                   <% end %>
-                <% end %>
-              </ul>
-            </div>
-          </nav>
+                </ul>
+              </div>
+            </nav>
+          <% end %>
       
         <% end %>
       <% end %>
@@ -786,55 +787,176 @@
       </div>
     </main>
 
-    <% unless (controller_name == "card_collections" && (action_name == "new" || action_name == "edit")) || (["sessions", "registrations", "passwords", "confirmations"].include?(controller_name)) %>
-      <footer style="width: 100%; background-color: #f8f8f8; margin-top: 40px;">
-        <div style="max-width: 1256px; margin: 0 auto; padding: 80px 60px; display: flex; justify-content: space-between; color: #666; font-size: 14px;">
-          <div style="flex: 1; margin-right: 40px; border-right: 1px solid #ddd;">
-            <h3 style="font-size: 16px; margin-bottom: 10px; font-weight: bold;">カスタマーセンター &gt;</h3>
-            <p style="margin: 0; font-weight: 700; font-size: 20px;">080-xxxx-xxxx <br> (09:00 ~ 18:00)</p>
-            <p style="margin: 0;">昼休み: 12時～13時は対応しておりません</p>
-            <p style="margin: 0;">平日、祝日は休業</p>
+    <% unless (controller_name == "card_collections" && (action_name == "new" || action_name == "edit")) ||%w[sessions registrations passwords confirmations].include?(controller_name) %>
+      <footer class="bg-light mt-5">
+      <div class="container py-5">
+
+      <!-- XS–SM: 각 섹션 아래에 구분선 -->
+      <div class="d-sm-block d-md-none">
+        <div class="row text-secondary small gy-4">
+          <div class="col-12 pb-3 border-bottom mb-3">
+            <h5 class="fw-bold">カスタマーセンター &gt;</h5>
+            <p class="mb-1 fw-bold fs-4">
+              080-xxxx-xxxx<br><small>(09:00 ~ 18:00)</small>
+            </p>
+            <p class="mb-1">昼休み: 12時～13時は対応しておりません</p>
+            <p class="mb-0">平日、祝日は休業</p>
             <a href="https://mail.google.com/"
-              style="
-                display: inline-block;
-                margin-top: 8px;
-                background-color: #0AA5FF;
-                color: #fff;
-                text-decoration: none;
-                border: none;
-                border-radius: 4px;
-                padding: 8px 16px;
-                cursor: pointer;
-              "
-            >
+                        style="
+                        display: inline-block;
+                        margin-top: 8px;
+                        background-color: #0AA5FF;
+                        color: #fff;
+                        text-decoration: none;
+                        border: none;
+                        border-radius: 4px;
+                        padding: 8px 16px;
+                        cursor: pointer;
+                        width: 200px;
+                      "
+                    >
+            メールでのお問い合わせ
+            </a>
+          </div>
+          <div class="col-12 pb-3 border-bottom mb-3">
+            <div class="d-flex flex-wrap gap-2 fw-bold mb-2">
+              <a href="#" class="text-secondary text-decoration-none m-1">会社概要</a>
+              <a href="#" class="text-secondary text-decoration-none m-1">採用情報</a>
+              <a href="#" class="text-secondary text-decoration-none m-1">広告お問い合わせ</a>
+              <a href="#" class="text-secondary text-decoration-none m-1">利用規約</a>
+              <a href="#" class="text-secondary text-decoration-none m-1">プライバシーポリシー</a>
+            </div>
+            <p class="mb-1">株式会社MRMI | 東京都板橋区</p>
+            <p class="mb-0">bjking102409@gmail.com | 事業者登録番号: portfolio | 通信販売業: portfolio</p>
+          </div>
+          <div class="col-12 text-center">
+            <img src="<%= asset_path('mrmiLogo.png') %>" alt="mrmiLogo"
+                class="rounded mb-2" style="width:80px; height:auto;">
+            <p class="text-muted small mb-0">&copy; <%= Time.current.year %> MRMI Prd.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MD only: 두 컬럼 + 한 줄 구분선 -->
+      <div class="d-none d-md-block d-lg-none">
+        <div class="row text-secondary small gy-4">
+          <div class="col-6">
+            <h5 class="fw-bold">カスタマーセンター &gt;</h5>
+            <p class="mb-1 fw-bold fs-4">
+              080-xxxx-xxxx<br><small>(09:00 ~ 18:00)</small>
+            </p>
+            <p class="mb-1">昼休み: 12時～13時は対応しておりません</p>
+            <p class="mb-0">平日、祝日は休業</p>
+            <a href="https://mail.google.com/"
+                          style="
+                          display: inline-block;
+                          margin-top: 8px;
+                          background-color: #0AA5FF;
+                          color: #fff;
+                          text-decoration: none;
+                          border: none;
+                          border-radius: 4px;
+                          padding: 8px 16px;
+                          cursor: pointer;
+                          width: 200px;
+                        "
+                      >
               メールでのお問い合わせ
             </a>
           </div>
-        
-          <div style="flex: 2; border-right: 1px solid #ddd;">
-            <div style="display: flex; gap: 16px; margin-bottom: 10px; font-weight: bold; ">
-              <a href="#" style="text-decoration: none; color: #666;">会社概要</a>
-              <a href="#" style="text-decoration: none; color: #666;">採用情報</a>
-              <a href="#" style="text-decoration: none; color: #666;">広告お問い合わせ</a>
-              <a href="#" style="text-decoration: none; color: #666;">利用規約</a>
-              <a href="#" style="text-decoration: none; color: #666;">プライバシーポリシー</a>
+          <div class="col-6">
+            <div class="d-flex flex-wrap gap-2 fw-bold mb-2">
+              <a href="#" class="text-secondary text-decoration-none m-1">会社概要</a>
+              <a href="#" class="text-secondary text-decoration-none m-1">採用情報</a>
+              <a href="#" class="text-secondary text-decoration-none m-1">広告お問い合わせ</a>
+              <a href="#" class="text-secondary text-decoration-none m-1">利用規約</a>
+              <a href="#" class="text-secondary text-decoration-none m-1">プライバシーポリシー</a>
             </div>
-            <p style="margin: 0;">株式会社MRMI | 東京都板橋区</p>
-            <p style="margin: 0;">bjking102409@gmail.com | 事業者登録番号: portfolio | 通信販売業: portfolio</p>
-            <p style="margin: 0;">開発者: キム・ビョンジュン | お問い合わせ受付時間: 平日 09:00-18:00</p>
-          </div>
-      
-          <div style="flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center;">
-            <div style="margin-bottom: 10px;">
-              <img src="<%= asset_path('mrmiLogo.png') %>" alt="mrmiLogo"
-                  style="width: 80px; height: auto; border-radius: 10%;" />
-            </div>
-            <p style="margin: 0; font-size: 12px; color: #999;">
-              &copy; <%= Time.current.year %> MRMI Prd. All rights reserved.
-            </p>
+            <p class="mb-1">株式会社MRMI | 東京都板橋区</p>
+            <p class="mb-0">bjking102409@gmail.com | 事業者登録番号: portfolio | 通信販売業: portfolio</p>
           </div>
         </div>
+        <hr class="my-4">
+        <div class="row">
+          <div class="col text-center">
+            <img src="<%= asset_path('mrmiLogo.png') %>" alt="mrmiLogo"
+                class="rounded mb-2" style="width:80px; height:auto;">
+            <p class="text-muted small mb-0">&copy; <%= Time.current.year %> MRMI Prd.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- LG 이상: 3단 레이아웃 + 각 섹션 사이 border-end -->
+      <div class="d-none d-lg-block">
+        <div class="row text-secondary small gy-4 align-items-stretch">
+          <!-- 고객센터 -->
+          <div class="col-12 col-md-6 col-lg-4 border-end border-secondary">
+            <div class="pe-4 h-100 d-flex flex-column justify-content-start">
+              <h5 class="fw-bold">カスタマーセンター &gt;</h5>
+              <p class="mb-1 fw-bold fs-4">
+                080-xxxx-xxxx<br><small>(09:00 ~ 18:00)</small>
+              </p>
+              <p class="mb-1">昼休み: 12時～13時は対応しておりません</p>
+              <p class="mb-0">平日、祝日は休業</p>
+              <a href="https://mail.google.com/"
+                          style="
+                            display: inline-block;
+                            margin-top: 8px;
+                            background-color: #0AA5FF;
+                            color: #fff;
+                            text-decoration: none;
+                            border: none;
+                            border-radius: 4px;
+                            padding: 8px 16px;
+                            cursor: pointer;
+                            width: 200px;
+                          "
+                        >
+                メールでのお問い合わせ
+              </a>
+            </div>
+          </div>
+
+          <!-- 회사 정보 -->
+          <div class="col-12 col-md-6 col-lg-5 border-end border-secondary">
+            <div class="pe-4 h-100 d-flex flex-column justify-content-start">
+              <div class="d-flex flex-wrap gap-2 fw-bold mb-2">
+                <a href="#" class="text-secondary text-decoration-none m-2">会社概要</a>
+                <a href="#" class="text-secondary text-decoration-none m-2">採用情報</a>
+                <a href="#" class="text-secondary text-decoration-none m-2">広告お問い合わせ</a>
+                <a href="#" class="text-secondary text-decoration-none m-2">利用規約</a>
+                <a href="#" class="text-secondary text-decoration-none m-2">プライバシーポリシー</a>
+              </div>
+              <p class="mb-1">株式会社MRMI | 東京都板橋区</p>
+              <p class="mb-0">bjking102409@gmail.com | 事業者登録番号: portfolio | 通信販売業: portfolio</p>
+            </div>
+          </div>
+
+          <!-- 로고 & 카피라이트 -->
+          <div class="col-12 col-lg-3 text-center text-md-end mt-3 mt-lg-0">
+            <div class="h-100 d-flex flex-column justify-content-start align-items-center ">
+              <img src="<%= asset_path('mrmiLogo.png') %>" alt="mrmiLogo"
+                    class="rounded mb-2" style="width:80px; height:auto;">
+              <p class="text-muted small mb-0">&copy; <%= Time.current.year %> MRMI Prd.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      </div>
       </footer>
-    <% end %>
+      <% end %>
+
+
+
+
+
+
+
+
+
+
+  
+  
   </body>
 </html>

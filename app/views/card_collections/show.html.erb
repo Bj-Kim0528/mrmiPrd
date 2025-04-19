@@ -81,7 +81,7 @@
     </div>
   </div>
 
-  <div class="d-flex justify-content-between" style="max-width: 720px; margin: 40px 0px"; padding: 0px;"">
+  <div class="d-flex justify-content-between" style="max-width: 720px; margin-top:40px; margin-bottom: 20px; padding: 0px;"">
     <!-- 왼쪽 영역: プロフィール画像とユーザー情報 -->
     <div class="d-flex align-items-center">
       <div>
@@ -171,7 +171,60 @@
     <% end %>
   </div>
 
-  <div class="d-flex flex-wrap" style="max-width: 720px; margin: 0 auto 40px; padding: 0; justify-content: flex-start; gap: 8px;">
+  <div class="d-flex d-md-none justify-content-end">
+    <%= link_to "もっと見る",
+                card_collections_user_path(@card_collection.user),
+                style: "text-decoration: none;  font-size: 12px; font-weight: bold; color:rgb(130, 140, 148);"
+                 %>
+  </div>
+
+  <div class="d-flex d-md-none flex-nowrap overflow-auto" style="margin: 0 auto 40px; padding: 0; gap: 8px;">
+    <% posts = @card_collection.user.card_collections.where.not(id: @card_collection.id).limit(4) %>
+    <% posts.each_with_index do |post, index| %>
+      <div class="position-relative flex-shrink-1"
+            style="flex-basis: 120px; height: 120px;">
+        <%= link_to card_collection_path(post),
+                    class: "d-block w-100 h-100 text-decoration-none" do %>
+          <% if post.card_images.any? && post.card_images.first.image.attached? %>
+            <%= image_tag url_for(post.card_images.first.image),
+                          alt: "投稿写真",
+                          class: "rounded w-100 h-100",
+                          style: "object-fit: cover;" %>
+          <% else %>
+            <div class="rounded bg-secondary-subtle w-100 h-100" style="background-color: #f0f0f0;"></div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+
+
+
+  <div class="d-none d-md-flex d-lg-none  flex-wrap" style=" margin: 0 auto 40px; padding: 0; justify-content: flex-start; gap: 8px;">
+    <% posts = @card_collection.user.card_collections.where.not(id: @card_collection.id).limit(4) %>
+    <% posts.each_with_index do |post, index| %>
+      <div style="width: 165px; height: 165px; position: relative;">
+        <%= link_to card_collection_path(post), style: "text-decoration: none;" do %>
+          <% if post.card_images.any? && post.card_images.first.image.attached? %>
+            <%= image_tag url_for(post.card_images.first.image),
+                  alt: "投稿写真", class: "rounded", 
+                  style: "width: 100%; height: 100%; object-fit: cover;" %>
+          <% else %>
+            <div class="rounded" style="width: 100%; height: 100%; background-color: #f0f0f0;"></div>
+          <% end %>
+        <% end %>
+        <% if posts.size == 4 && index == 3 %>
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 160px; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center;">
+            <%= link_to "もっと見る", card_collections_user_path(@card_collection.user), 
+                      style: "text-decoration: none; color: #fff; font-size: 16px; font-weight: bold;" %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="d-none d-lg-flex flex-wrap" style=" margin: 0 auto 40px; padding: 0; justify-content: flex-start; gap: 8px;">
     <% posts = @card_collection.user.card_collections.where.not(id: @card_collection.id).limit(4) %>
     <% posts.each_with_index do |post, index| %>
       <div style="width: 174px; height: 174px; position: relative;">
@@ -194,7 +247,10 @@
     <% end %>
   </div>
 
-  <div style="max-width: 720px; padding: 0px; margin-top: 76px;">
+
+  
+
+  <div style="padding: 0px; margin-top: 76px;">
     <% total_comments = @card_collection.card_collection_comments.where(deleted: false).count +
     CardCollectionReply.joins(:card_collection_comment)
                       .where(card_collection_comments: { card_collection_id: @card_collection.id }, deleted: false)
@@ -461,61 +517,116 @@
       </div>
     </div>
 
-    <div style="position: absolute; top: 50px; right: 0px; width: calc(50% - 360px); max-width: 340px; height: 100%; padding: 0px 40px; box-sizing: border-box;">
-      <div style="position: sticky; top: 183px; transition: top 0.1s;">
-        <% unless current_user.email == "guest@example.com" %>
-          <div style="position: relative; display: flex; flex-direction: column; align-items: center;">
-            <div style="border: 1px solid rgb(194, 200, 204); background: rgb(247, 249, 250); box-shadow: rgba(63, 71, 77, 0.15) 0px 2px 6px; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 100%; box-sizing: border-box; transition: 0.2s;">
-              <% if current_user.likes.exists?(likeable: @card_collection) %>
-                <% like = current_user.likes.find_by(likeable: @card_collection) %>
-                <%= link_to like_path(like), method: :delete, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
-                  <i class="fa-solid fa-heart" style="font-size: 24px;"></i>
+    <div class="d-none d-md-block" style="pointer-events: none;">
+      <div style="position: absolute; top: 50px; right: 0; width: calc(50% - 360px); max-width: 340px; height: 100%; padding: 0 40px; box-sizing: border-box;">
+        <div style="position: sticky; top: 183px; transition: top 0.1s;">
+          <% unless current_user.email == "guest@example.com" %>
+            <div style="position: relative; display: flex; flex-direction: column; align-items: center;">
+              <div style="border: 1px solid rgb(194, 200, 204); background: rgb(247, 249, 250); box-shadow: rgba(63, 71, 77, 0.15) 0px 2px 6px; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 100%; box-sizing: border-box; transition: 0.2s; pointer-events: auto;">
+                <% if current_user.likes.exists?(likeable: @card_collection) %>
+                  <% like = current_user.likes.find_by(likeable: @card_collection) %>
+                  <%= link_to like_path(like), method: :delete, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
+                    <i class="fa-solid fa-heart" style="font-size: 24px;"></i>
+                  <% end %>
+                <% else %>
+                  <%= link_to likes_path(likeable_type: "CardCollection", likeable_id: @card_collection.id), method: :post, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
+                    <i class="fa-regular fa-heart" style="font-size: 24px;"></i>
+                  <% end %>
                 <% end %>
-              <% else %>
-                <%= link_to likes_path(likeable_type: "CardCollection", likeable_id: @card_collection.id), method: :post, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
-                  <i class="fa-regular fa-heart" style="font-size: 24px;"></i>
-                <% end %>
-              <% end %>
+              </div>
+              <span style="margin-top: 8px; font-size: 14px; color: #555;"><%= @card_collection.likes.count %></span>
             </div>
-            <span style="margin-top: 8px; font-size: 14px; color: #555;"><%= @card_collection.likes.count %></span>
-          </div>
-        <% end %>
+          <% end %>
 
-        <% unless current_user.email == "guest@example.com" %>
-          <div style="position: relative; display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
-            <div style="border: 1px solid rgb(194, 200, 204); background: rgb(247, 249, 250); box-shadow: rgba(63, 71, 77, 0.15) 0px 2px 6px; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 100%; box-sizing: border-box; transition: 0.2s;">
-              <% if current_user.bookmarks.exists?(bookmarkable: @card_collection) %>
-                <% bookmark = current_user.bookmarks.find_by(bookmarkable: @card_collection) %>
-                <%= link_to bookmark_path(bookmark), method: :delete, data: { confirm: "本当にブックマークを解除しますか？" }, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
-                  <i class="fa-solid fa-bookmark" style="font-size: 24px;"></i>
+          <% unless current_user.email == "guest@example.com" %>
+            <div style="position: relative; display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
+              <div style="border: 1px solid rgb(194, 200, 204); background: rgb(247, 249, 250); box-shadow: rgba(63, 71, 77, 0.15) 0px 2px 6px; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 100%; box-sizing: border-box; transition: 0.2s; pointer-events: auto;">
+                <% if current_user.bookmarks.exists?(bookmarkable: @card_collection) %>
+                  <% bookmark = current_user.bookmarks.find_by(bookmarkable: @card_collection) %>
+                  <%= link_to bookmark_path(bookmark), method: :delete, data: { confirm: "本当にブックマークを解除しますか？" }, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
+                    <i class="fa-solid fa-bookmark" style="font-size: 24px;"></i>
+                  <% end %>
+                <% else %>
+                  <%= link_to bookmarks_path(bookmarkable_type: "CardCollection", bookmarkable_id: @card_collection.id), method: :post, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
+                    <i class="fa-regular fa-bookmark" style="font-size: 24px;"></i>
+                  <% end %>
                 <% end %>
-              <% else %>
-                <%= link_to bookmarks_path(bookmarkable_type: "CardCollection", bookmarkable_id: @card_collection.id), method: :post, class: "btn", style: "display: block; text-decoration: none; color: inherit;" do %>
-                  <i class="fa-regular fa-bookmark" style="font-size: 24px;"></i>
-                <% end %>
-              <% end %>
+              </div>
+              <span style="margin-top: 8px; font-size: 14px; color: #555;"><%= @card_collection.bookmarks.count %></span>
             </div>
-            <span style="margin-top: 8px; font-size: 14px; color: #555;"><%= @card_collection.bookmarks.count %></span>
-          </div>
-        <% end %>
+          <% end %>
 
-        <% unless current_user.email == "guest@example.com" %>
-          <div style="position: relative; display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
-            <div style="border: 1px solid rgb(194, 200, 204); background: rgb(247, 249, 250); box-shadow: rgba(63, 71, 77, 0.15) 0px 2px 6px; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 100%; box-sizing: border-box; transition: 0.2s;">
-              <%= link_to "#", onclick: "window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); return false;", style: "display: block; text-decoration: none; color: inherit;" do %>
-                <i class="fa-regular fa-comment" style="font-size: 24px;"></i>
-              <% end %>
+          <% unless current_user.email == "guest@example.com" %>
+            <div style="position: relative; display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
+              <div style="border: 1px solid rgb(194, 200, 204); background: rgb(247, 249, 250); box-shadow: rgba(63, 71, 77, 0.15) 0px 2px 6px; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 100%; box-sizing: border-box; transition: 0.2s; pointer-events: auto;">
+                <%= link_to "#", onclick: "window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); return false;", style: "display: block; text-decoration: none; color: inherit;" do %>
+                  <i class="fa-regular fa-comment" style="font-size: 24px;"></i>
+                <% end %>
+              </div>
+              <!-- 댓글 개수: 원 밖, 중앙 정렬 -->
+              <% total_comments = @card_collection.card_collection_comments.where(deleted: false).count +
+                                  CardCollectionReply.joins(:card_collection_comment)
+                                                      .where(card_collection_comments: { card_collection_id: @card_collection.id }, deleted: false)
+                                                      .count %>
+              <span style="margin-top: 8px; font-size: 14px; color: #555;"><%= total_comments %></span>
             </div>
-            <!-- 댓글 개수: 원 밖, 중앙 정렬 -->
-            <% total_comments = @card_collection.card_collection_comments.where(deleted: false).count +
-                                CardCollectionReply.joins(:card_collection_comment)
-                                                    .where(card_collection_comments: { card_collection_id: @card_collection.id }, deleted: false)
-                                                    .count %>
-            <span style="margin-top: 8px; font-size: 14px; color: #555;"><%= total_comments %></span>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
+      </div>
     
     </div>
+
+    <div class="d-block d-md-none">
+      <div class="fixed-bottom bg-white border-top" style="z-index: 1000;">
+        <div class="d-flex justify-content-around py-2">
+          <%# 좋아요 버튼 %>
+          <div class="text-center">
+            <% if current_user.likes.exists?(likeable: @card_collection) %>
+              <% like = current_user.likes.find_by(likeable: @card_collection) %>
+              <%= link_to like_path(like), method: :delete, class: "text-decoration-none text-dark" do %>
+                <i class="fa-solid fa-heart fs-4"></i><br>
+                <small><%= @card_collection.likes.count %></small>
+              <% end %>
+            <% else %>
+              <%= link_to likes_path(likeable_type: "CardCollection", likeable_id: @card_collection.id), method: :post, class: "text-decoration-none text-dark" do %>
+                <i class="fa-regular fa-heart fs-4"></i><br>
+                <small><%= @card_collection.likes.count %></small>
+              <% end %>
+            <% end %>
+          </div>
+    
+          <%# 북마크 버튼 %>
+          <div class="text-center">
+            <% if current_user.bookmarks.exists?(bookmarkable: @card_collection) %>
+              <% bm = current_user.bookmarks.find_by(bookmarkable: @card_collection) %>
+              <%= link_to bookmark_path(bm), method: :delete, class: "text-decoration-none text-dark" do %>
+                <i class="fa-solid fa-bookmark fs-4"></i><br>
+                <small><%= @card_collection.bookmarks.count %></small>
+              <% end %>
+            <% else %>
+              <%= link_to bookmarks_path(bookmarkable_type: "CardCollection", bookmarkable_id: @card_collection.id), method: :post, class: "text-decoration-none text-dark" do %>
+                <i class="fa-regular fa-bookmark fs-4"></i><br>
+                <small><%= @card_collection.bookmarks.count %></small>
+              <% end %>
+            <% end %>
+          </div>
+    
+          <%# 댓글 이동 버튼 %>
+          <div class="text-center">
+            <%= link_to "#", onclick: "window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'}); return false;", class: "text-decoration-none text-dark" do %>
+              <i class="fa-regular fa-comment fs-4"></i><br>
+              <small><%= @card_collection.card_collection_comments.where(deleted:false).count +
+                          CardCollectionReply.joins(:card_collection_comment)
+                                              .where(card_collection_comments:{card_collection_id:@card_collection.id},deleted:false)
+                                              .count %></small>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+
   </div>
 </div>
 
