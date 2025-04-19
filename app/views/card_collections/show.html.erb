@@ -109,10 +109,12 @@
     <% unless current_user.email == "guest@example.com" %>
       <% unless current_user == @card_collection.user %>
         <% if current_user.following.include?(@card_collection.user) %>
-          <%= link_to "フォロー中", relationship_path(current_user.active_relationships.find_by(followed_id: @card_collection.user.id)), 
-                      method: :delete,  
-                      class: "btn",
+<%= link_to "フォロー中",
+    relationship_path(current_user.active_relationships.find_by(followed_id: @card_collection.user.id)),
+    method: :delete,
+    class: "btn d-flex d-sm-none border",                    
                       style: "margin: 0px;
+                              border: none;
                               background: none;
                               font-style: inherit;
                               font-variant: inherit;
@@ -123,7 +125,39 @@
                               font-kerning: inherit;
                               font-feature-settings: inherit;
                               font-variation-settings: inherit;
-                              font-size: 14px;
+                              font-size: 10px;
+                              line-height: 10px;
+                              display: inline-flex;
+                              -webkit-box-pack: center;
+                              justify-content: center;
+                              -webkit-box-align: center;
+                              align-items: center;
+                              height: 30px;
+                              border-radius: 4px;
+                              padding: 0px;
+                              box-sizing: border-box;
+                              text-align: center;
+                              color: black;
+                              font-weight: 700;
+                              width: 60px;"%>
+
+<%= link_to "フォロー中",
+    relationship_path(current_user.active_relationships.find_by(followed_id: @card_collection.user.id)),
+    method: :delete,
+    class: "btn d-none d-sm-flex border",
+                      style: "margin: 0px;
+                              border: none;
+                              background: none;
+                              font-style: inherit;
+                              font-variant: inherit;
+                              font-stretch: inherit;
+                              font-family: inherit;
+                              font-optical-sizing: inherit;
+                              font-size-adjust: inherit;
+                              font-kerning: inherit;
+                              font-feature-settings: inherit;
+                              font-variation-settings: inherit;
+                              font-size: 12px;
                               line-height: 18px;
                               display: inline-flex;
                               -webkit-box-pack: center;
@@ -133,12 +167,15 @@
                               height: 40px;
                               border-radius: 4px;
                               padding: 0px 16px;
-                              font-weight: 400;
-                              box-sizing: border-box; text-align: center; color: rgb(47, 52, 56); border: 1px solid rgb(230, 230, 230); width: 100px;"%>
+                              box-sizing: border-box;
+                              text-align: center;
+                              color: black;
+                              font-weight: 700;
+                              width: 90px;"%>
         <% else %>
           <%= link_to "フォロー", relationships_path(followed_id: @card_collection.user.id), 
                       method: :post, 
-                      class: "btn",
+                      class: "btn d-flex d-sm-none border",
                       style: "margin: 0px;
                               border: none;
                               background: none rgb(10, 165, 255);
@@ -151,7 +188,37 @@
                               font-kerning: inherit;
                               font-feature-settings: inherit;
                               font-variation-settings: inherit;
-                              font-size: 14px;
+                              font-size: 10px;
+                              line-height: 10px;
+                              display: inline-flex;
+                              -webkit-box-pack: center;
+                              justify-content: center;
+                              -webkit-box-align: center;
+                              align-items: center;
+                              height: 30px;
+                              border-radius: 4px;
+                              padding: 0px;
+                              box-sizing: border-box;
+                              text-align: center;
+                              color: rgb(255, 255, 255);
+                              font-weight: 700;
+                              width: 60px;"%>
+          <%= link_to "フォロー", relationships_path(followed_id: @card_collection.user.id), 
+                      method: :post, 
+                      class: "btn d-none d-sm-flex border",
+                      style: "margin: 0px;
+                              border: none;
+                              background: none rgb(10, 165, 255);
+                              font-style: inherit;
+                              font-variant: inherit;
+                              font-stretch: inherit;
+                              font-family: inherit;
+                              font-optical-sizing: inherit;
+                              font-size-adjust: inherit;
+                              font-kerning: inherit;
+                              font-feature-settings: inherit;
+                              font-variation-settings: inherit;
+                              font-size: 12px;
                               line-height: 18px;
                               display: inline-flex;
                               -webkit-box-pack: center;
@@ -165,7 +232,7 @@
                               text-align: center;
                               color: rgb(255, 255, 255);
                               font-weight: 700;
-                              width: 100px;"%>
+                              width: 90px;"%>
         <% end %>   
       <% end %>
     <% end %>

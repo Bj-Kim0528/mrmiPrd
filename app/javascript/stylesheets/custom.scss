@@ -105,3 +105,15 @@
       margin-left: -10px;
   }
 }
+
+/* 전역으로 모든 드롭다운 토글에서 caret 제거 */
+.dropdown-toggle::after {
+  display: none;
+}
+
+/* 또는 특정 요소만 
+   #xsMenuDropdown::after { display: none; }
+*/
+#xsMenuDropdown.dropdown-toggle::after {
+  display: none;
+}

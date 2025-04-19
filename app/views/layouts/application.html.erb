@@ -105,10 +105,10 @@
                   </div>
 
                   <div class="d-none d-sm-flex dropdown" style="margin:0 20px;">
-                    <button data-bs-toggle="dropdown" class="btn btn-link p-0 border-0">
+                    <div data-bs-toggle="dropdown" class="btn btn-link p-0 border-0">
                       <%= image_tag current_user.get_profile_image(40,40),
                                     class: "rounded-circle", style:"width:35px;height:35px;" %>
-                    </button>
+                    </div>
                     
                     <% if current_user.email == "guest@example.com" %>
                       <ul class="dropdown-menu dropdown-menu-end">
@@ -287,16 +287,16 @@
                         </div>
                       </div>
 
-                      <div class="d-flex d-sm-none align-items-center justify-content-around" style="width: 100%;">
+                      <div class="d-flex d-sm-none align-items-center justify-content-between" style="width: 100%;">
                         <div class="dropdown ms-2">
-                          <button class="btn btn-link nav-link dropdown-toggle"
+                          <div class="btn btn-link nav-link dropdown-toggle"
                                   type="button"
                                   id="xsMenuDropdown"
                                   data-bs-toggle="dropdown"
                                   aria-expanded="false"
                                   style="text-decoration: none; color: inherit; font-weight: 700; margin-left: 0px;">
-                            メニュー
-                          </button>
+                            <i class="fa-solid fa-bars" style="font-size: 16px"></i>
+                          </div>
                           <ul class="dropdown-menu" aria-labelledby="xsMenuDropdown">
                             <li>
                               <%= link_to "プロフィール", user_path(current_user), class: "nav-link #{'active' if current_page?(user_path(current_user))}", style: "text-decoration: none; color: inherit; font-weight: 700;" %>
@@ -308,8 +308,8 @@
                         </div>
         
                         <div class="d-flex">
-                          <div>
-                            <div class="d-flex aling-items-center", style="width: 180px; position: relative; ">
+                          <div class="d-flex align-items-center">
+                            <div style="width: 160px; position: relative; ">
                               <%= form_with url: searchs_path, method: :get, local: true, html: { style: "width:100%;position:relative;" } do |f| %>
                                 <button type="submit"
                                         style="position:absolute; left:10px; top:50%; transform:translateY(-50%); background:none; border:none; padding:0; cursor:pointer;">
@@ -324,12 +324,13 @@
                               <% end %>
                             </div>
                           </div>
+
         
                           <div class="dropdown" style="margin:0 20px;">
-                            <button data-bs-toggle="dropdown" class="btn btn-link p-0 border-0">
+                            <div data-bs-toggle="dropdown" class="btn btn-link p-0 border-0">
                               <%= image_tag current_user.get_profile_image(40,40),
-                                            class: "rounded-circle", style:"width:35px;height:35px;" %>
-                            </button>
+                                            class: "rounded-circle", style:"width:30px;height:30px;" %>
+                            </div>
                             
                             <% if current_user.email == "guest@example.com" %>
                               <ul class="dropdown-menu dropdown-menu-end">
@@ -434,14 +435,14 @@
                                 style: "text-decoration: none; color: inherit; font-weight: 700;" %>
 
                     <div class="dropdown ms-2">
-                      <button class="btn btn-link nav-link dropdown-toggle p-0"
+                      <div class="btn btn-link nav-link dropdown-toggle"
                               type="button"
-                              id="mdThemesDropdown"
+                              id="xsMenuDropdown"
                               data-bs-toggle="dropdown"
                               aria-expanded="false"
-                              style="text-decoration: none; color: inherit; font-weight: 700;">
-                        その他
-                      </button>
+                              style="text-decoration: none; color: inherit; font-weight: 700; margin-left: 0px;">
+                        <i class="fas fa-chevron-down" style="font-size: 16px"></i>
+                      </div>
                       <ul class="dropdown-menu" aria-labelledby="mdThemesDropdown">
                         <% Theme.where.not(name: ["お部屋写真","その他"]).each do |theme| %>
                           <li>
@@ -464,14 +465,14 @@
                                 style: "text-decoration: none; color: inherit; font-weight: 700;" %>
 
                     <div class="dropdown ms-2">
-                      <button class="btn btn-link nav-link dropdown-toggle p-0"
+                      <div class="btn btn-link nav-link dropdown-toggle"
                               type="button"
-                              id="smMenuDropdown"
+                              id="xsMenuDropdown"
                               data-bs-toggle="dropdown"
                               aria-expanded="false"
-                              style="text-decoration: none; color: inherit; font-weight: 700;">
-                        メニュー
-                      </button>
+                              style="text-decoration: none; color: inherit; font-weight: 700; margin-left: 0px;">
+                        <i class="fas fa-chevron-down" style="font-size: 16px"></i>
+                      </div>
                       <ul class="dropdown-menu" aria-labelledby="smMenuDropdown">
                         <li>
                           <%= link_to "おすすめ（部屋の写真、その他）", recommend_path,
@@ -491,14 +492,14 @@
                   <!-- XS(<576px): "すべての写真"만 노출, 나머지는 토글 -->
                   <div class="d-flex d-sm-none align-items-center justify-content-between" style="width: 100%;">
                     <div class="dropdown ms-2">
-                      <button class="btn btn-link nav-link dropdown-toggle"
+                      <div class="btn btn-link nav-link dropdown-toggle"
                               type="button"
                               id="xsMenuDropdown"
                               data-bs-toggle="dropdown"
                               aria-expanded="false"
                               style="text-decoration: none; color: inherit; font-weight: 700; margin-left: 0px;">
-                        メニュー
-                      </button>
+                        <i class="fa-solid fa-bars" style="font-size: 16px"></i>
+                      </div>
                       <ul class="dropdown-menu" aria-labelledby="xsMenuDropdown">
                         <li>
                           <%= link_to "すべての写真", card_collections_path,
@@ -524,8 +525,8 @@
                     </div>
 
                     <div class="d-flex">
-                      <div>
-                        <div class="d-flex aling-items-center", style="width: 180px; position: relative; ">
+                      <div class="d-flex align-items-center">
+                        <div style="width: 160px; position: relative; ">
                           <%= form_with url: searchs_path, method: :get, local: true, html: { style: "width:100%;position:relative;" } do |f| %>
                             <button type="submit"
                                     style="position:absolute; left:10px; top:50%; transform:translateY(-50%); background:none; border:none; padding:0; cursor:pointer;">
@@ -542,10 +543,10 @@
                       </div>
 
                       <div class="dropdown" style="margin:0 20px;">
-                        <button data-bs-toggle="dropdown" class="btn btn-link p-0 border-0">
+                        <div data-bs-toggle="dropdown" class="btn btn-link p-0 border-0">
                           <%= image_tag current_user.get_profile_image(40,40),
-                                        class: "rounded-circle", style:"width:35px;height:35px;" %>
-                        </button>
+                                        class: "rounded-circle", style:"width:30px;height:30px;" %>
+                        </div>
                         
                         <% if current_user.email == "guest@example.com" %>
                           <ul class="dropdown-menu dropdown-menu-end">
@@ -636,10 +637,10 @@
                     </div>
 
                     <div class="dropdown" style="margin:0 20px;">
-                      <button data-bs-toggle="dropdown" class="btn btn-link p-0 border-0">
+                      <div data-bs-toggle="dropdown" class="btn btn-link p-0 border-0">
                         <%= image_tag current_user.get_profile_image(40,40),
                                       class: "rounded-circle", style:"width:35px;height:35px;" %>
-                      </button>
+                      </div>
                       
                       <% if current_user.email == "guest@example.com" %>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -710,7 +711,7 @@
           <% if controller_name == 'users'%>
             <nav class="border-bottom">
               <div class="container px-3 overflow-auto">
-                <ul class="nav justify-content-center flex-nowrap">
+                <ul class="nav justify-content-center flex-nowrap" style="font-size: 15px;">
                   <% if controller_name == 'users' && ['edit', 'edit_password'].include?(action_name) %>
                     <li class="nav-item me-3">
                       <%= link_to "プロフィール編集",
