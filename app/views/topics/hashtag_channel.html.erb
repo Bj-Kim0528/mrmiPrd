@@ -1,38 +1,46 @@
 <!-- 私が参加したチャンネル: 現在ユーザーがブックマークしたハッシュタグチャンネル -->
 <% unless current_user.email == "guest@example.com" %>
 
-  <% if user_signed_in? %>
-    <% if current_user.bookmarked_hashtags.any? %>
+<% if user_signed_in? && current_user.bookmarked_hashtags.any? %>
+  <div style="margin-top:32px;">
+    <div style="font-weight:700; font-size:16px; line-height:18px; padding-bottom:20px;">
+      <%= current_user.nickname %>さんが参加中のチャンネル
+    </div>
 
-      <div style="margin-top:32px;">
-        <div style="font-weight: 700; font-size: 16px; line-height: 18px; padding-bottom: 20px;"><%= current_user.nickname %>さんが参加中のチャンネル</div>
-        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-          <% current_user.bookmarked_hashtags.each do |hashtag| %>
-            <div style="text-align: center;">
-              <%= link_to hashtag_path(hashtag) do %>
-                <% if hashtag.card_collections.any? && hashtag.card_collections.first.card_images.any? && hashtag.card_collections.first.card_images.first.image.attached? %>
-                  <%= image_tag url_for(hashtag.card_collections.first.card_images.first.image),
-                                alt: "Hashtag Card Image",
-                                class: "rounded",
-                                style: "width: 62px; height: 62px; object-fit: cover;" %>
-                <% else %>
-                  <%= image_tag "no_image.jpg",
-                                alt: "Hashtag Card Image",
-                                class: "rounded",
-                                style: "width: 62px; height: 62px; object-fit: cover;" %>
-                <% end %>
-                <div style="font-size: 12px; line-height: 16px; width: max-content; text-align: center; margin: 9px auto 0px; color: #000000;">
-                  #<%= hashtag.name %>
-                </div>
-              <% end %>
+    <!-- 스크롤 가능한 래퍼 -->
+    <div style="
+      display: flex;
+      flex-wrap: nowrap;         /* 항목을 한 줄에 쭉 늘림 */
+      overflow-x: auto;          /* 넘칠 때 가로 스크롤 */
+      gap: 10px;
+      padding-bottom: 10px;      /* 스크롤바와 겹치지 않도록 여유 */
+      -webkit-overflow-scrolling: touch; /* iOS 스무스 스크롤 */
+    ">
+      <% current_user.bookmarked_hashtags.each do |hashtag| %>
+        <div style="flex: 0 0 auto; text-align: center;">
+          <%= link_to hashtag_path(hashtag) do %>
+            <% image = hashtag.card_collections.first&.card_images&.first&.image %>
+            <% if image&.attached? %>
+              <%= image_tag url_for(image),
+                    alt: "Hashtag Card Image",
+                    class: "rounded",
+                    style: "width:62px; height:62px; object-fit:cover;" %>
+            <% else %>
+              <%= image_tag "no_image.jpg",
+                    alt: "Hashtag Card Image",
+                    class: "rounded",
+                    style: "width:62px; height:62px; object-fit:cover;" %>
+            <% end %>
+            <div style="font-size:12px; line-height:16px; margin-top:8px; color:#000;">
+              #<%= hashtag.name %>
             </div>
           <% end %>
         </div>
-      </div>
-    <% end %>
-  <% else %>
-    <div>ログイン後、参加したチャンネルをご確認いただけます。</div>
-  <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
 
 <% end %>
 
@@ -45,53 +53,50 @@
       padding-bottom: 20px;">お気に入りのチャンネルを選んでみましょう</div>
   <% end %>
 
-  <% if @hashtags.any? %>
-    <div style="display: flex; flex-wrap: wrap; gap: 10px; width: 100%;">
-      <% @hashtags.each do |hashtag| %>
-        <div class="rounded" style="padding: 10px; text-align: center; width: calc(50% - 5px); height: 257px; box-sizing: border-box; padding: 0; border: 1px solid rgba(0, 0, 0, 0.1);">
-          <div style="padding: 10px 10px 10px 18px; width: 100%;">
-
-            <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between;">
-              <%= link_to hashtag_path(hashtag) do %>
-                <h1 style="display: flex; font-size: 20px; line-height: 28px; font-weight: 700; padding: 0px; margin: 0px; -webkit-box-align: center; align-items: center; color: #000000;">#<%= hashtag.name %></h1>
-                <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= Bookmark.where(bookmarkable_type: "Hashtag", bookmarkable_id: hashtag.id).count %>名が活動中</span>
-                <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</span>
-                <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= hashtag.card_collections.count %>件のコンテンツ</span>
+<% if @hashtags.any? %>
+  <div class="row g-2">
+    <% @hashtags.each do |hashtag| %>
+      <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="padding-bottom: 15px;">
+        <div class="rounded h-100 border">
+          <div class="p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <%= link_to hashtag_path(hashtag), class: "text-decoration-none text-dark d-flex align-items-center" do %>
+                <h1 class="h5 mb-0">#<%= hashtag.name %></h1>
+                <small class="text-muted ms-2"><%= Bookmark.where(bookmarkable: hashtag).count %>名</small>
+                <span class="mx-1">・</span>
+                <small class="text-muted"><%= hashtag.card_collections.count %>件</small>
               <% end %>
-              <%= link_to hashtag_path(hashtag) do %>
-                <i class="fa-solid fa-arrow-right"></i>
+              <%= link_to hashtag_path(hashtag), class: "text-decoration-none text-dark" do %>
+                <i class="fas fa-arrow-right"></i>
               <% end %>
             </div>
 
-            <!-- このハッシュタグに関連するカードコレクションを表示 -->
             <% if hashtag.card_collections.any? %>
-              <div class="d-flex flex-wrap" style="width: 100%; justify-content: flex-start; gap: 8px;">
-                <% posts = hashtag.card_collections.limit(4) %>
-                <% posts.each_with_index do |post, index| %>
-                  <div style="width: calc(25% - 8px); position: relative; aspect-ratio: 2/3;">
-                    <%= link_to card_collection_path(post), style: "text-decoration: none;" do %>
-                      <% if post.card_images.any? && post.card_images.first.image.attached? %>
-                        <%= image_tag url_for(post.card_images.first.image),
-                                      alt: "投稿写真",
-                                      class: "rounded",
-                                      style: "width: 100%; height: 100%; object-fit: cover; border-radius: 4px;" %>
+              <div class="row g-1">
+                <% hashtag.card_collections.limit(4).each do |post| %>
+                  <div class="col-3" style="padding:8px;">
+                    <%= link_to card_collection_path(post), class: "d-block" do %>
+                      <% if img = post.card_images.first&.image %>
+                        <%= image_tag img, class: "img-fluid rounded", style: "width:100%; height:120px; object-fit: cover;" %>
                       <% else %>
-                        <div class="rounded" style="width: 100%; height: 100%; background-color: #f0f0f0; border-radius: 4px;"></div>
+                        <div class="bg-light rounded" style="aspect-ratio:2/3;"></div>
                       <% end %>
                     <% end %>
                   </div>
                 <% end %>
               </div>
             <% else %>
-              <div class="gallery-item" style="flex: 0 0 calc(25% - 8px); position: relative; height: 183px; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; border-radius: 4px;">
-                <p style="margin: 0; color: #999; font-size: 14px;">このハッシュタグに該当する投稿はありません。</p>
+              <div class="d-flex justify-content-center align-items-center bg-light rounded" style="height:120px;">
+                <small class="text-muted">このハッシュタグに該当する投稿はありません。</small>
               </div>
             <% end %>
           </div>
         </div>
-      <% end %>
-    </div>
-  <% else %>
-    <p>ハッシュタグチャンネルがありません。</p>
-  <% end %>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p>ハッシュタグチャンネルがありません。</p>
+<% end %>
+
 </div>

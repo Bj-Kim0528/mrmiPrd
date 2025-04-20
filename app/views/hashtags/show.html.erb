@@ -81,17 +81,17 @@
     <% if @card_collections.any? %>
       <div class="row" style="padding-top: 0px; transform: translateY(0px); max-height: 1000px; overflow: hidden;">
         <% @card_collections.each do |card_collection| %>
-          <div class="col-12 col-lg-4 col-xl-3" style="padding: 0 10px; margin-bottom: 30px;">
+          <div class="col-12 col-md-6 col-lg-4 col-xl-3" style="padding: 0 10px; margin-bottom: 30px;">
             <article class="card-collection-item" style="overflow: hidden;">
               <!-- 게시물 이미지 영역 -->
               <div class="card-collection-item__content" style="position: relative;">
                 <% if card_collection.card_images.any? && card_collection.card_images.first.image.attached? %>
                   <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
-                    <%= image_tag url_for(card_collection.card_images.first.image.variant(resize_to_fill: [289, 289]).processed), alt: "投稿写真", class: "img-fluid", style: "border-radius: 0.4rem !important; width: 289px; height: 289px; display: block;" %>
+                    <%= image_tag url_for(card_collection.card_images.first.image), alt: "投稿写真", class: "img-fluid", style: "border-radius: 0.4rem !important; width: 100%; height: 289px; object-fit: cover; display: block; background-size: cover; " %>
                   <% end %>
                 <% else %>
                   <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
-                    <div style="width: 289px; height: 289px; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center;">
+                    <div style="width: 100%; height: 289px; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center;">
                       <p style="margin: 0;">写真がアップロードされていません。</p>
                     </div>
                   <% end %>
@@ -133,7 +133,7 @@
                 <div style="display: flex; align-items: center;">
                   <div class="card-item-writer__header" style="align-items: center;">
                     <%= link_to user_path(card_collection.user), style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
-                      <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "プロフィール画像", class: "rounded-circle", style: "width: 18px; height: 18px; object-fit: cover; margin-right: 10px;" %>
+                      <%= image_tag url_for(card_collection.user.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 18px; height: 18px; object-fit: cover; margin-right: 10px;" %>
                     <% end %>
                   </div>
                   <div>
