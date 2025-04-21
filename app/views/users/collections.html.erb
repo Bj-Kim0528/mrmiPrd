@@ -1,5 +1,4 @@
-<div style="margin: 0px -10px; display: flex; flex-wrap: wrap; box-sizing: border-box; padding: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><!-- 전체 -->
-
+<div class="d-none d-lg-flex flex-wrap" style="margin: 0 -10px; box-sizing: border-box; padding: 0;">
 
   <div style="width: 25%; padding-left: 10px; padding-right: 10px;position: relative; padding-top: 30px;"><!-- 카드파트 -->
     <div style="position: sticky; top: 160px; transition: top 0.1s;"><!-- 카드내부파트 -->
@@ -10,19 +9,14 @@
                 border: 1px solid rgb(218, 220, 224);
                 box-shadow: rgba(63, 71, 77, 0.06); position: relative;">
 
-            <div style=" padding: 0px;min-height: 120px;     position: relative; margin: 0px 0px 20px"><!-- 프로필~설정 -->
-                <div style="width: 120px;
-                      height: 120px; position: relative;
-                      margin: 0px auto 24px; top: 0px;
-                  left: 0px;     border-radius: 100%;
-                  background-color: rgb(237, 237, 237);
-                  overflow: hidden;">
-                  <%= image_tag url_for(@userinfo.get_profile_image(120, 120)), alt: "プロフィール画像", class: "rounded-circle", style: "width: 120px; height: 120px; object-fit: cover; border: 1px solid rgba(0, 0, 0, 0.1);" %>
+            <div style=" padding: 0px;min-height: 120px;     position: relative; margin: 0px 0px 20px"><!-- プロフィール～設定 -->
+                <div style="width: 120px; height: 120px; position: relative; margin: 0px auto 24px; top: 0px; left: 0px; border-radius: 100%; background-color: rgb(237, 237, 237); overflow: hidden;">
+                  <%= image_tag url_for(@userinfo.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 120px; height: 120px; object-fit: cover; border: 1px solid rgba(0, 0, 0, 0.1);" %>
                 </div>
 
-                <div style="text-align: center;"><!-- 그외 -->
+                <div style="text-align: center;"><!-- その他 -->
                   <div style="line-height: 1.15;         margin: 0px 0px 10px;
-                                font-size: 26px; font-weight: bold;     color: rgb(41, 41, 41);
+                                font-size: 22px; font-weight: bold;     color: rgb(41, 41, 41);
                             overflow-wrap: break-word;
                             word-break: break-all;
                         }">
@@ -30,52 +24,23 @@
                   </div>
   
                   <div style="text-align: center;">
-                    <dl style="margin: 0px 0px 13px; display: block;
-                      font-size: 13px;
-                      font-weight: 400;
-                      line-height: 19px;
-                      color: rgb(130, 140, 148);"><!-- 팔로워 팔로잉 -->
-                      <dt style="display: inline-block;
-                        margin-right: 5px;">フォロワー
-                      </dt>
-
-                      <dd style="display: inline-block;
-                        
-                        font-weight: bold;
-                        color: rgb(82, 91, 97);">
-
-                        <%= link_to follower_user_path(@userinfo), style: "opacity: 1;
-                        transition: opacity 0.1s; cursor: pointer;     touch-action: manipulation; color: inherit;
-                        text-decoration: none;" do %>
-                          <%= @userinfo.followers.count %>
-                        <% end %>
-                      </dd>
-
-                      <div style="display: inline-block; width:9px; height:9px; border-right: 1px solid rgba(0, 0, 0, 0.4);"></div>
-
-                      <dt style="display: inline-block;
-                        margin-right: 5px; margin-left: 9px;">
-                        フォロー中
-                      </dt>
-
-                      <dd style="display: inline-block;
-                        margin-right: 10px;
-                        font-weight: bold;
-                        color: rgb(82, 91, 97);">
-                        <%= link_to followee_user_path(@userinfo), style: "opacity: 1;
-                            transition: opacity 0.1s; cursor: pointer;     touch-action: manipulation; color: inherit;
-                            text-decoration: none;" do %>
-                          <%= @userinfo.following.count %>
-                        <% end %>
-                      </dd>
-
-
-                    </dl>
+                    <div class="d-flex justify-content-center align-items-center mb-3 flex-nowrap text-nowrap text-secondary" style="font-size:12px; line-height:1.4;">
+                      <div class="me-3" style="margin-right:5px;">
+                        <span class="me-1" style="margin-right: 3px">フォロワー</span>
+                        <%= link_to @userinfo.followers.count, follower_user_path(@userinfo),
+                                    class: "fw-bold text-dark text-decoration-none" %>
+                      </div>
+                      <div style="padding-left: 5px; border-left: 1px solid black">
+                        <span class="me-1" style="margin-right: 3px">フォロー中</span>
+                        <%= link_to @userinfo.following.count, followee_user_path(@userinfo),
+                                    class: "fw-bold text-dark text-decoration-none" %>
+                      </div>
+                    </div>
 
 
 
                     <% if current_user == @userinfo%>
-                      <div><!-- 설정버튼 -->
+                      <div><!-- 設定ボタン -->
                         <%= link_to "設定", edit_user_path(current_user), class: "btn",
                         style: "margin: 0px;
                                 background: none;
@@ -186,7 +151,7 @@
                 font-size: 15px;
                 line-height: 1.4;
                 font-weight: 400;
-                word-break: break-word;"><!-- 자기소개~에스엔에스 -->
+                word-break: break-word;"><!-- 自己紹介～SNS -->
               <p class="mb-1">
                 <%= @userinfo.introduction.presence %>
               </p>
@@ -202,20 +167,24 @@
             </div>
 
             <% if current_user == @userinfo %>
-              <div style="padding: 24px 0px 6px;         border-top: 1px solid rgb(234, 235, 239);"><!-- 좋아요,북마크 -->
-                <div style="display: flex; color: rgb(41, 41, 41); justify-content: center;">
-                  <%= link_to collections_user_path(@userinfo), class: "btn" do %>
-                    <i class="fa-regular fa-bookmark" style="font-size: 28px;"></i>
-                    <div>ブックマーク</div>
-                    <div><%= @userinfo.bookmarks.where(bookmarkable_type: "CardCollection").count %></div>
-                  <% end %>
-
-                  <%= link_to likes_user_path(@userinfo), class: "btn" do %>
-                    <i class="fa-regular fa-heart" style="font-size: 28px;"></i>
-                    <div>いいね</div>
-                    <div><%= Like.where(user_id: @userinfo.id, likeable_type: "CardCollection").count %></div>
-                  <% end %>
-                </div>
+              <div style="padding: 24px 0px 6px; border-top: 1px solid rgb(234, 235, 239);"><!-- ブックマーク、いいね -->
+              <div class="d-flex justify-content-center" ">
+              <%= link_to collections_user_path(@userinfo),
+                          class: "btn d-flex flex-column align-items-center justify-content-center p-0",
+                          style: "width: 90px; height: 80px; font-size: 13px; color: #292929;" do %>
+                <i class="fa-regular fa-bookmark" style="font-size: 20px;"></i>
+                <small class="mt-1">ブックマーク</small>
+                <small><%= @userinfo.bookmarks.where(bookmarkable_type: "CardCollection").count %></small>
+              <% end %>
+            
+              <%= link_to likes_user_path(@userinfo),
+                          class: "btn d-flex flex-column align-items-center justify-content-center p-0",
+                          style: "width: 90px; height: 80px; font-size: 13px; color: #292929;" do %>
+                <i class="fa-regular fa-heart" style="font-size: 20px;"></i>
+                <small class="mt-1">いいね</small>
+                <small><%= Like.where(user_id: @userinfo.id, likeable_type: "CardCollection").count %></small>
+              <% end %>
+            </div>
               </div>
             <% end %>
           </div>
@@ -224,13 +193,13 @@
     </div>
   </div>
 
-  <div style="width: 8.333333333333332%; padding-left: 10px; padding-right: 10px;position: relative; padding-top: 30px;"><!-- 중간공간파트 -->
+  <div style="width: 8.333333333333332%; padding-left: 10px; padding-right: 10px;position: relative; padding-top: 30px;"><!-- 中間スペースパート -->
   </div>
 
   <div style="width: 66.66666666666666%; padding-left: 10px; padding-right: 10px;position: relative; padding-top: 30px;"><!-- 사진,좋아요,북마크파트 -->
     <div style="display: flex; flex-wrap: wrap; margin: 0 -10px; box-sizing: border-box;">
       <% @card_collections.each do |card_collection| %>
-        <div style="width: calc((100% - 20px) / 3); padding: 0 10px; margin-bottom: 30px; box-sizing: border-box;">
+        <div style="width: calc((100%) / 3); padding: 0 10px; margin-bottom: 10px; box-sizing: border-box;">
           <article class="card-collection-item" style="overflow: hidden; transition: box-shadow 0.2s ease;">
             <!-- 게시물 이미지 영역 -->
             <div class="card-collection-item__content" style="position: relative;">
@@ -260,11 +229,11 @@
                   <% if current_user.bookmarks.exists?(bookmarkable: card_collection) %>
                     <% bookmark = current_user.bookmarks.find_by(bookmarkable: card_collection) %>
                     <%= link_to bookmark_path(bookmark), method: :delete, data: { confirm: "本当にブックマークを解除しますか？" }, style: "text-decoration: none; color: #555; display: flex; align-items: center;" do %>
-                      <i class="fa-solid fa-bookmark" style="font-size: 30px; color: rgb(10, 165, 255);"></i>
+                      <i class="fa-solid fa-bookmark" style="font-size: 20px; color: rgb(10, 165, 255);"></i>
                     <% end %>
                   <% else %>
                     <%= link_to bookmarks_path(bookmarkable_type: "CardCollection", bookmarkable_id: card_collection.id), method: :post, style: "text-decoration: none; color: #555; display: flex; align-items: center;" do %>
-                      <i class="fa-regular fa-bookmark" style="font-size: 30px;"></i>
+                      <i class="fa-regular fa-bookmark" style="font-size: 20px;"></i>
                     <% end %>
                   <% end %>
                 </div>
@@ -276,11 +245,544 @@
             <div class="card-item-writer" style="padding-top: 10px;">
               <address style="margin: 0; display: flex; align-items: center;">
                 <%= link_to user_path(card_collection.user), style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
-                  <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "プロフィール画像", class: "rounded-circle", style: "width: 20px; height: 20px; object-fit: cover; margin-right: 10px;" %>
+                  <%= image_tag url_for(card_collection.user.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 20px; height: 20px; object-fit: cover; margin-right: 10px;" %>
                 <% end %>
                 <div style="flex-grow: 1;">
                   <%= link_to user_path(card_collection.user), style: "text-decoration: none; color: inherit;" do %>
                     <div style="font-size: 13px; font-weight: bold;"><%= card_collection.user.nickname %></div>
+                  <% end %>
+                </div>
+              </address>
+            </div>
+
+          </article>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+<div class="d-none d-md-block d-lg-none" style="margin:0 -10px; padding:0; box-sizing:border-box;">
+
+
+  <div style="width: 100%; padding-left: 10px; padding-right: 10px;position: relative; padding-top: 30px;"><!-- 카드파트 -->
+    <div style="position: relative;">
+      <div>
+        <div style= "padding: 30px 25px 18px;
+              border-radius: 4px;
+              border: 1px solid rgb(218, 220, 224);
+              box-shadow: rgba(63, 71, 77, 0.06); position: relative;">
+
+          <div class="d-flex justify-content-between" style=" padding: 0px;min-height: 120px; position: relative; margin: 0px 0px 50px"><!-- プロフィール～設定 -->
+            <div class="d-flex">
+              <div style="position: relative; overflow: hidden;">
+                <%= image_tag url_for(@userinfo.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 120px; height: 120px; object-fit: cover; border: 1px solid rgba(0, 0, 0, 0.1);" %>
+              </div>
+
+              <div class="pt-2" style="text-align: center; margin-left: 20px"><!-- その他 -->
+                <div style="line-height: 1.15;         margin: 0px 0px 10px;
+                              font-size: 22px; font-weight: bold;     color: rgb(41, 41, 41);
+                          overflow-wrap: break-word;
+                          word-break: break-all;
+                      }">
+                  <%= @userinfo.nickname %>
+                </div>
+
+                <div style="text-align: center;">
+                  <div class="d-flex justify-content-center align-items-center mb-3 flex-nowrap text-nowrap text-secondary" style="font-size:12px; line-height:1.4;">
+                    <div class="me-3" style="margin-right:5px;">
+                      <span class="me-1" style="margin-right: 3px">フォロワー</span>
+                      <%= link_to @userinfo.followers.count, follower_user_path(@userinfo),
+                                  class: "fw-bold text-dark text-decoration-none" %>
+                    </div>
+                    <div style="padding-left: 5px; border-left: 1px solid black">
+                      <span class="me-1" style="margin-right: 3px">フォロー中</span>
+                      <%= link_to @userinfo.following.count, followee_user_path(@userinfo),
+                                  class: "fw-bold text-dark text-decoration-none" %>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="margin: 5px 0px;
+                    text-align: start;     color: rgb(66, 66, 66);
+                    font-size: 15px;
+                    line-height: 1.4;
+                    font-weight: 400;
+                    word-break: break-word;"><!-- 自己紹介～SNS -->
+                  <p class="mb-1">
+                    <%= @userinfo.introduction.presence %>
+                  </p>
+                  <% if @userinfo.sns_link.present? %>
+                    <% url = @userinfo.sns_link =~ /\Ahttp(s)?:\/\// ? @userinfo.sns_link : "http://#{@userinfo.sns_link}" %>
+                    <% display_text = url.sub(/\Ahttps?:\/\//, "") %>
+                    <p style="margin: 2px 0px 0px;
+                              color: rgb(23, 120, 186);
+                              transition: opacity 0.1s; padding: 0px">
+                      <%= link_to display_text, url, target: "_blank", rel: "noopener noreferrer" %>
+                    </p>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+            <% if current_user == @userinfo%>
+              <div><!-- 設定ボタン -->
+                <%= link_to "設定", edit_user_path(current_user), class: "btn",
+                style: "margin: 0px;
+                        background: none;
+                        font-style: inherit;
+                        font-variant: inherit;
+                        font-stretch: inherit;
+                        font-family: inherit;
+                        font-optical-sizing: inherit;
+                        font-size-adjust: inherit;
+                        font-kerning: inherit;
+                        font-feature-settings: inherit;
+                        font-variation-settings: inherit;
+                        font-size: 18px;
+                        line-height: 18px;
+                        display: inline-flex;
+                        -webkit-box-pack: center;
+                        justify-content: center;
+                        -webkit-box-align: center;
+                        align-items: center;
+                        height: 33px;
+                        border-radius: 4px;
+                        padding: 20px 16px;
+                        font-weight: 500;
+                        box-sizing: border-box;
+                        text-align: center;
+                        color: rgb(47, 52, 56);
+                        border: 1px solid rgb(230, 230, 230);
+                        width: 100px;"%>
+              </div>
+            <% else %>
+              <div class="ms-auto">
+                <% if user_signed_in? %>
+                  <% unless current_user.email == "guest@example.com" %>
+                    <% if current_user.following.include?(@userinfo) %>
+                      <%= link_to "フォロー解除", relationship_path(current_user.active_relationships.find_by(followed_id: @userinfo)), 
+                                  method: :delete,  
+                                  class: "btn",
+                                  style: "margin: 0px;
+                                          background: none;
+                                          font-style: inherit;
+                                          font-variant: inherit;
+                                          font-stretch: inherit;
+                                          font-family: inherit;
+                                          font-optical-sizing: inherit;
+                                          font-size-adjust: inherit;
+                                          font-kerning: inherit;
+                                          font-feature-settings: inherit;
+                                          font-variation-settings: inherit;
+                                          font-size: 14px;
+                                          line-height: 18px;
+                                          display: inline-flex;
+                                          -webkit-box-pack: center;
+                                          justify-content: center;
+                                          -webkit-box-align: center;
+                                          align-items: center;
+                                          height: 40px;
+                                          border-radius: 4px;
+                                          padding: 0px 16px;
+                                          font-weight: 400;
+                                          box-sizing: border-box;
+                                          text-align: center;
+                                          color: rgb(47, 52, 56);
+                                          border: 1px solid rgb(230, 230, 230);
+                                          width: 90px;"%>
+                    <% else %>
+                      <%= link_to "フォロー", relationships_path(followed_id: @userinfo), 
+                                  method: :post, 
+                                  class: "btn",
+                                  style: "margin: 0px;
+                                          border: none;
+                                          background: none rgb(10, 165, 255);
+                                          font-style: inherit;
+                                          font-variant: inherit;
+                                          font-stretch: inherit;
+                                          font-family: inherit;
+                                          font-optical-sizing: inherit;
+                                          font-size-adjust: inherit;
+                                          font-kerning: inherit;
+                                          font-feature-settings: inherit;
+                                          font-variation-settings: inherit;
+                                          font-size: 14px;
+                                          line-height: 18px;
+                                          display: inline-flex;
+                                          -webkit-box-pack: center;
+                                          justify-content: center;
+                                          -webkit-box-align: center;
+                                          align-items: center;
+                                          height: 40px;
+                                          border-radius: 4px;
+                                          padding: 0px 16px;
+                                          box-sizing: border-box;
+                                          text-align: center;
+                                          color: rgb(255, 255, 255);
+                                          font-weight: 700;
+                                          width: 80px;"%>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+            
+          </div>
+
+
+
+
+          <% if current_user == @userinfo %>
+            <div style="padding: 24px 0px 6px; border-top: 1px solid rgb(234, 235, 239);"><!-- ブックマーク、いいね -->
+              <div class="d-flex justify-content-around">
+                <%= link_to collections_user_path(@userinfo),
+                            class: "btn d-flex flex-column align-items-center justify-content-center p-0",
+                            style: "width: 90px; height: 80px; font-size: 13px; color: #292929; margin-left:30px;" do %>
+                  <i class="fa-regular fa-bookmark" style="font-size: 23px;"></i>
+                  <small class="mt-1">ブックマーク</small>
+                  <small><%= @userinfo.bookmarks.where(bookmarkable_type: "CardCollection").count %></small>
+                <% end %>
+              
+                <%= link_to likes_user_path(@userinfo),
+                            class: "btn d-flex flex-column align-items-center justify-content-center p-0",
+                            style: "width: 90px; height: 80px; font-size: 15px; color: #292929; margin-right:30px;" do %>
+                  <i class="fa-regular fa-heart" style="font-size: 23px;"></i>
+                  <small class="mt-1">いいね</small>
+                  <small><%= Like.where(user_id: @userinfo.id, likeable_type: "CardCollection").count %></small>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="width: 100%; padding-left: 10px; padding-right: 10px;position: relative; padding-top: 30px;"><!-- 中間スペースパート -->
+  </div>
+
+  <div style="width: 100%; padding-left: 10px; padding-right: 10px;position: relative; padding-top: 30px;"><!-- 사진,좋아요,북마크파트 -->
+    <div style="display: flex; flex-wrap: wrap; margin: 0 -10px; box-sizing: border-box;">
+      <% @card_collections.each do |card_collection| %>
+        <div style="width: calc((100%) / 3); padding: 0 10px; margin-bottom: 10px; box-sizing: border-box;">
+          <article class="card-collection-item" style="overflow: hidden; transition: box-shadow 0.2s ease;">
+            <!-- 게시물 이미지 영역 -->
+            <div class="card-collection-item__content" style="position: relative;">
+              <% if card_collection.card_images.any? && card_collection.card_images.first.image.attached? %>
+                <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
+                  <!-- 정사각형 컨테이너: width 100%, padding-top 100%로 비율 유지 -->
+                  <div style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
+                    <%= image_tag url_for(card_collection.card_images.first.image),
+                                  alt: "投稿写真",
+                                  class: "img-fluid rounded",
+                                  style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" %>
+                  </div>
+                <% end %>
+              <% else %>
+                <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
+                  <div class="rounded" style="width: 100%; padding-top: 100%; position: relative; background-color: #f0f0f0;">
+                    <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; font-size: 14px; color: #999;">
+                      写真がアップロードされていません。
+                    </p>
+                  </div>
+                <% end %>
+              <% end %>
+
+              <!-- 액션 버튼 영역 -->
+              <div style="position: absolute; right: 10px; bottom: 10px; display: flex; align-items: center;">
+                <div>
+                  <% if current_user.bookmarks.exists?(bookmarkable: card_collection) %>
+                    <% bookmark = current_user.bookmarks.find_by(bookmarkable: card_collection) %>
+                    <%= link_to bookmark_path(bookmark), method: :delete, data: { confirm: "本当にブックマークを解除しますか？" }, style: "text-decoration: none; color: #555; display: flex; align-items: center;" do %>
+                      <i class="fa-solid fa-bookmark" style="font-size: 17px; color: rgb(10, 165, 255);"></i>
+                    <% end %>
+                  <% else %>
+                    <%= link_to bookmarks_path(bookmarkable_type: "CardCollection", bookmarkable_id: card_collection.id), method: :post, style: "text-decoration: none; color: #555; display: flex; align-items: center;" do %>
+                      <i class="fa-regular fa-bookmark" style="font-size: 17px;"></i>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="card-item-writer" style="padding-top: 10px;">
+              <address style="margin: 0; display: flex; align-items: center;">
+                <%= link_to user_path(card_collection.user), style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
+                  <%= image_tag url_for(card_collection.user.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 20px; height: 20px; object-fit: cover; margin-right: 10px;" %>
+                <% end %>
+                <div style="flex-grow: 1;">
+                  <%= link_to user_path(card_collection.user), style: "text-decoration: none; color: inherit;" do %>
+                    <div style="font-size: 13px; font-weight: bold;"><%= card_collection.user.nickname %></div>
+                  <% end %>
+                </div>
+              </address>
+            </div>
+
+          </article>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="d-md-none" style="margin:0 -10px; padding:0; box-sizing:border-box;">
+
+
+  <div style="width: 100%; padding-left: 10px; padding-right: 10px;position: relative; padding-top: 30px;"><!-- 카드파트 -->
+    <div style="position: relative;">
+      <div>
+        <div style= "padding-top: 10px;
+              border-radius: 4px;
+              border: 1px solid rgb(218, 220, 224);
+              box-shadow: rgba(63, 71, 77, 0.06); position: relative;">
+
+          <div style=" padding: 0px;min-height: 120px; position: relative; margin: 0px 0px 20px"><!-- プロフィール～設定 -->
+            
+              <div style="text-align: center; position: relative; overflow: hidden;">
+                <%= image_tag url_for(@userinfo.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 100px; height: 100px; object-fit: cover; border: 1px solid rgba(0, 0, 0, 0.1);" %>
+              </div>
+
+              <div class="pt-2" style="text-align: center;"><!-- その他 -->
+                <div style="line-height: 1.15; margin: 0px 0px 3px;
+                              font-size: 18px; font-weight: bold;     color: rgb(41, 41, 41);
+                          overflow-wrap: break-word;
+                          word-break: break-all;
+                      }">
+                  <%= @userinfo.nickname %>
+                </div>
+
+                <div style="text-align: center;">
+                  <div class="d-flex justify-content-center align-items-center flex-nowrap text-nowrap text-secondary" style="font-size:12px; line-height:1.4;">
+                    <div class="me-3" style="margin-right:5px;">
+                      <span class="me-1" style="margin-right: 3px">フォロワー</span>
+                      <%= link_to @userinfo.followers.count, follower_user_path(@userinfo),
+                                  class: "fw-bold text-dark text-decoration-none" %>
+                    </div>
+                    <div style="padding-left: 5px; border-left: 1px solid black">
+                      <span class="me-1" style="margin-right: 3px">フォロー中</span>
+                      <%= link_to @userinfo.following.count, followee_user_path(@userinfo),
+                                  class: "fw-bold text-dark text-decoration-none" %>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="margin: 5px 0px;
+                    text-align: center;     color: rgb(66, 66, 66);
+                    font-size: 13px;
+                    line-height: 1.4;
+                    font-weight: 400;
+                    word-break: break-word;"><!-- 自己紹介～SNS -->
+                  <p class="mb-1">
+                    <%= @userinfo.introduction.presence %>
+                  </p>
+                  <% if @userinfo.sns_link.present? %>
+                    <% url = @userinfo.sns_link =~ /\Ahttp(s)?:\/\// ? @userinfo.sns_link : "http://#{@userinfo.sns_link}" %>
+                    <% display_text = url.sub(/\Ahttps?:\/\//, "") %>
+                    <p style="margin: 2px 0px 0px;
+                              color: rgb(23, 120, 186);
+                              transition: opacity 0.1s; padding: 0px">
+                      <%= link_to display_text, url, target: "_blank", rel: "noopener noreferrer" %>
+                    </p>
+                  <% end %>
+                </div>
+              </div>
+            
+
+            <% if current_user == @userinfo%>
+              <div class="pt-2" style="text-align: center;"><!-- 設定ボタン -->
+                <%= link_to "設定", edit_user_path(current_user), class: "btn",
+                style: "margin: 0px;
+                        background: none;
+                        font-style: inherit;
+                        font-variant: inherit;
+                        font-stretch: inherit;
+                        font-family: inherit;
+                        font-optical-sizing: inherit;
+                        font-size-adjust: inherit;
+                        font-kerning: inherit;
+                        font-feature-settings: inherit;
+                        font-variation-settings: inherit;
+                        font-size: 18px;
+                        line-height: 18px;
+                        display: inline-flex;
+                        -webkit-box-pack: center;
+                        justify-content: center;
+                        -webkit-box-align: center;
+                        align-items: center;
+                        height: 33px;
+                        border-radius: 4px;
+                        padding: 20px 16px;
+                        font-weight: 500;
+                        box-sizing: border-box;
+                        text-align: center;
+                        color: rgb(47, 52, 56);
+                        border: 1px solid rgb(230, 230, 230);
+                        width: 100px;"%>
+              </div>
+            <% else %>
+              <div class="ms-auto">
+                <% if user_signed_in? %>
+                  <% unless current_user.email == "guest@example.com" %>
+                    <% if current_user.following.include?(@userinfo) %>
+                      <%= link_to "フォロー解除", relationship_path(current_user.active_relationships.find_by(followed_id: @userinfo)), 
+                                  method: :delete,  
+                                  class: "btn",
+                                  style: "margin: 0px;
+                                          background: none;
+                                          font-style: inherit;
+                                          font-variant: inherit;
+                                          font-stretch: inherit;
+                                          font-family: inherit;
+                                          font-optical-sizing: inherit;
+                                          font-size-adjust: inherit;
+                                          font-kerning: inherit;
+                                          font-feature-settings: inherit;
+                                          font-variation-settings: inherit;
+                                          font-size: 14px;
+                                          line-height: 18px;
+                                          display: inline-flex;
+                                          -webkit-box-pack: center;
+                                          justify-content: center;
+                                          -webkit-box-align: center;
+                                          align-items: center;
+                                          height: 40px;
+                                          border-radius: 4px;
+                                          padding: 0px 16px;
+                                          font-weight: 400;
+                                          box-sizing: border-box;
+                                          text-align: center;
+                                          color: rgb(47, 52, 56);
+                                          border: 1px solid rgb(230, 230, 230);
+                                          width: 90px;"%>
+                    <% else %>
+                      <%= link_to "フォロー", relationships_path(followed_id: @userinfo), 
+                                  method: :post, 
+                                  class: "btn",
+                                  style: "margin: 0px;
+                                          border: none;
+                                          background: none rgb(10, 165, 255);
+                                          font-style: inherit;
+                                          font-variant: inherit;
+                                          font-stretch: inherit;
+                                          font-family: inherit;
+                                          font-optical-sizing: inherit;
+                                          font-size-adjust: inherit;
+                                          font-kerning: inherit;
+                                          font-feature-settings: inherit;
+                                          font-variation-settings: inherit;
+                                          font-size: 14px;
+                                          line-height: 18px;
+                                          display: inline-flex;
+                                          -webkit-box-pack: center;
+                                          justify-content: center;
+                                          -webkit-box-align: center;
+                                          align-items: center;
+                                          height: 40px;
+                                          border-radius: 4px;
+                                          padding: 0px 16px;
+                                          box-sizing: border-box;
+                                          text-align: center;
+                                          color: rgb(255, 255, 255);
+                                          font-weight: 700;
+                                          width: 80px;"%>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+            
+          </div>
+
+
+
+
+          <% if current_user == @userinfo %>
+            <div style="padding: 10px 0px 6px; border-top: 1px solid rgb(234, 235, 239);"><!-- ブックマーク、いいね -->
+              <div class="d-flex justify-content-around">
+                <%= link_to collections_user_path(@userinfo),
+                            class: "btn d-flex flex-column align-items-center justify-content-center p-0",
+                            style: "width: 90px; height: 80px; font-size: 13px; color: #292929; margin-left:30px;" do %>
+                  <i class="fa-regular fa-bookmark" style="font-size: 23px;"></i>
+                  <small class="mt-1">ブックマーク</small>
+                  <small><%= @userinfo.bookmarks.where(bookmarkable_type: "CardCollection").count %></small>
+                <% end %>
+              
+                <%= link_to likes_user_path(@userinfo),
+                            class: "btn d-flex flex-column align-items-center justify-content-center p-0",
+                            style: "width: 90px; height: 80px; font-size: 15px; color: #292929; margin-right:30px;" do %>
+                  <i class="fa-regular fa-heart" style="font-size: 23px;"></i>
+                  <small class="mt-1">いいね</small>
+                  <small><%= Like.where(user_id: @userinfo.id, likeable_type: "CardCollection").count %></small>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="width: 100%; padding-left: 10px; padding-right: 10px;position: relative; padding-top: 30px;"><!-- 中間スペースパート -->
+  </div>
+
+  <div style="width: 100%; padding-left: 10px; padding-right: 10px;position: relative; padding-top: 30px;"><!-- 사진,좋아요,북마크파트 -->
+    <div style="display: flex; flex-wrap: wrap; margin: 0 -10px; box-sizing: border-box;">
+      <% @card_collections.each do |card_collection| %>
+        <div style="width: calc((100%) / 3); padding: 0 3px; margin-bottom: 10px; box-sizing: border-box;">
+          <article class="card-collection-item" style="overflow: hidden; transition: box-shadow 0.2s ease;">
+            <!-- 게시물 이미지 영역 -->
+            <div class="card-collection-item__content" style="position: relative;">
+              <% if card_collection.card_images.any? && card_collection.card_images.first.image.attached? %>
+                <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
+                  <!-- 정사각형 컨테이너: width 100%, padding-top 100%로 비율 유지 -->
+                  <div style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
+                    <%= image_tag url_for(card_collection.card_images.first.image),
+                                  alt: "投稿写真",
+                                  class: "img-fluid rounded",
+                                  style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" %>
+                  </div>
+                <% end %>
+              <% else %>
+                <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
+                  <div class="rounded" style="width: 100%; padding-top: 100%; position: relative; background-color: #f0f0f0;">
+                    <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; font-size: 14px; color: #999;">
+                      写真がアップロードされていません。
+                    </p>
+                  </div>
+                <% end %>
+              <% end %>
+
+              <!-- 액션 버튼 영역 -->
+              <div style="position: absolute; right: 10px; bottom: 10px; display: flex; align-items: center;">
+                <div>
+                  <% if current_user.bookmarks.exists?(bookmarkable: card_collection) %>
+                    <% bookmark = current_user.bookmarks.find_by(bookmarkable: card_collection) %>
+                    <%= link_to bookmark_path(bookmark), method: :delete, data: { confirm: "本当にブックマークを解除しますか？" }, style: "text-decoration: none; color: #555; display: flex; align-items: center;" do %>
+                      <i class="fa-solid fa-bookmark" style="font-size: 17px; color: rgb(10, 165, 255);"></i>
+                    <% end %>
+                  <% else %>
+                    <%= link_to bookmarks_path(bookmarkable_type: "CardCollection", bookmarkable_id: card_collection.id), method: :post, style: "text-decoration: none; color: #555; display: flex; align-items: center;" do %>
+                      <i class="fa-regular fa-bookmark" style="font-size: 17px;"></i>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="card-item-writer" style="padding-top:3px;">
+              <address style="margin: 0; display: flex; align-items: center;">
+                <%= link_to user_path(card_collection.user), style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
+                  <%= image_tag url_for(card_collection.user.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 20px; height: 20px; object-fit: cover; margin-right: 10px;" %>
+                <% end %>
+                <div style="flex-grow: 1;">
+                  <%= link_to user_path(card_collection.user), style: "text-decoration: none; color: inherit;" do %>
+                    <div style="font-size: 10px; font-weight: bold;"><%= card_collection.user.nickname %></div>
                   <% end %>
                 </div>
               </address>

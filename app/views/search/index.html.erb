@@ -50,7 +50,7 @@
                 <div class="card-collection-item__content" style="position: relative;">
                   <% if card_collection.card_images.any? && card_collection.card_images.first.image.attached? %>
                     <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
-                      <%= image_tag url_for(card_collection.card_images.first.image.variant(resize_to_fill: [289, 289]).processed), alt: "投稿写真", class: "img-fluid", style: "border-radius: 0.4rem !important; width: 289px; height: 289px; display: block;" %>
+                      <%= image_tag url_for(card_collection.card_images.first.image), alt: "投稿写真", class: "img-fluid", style: "border-radius: 0.4rem !important; width: 289px; height: 289px; display: block;" %>
                     <% end %>
                   <% else %>
                     <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
@@ -131,7 +131,7 @@
                   <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between; margin-bottom: 10px;">
                     <%= link_to user_path(user) do %>
                       <div style="display: flex;">
-                        <%= image_tag url_for(user.get_profile_image(100, 100)), 
+                        <%= image_tag url_for(user.profile_image), 
                                 alt: "プロフィール画像", 
                                 class: "rounded-circle", 
                                 style: "width: 60px; height: 60px; object-fit: cover; margin-bottom: 3px; margin-right: 5px;" %>

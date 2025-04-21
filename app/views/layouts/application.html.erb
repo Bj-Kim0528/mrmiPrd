@@ -15,7 +15,7 @@
   <body class= "d-flex flex-column justify-content-center" style="min-height: 100vh; margin: 0;">
     <header style="position: sticky; top: 0; z-index: 999; background-color: #fff;">
       <nav style="border-bottom: 1px solid #ddd;">
-        <div class="container d-flex align-items-center" style="margin: 0 auto; padding-right: 15px; padding-left: 15px; height: 80px;">
+        <div class="container d-flex align-items-center" style="margin: 0 auto; height: 80px;">
           <% unless user_signed_in? %>
             <div class="d-flex d-sm-none align-items-center justify-content-between" style="width: 100%;">
               <div>
@@ -106,8 +106,8 @@
 
                   <div class="d-none d-sm-flex dropdown" style="margin:0 20px;">
                     <div data-bs-toggle="dropdown" class="btn btn-link p-0 border-0">
-                      <%= image_tag current_user.get_profile_image(40,40),
-                                    class: "rounded-circle", style:"width:35px;height:35px;" %>
+                      <%= image_tag current_user.profile_image,
+                                    class: "rounded-circle", style:"width:35px;height:35px; object-fit: cover;" %>
                     </div>
                     
                     <% if current_user.email == "guest@example.com" %>
@@ -275,9 +275,10 @@
         <% unless (controller_name == "card_collections" && (action_name == "new" || action_name == "edit")) %>
           <% unless controller_name == 'users' && action_name == 'show' && params[:id] != current_user.id.to_s %>
             <nav class="border-bottom">
-              <div class="container d-flex align-items-center" style="margin: 0 auto; padding-right: 15px; padding-left: 15px;">
+              <div class="container">
+              
                 <% if controller_name == 'users' %>
-                  <div class="d-flex align-items-center justify-content-center" style="width: 100%;">
+                  <div class="d-flex align-items-center justify-content-center " style="width: 100%;">
                   
                     <% if user_signed_in? && current_user.id.to_s == params[:id] %>
                       <div class="d-none d-sm-flex justify-content-center " >
@@ -328,8 +329,8 @@
         
                           <div class="dropdown" style="margin:0 20px;">
                             <div data-bs-toggle="dropdown" class="btn btn-link p-0 border-0">
-                              <%= image_tag current_user.get_profile_image(40,40),
-                                            class: "rounded-circle", style:"width:30px;height:30px;" %>
+                              <%= image_tag current_user.profile_image,
+                                            class: "rounded-circle", style:"width:30px;height:30px; object-fit: cover;" %>
                             </div>
                             
                             <% if current_user.email == "guest@example.com" %>
@@ -400,26 +401,28 @@
                   </div>
                 <% else %>
                   <!-- LG 이상(≥992px): 모든 링크 노출 -->
-                  <div class="d-none d-lg-flex align-items-center">
+                  <div class="d-none d-lg-flex">
+                  <div class="d-flex flex-nowrap  overflow-auto  scroll-on-hover  justify-content-start">
                     <%= link_to "ホーム", root_path,
-                                class: "nav-link active",
+                                class: "nav-link active flex-shrink-0",
                                 style: "text-decoration: none; color: inherit; font-weight: 700; padding-left: 0px; margin-left: 0px;" %>
                     <%= link_to "すべての写真", card_collections_path,
-                                class: "nav-link active",
+                                class: "nav-link active flex-shrink-0",
                                 style: "text-decoration: none; color: inherit; font-weight: 700;" %>
                     <%= link_to "おすすめ（部屋の写真、その他）", recommend_path,
-                                class: "nav-link active",
+                                class: "nav-link active flex-shrink-0",
                                 style: "text-decoration: none; color: inherit; font-weight: 700;" %>
                     <%= link_to "#チャンネル", hashtag_channel_path,
-                                class: "nav-link active",
+                                class: "nav-link active flex-shrink-0",
                                 style: "text-decoration: none; color: inherit; font-weight: 700;" %>
 
                     <% Theme.where.not(name: ["お部屋写真","その他"]).each do |theme| %>
                       <%= link_to theme.name,
                                   topic_path(theme.name),
-                                  class: "nav-link #{'active' if params[:topic]==theme.name}",
+                                  class: "nav-link #{'active' if params[:topic]==theme.name} flex-shrink-0",
                                   style: "text-decoration: none; color: inherit; font-weight: 700;" %>
                     <% end %>
+                  </div>
                   </div>
 
                   <!-- MD 이상(≥768px, <992px): "すべての写真", "おすすめ", "#チャンネル"만 노출, 나머지는 토글 -->
@@ -544,8 +547,8 @@
 
                       <div class="dropdown" style="margin:0 20px;">
                         <div data-bs-toggle="dropdown" class="btn btn-link p-0 border-0">
-                          <%= image_tag current_user.get_profile_image(40,40),
-                                        class: "rounded-circle", style:"width:30px;height:30px;" %>
+                          <%= image_tag current_user.profile_image,
+                                        class: "rounded-circle", style:"width:30px;height:30px; object-fit: cover;" %>
                         </div>
                         
                         <% if current_user.email == "guest@example.com" %>
@@ -638,8 +641,8 @@
 
                     <div class="dropdown" style="margin:0 20px;">
                       <div data-bs-toggle="dropdown" class="btn btn-link p-0 border-0">
-                        <%= image_tag current_user.get_profile_image(40,40),
-                                      class: "rounded-circle", style:"width:35px;height:35px;" %>
+                        <%= image_tag current_user.profile_image,
+                                      class: "rounded-circle", style:"width:35px;height:35px; object-fit: cover;" %>
                       </div>
                       
                       <% if current_user.email == "guest@example.com" %>
@@ -716,12 +719,14 @@
                     <li class="nav-item me-3">
                       <%= link_to "プロフィール編集",
                                   edit_user_path(current_user),
-                                  class: "nav-link #{'active' if action_name == 'edit'} text-nowrap" %>
+                                  class: "nav-link #{'active' if action_name == 'edit'} text-nowrap",
+                                  style: "text-decoration: none; color: inherit;" %>
                     </li>
                     <li class="nav-item">
                       <%= link_to "パスワード変更",
                                   edit_password_user_path(current_user),
-                                  class: "nav-link #{'active' if action_name == 'edit_password'} text-nowrap" %>
+                                  class: "nav-link #{'active' if action_name == 'edit_password'} text-nowrap",
+                                  style: "text-decoration: none; color: inherit;" %>
                     </li>
             
                   <% elsif controller_name == 'users' && ['show', 'card_collections', 'likes', 'collections', 'follower', 'followee'].include?(action_name) %>

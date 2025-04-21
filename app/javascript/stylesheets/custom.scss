@@ -123,3 +123,34 @@
     height: 77.25px !important;
   }
 }
+
+/* 1. 기본 상태에서는 스크롤바를 숨긴다 */
+.scroll-on-hover {
+  overflow-x: auto;            /* 스크롤 자체는 항상 가능 */
+  -ms-overflow-style: none;    /* IE/Edge */
+  scrollbar-width: none;       /* Firefox */
+}
+
+/* WebKit 엔진(Chrome/Safari) 에서도 숨기기 */
+.scroll-on-hover::-webkit-scrollbar {
+  height: 0;
+}
+
+/* 2. 호버했을 때만 스크롤바를 보여준다 */
+.scroll-on-hover:hover::-webkit-scrollbar {
+  height: 8px;                 /* 원하는 높이 */
+}
+
+/* 스크롤바 막대(thumb) 스타일 */
+.scroll-on-hover::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.3);
+  border-radius: 4px;
+}
+
+/* Firefox 에서 thin 스타일로 돌리기 */
+.scroll-on-hover:hover {
+  scrollbar-width: thin;
+  -ms-overflow-style: auto;
+}
+
+

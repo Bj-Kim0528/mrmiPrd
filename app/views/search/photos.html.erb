@@ -46,7 +46,7 @@
             <div class="card-item-writer__header" style="display: flex; align-items: center;">
 
               <%= link_to user_path(card_collection.user), class: "card-item-writer__link", style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
-                <%= image_tag url_for(card_collection.user.get_profile_image(36, 36)), alt: "プロフィール画像", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover; margin-right: 10px;" %>
+                <%= image_tag url_for(card_collection.user.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover; margin-right: 10px;" %>
               <% end %>
             </div>
 
@@ -88,7 +88,7 @@
         <div class="card-collection-item__content" style="position: relative;">
           <% if card_collection.card_images.any? && card_collection.card_images.first.image.attached? %>
             <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
-              <%= image_tag url_for(card_collection.card_images.first.image.variant(resize_to_fill: [289, 289]).processed), alt: "投稿写真", class: "img-fluid", style: "border-radius: 0.4rem !important; width: 289px; height: 289px; display: block;" %>
+              <%= image_tag url_for(card_collection.card_images.first.image), alt: "投稿写真", class: "img-fluid", style: "border-radius: 0.4rem !important; width: 289px; height: 289px; display: block;" %>
             <% end %>
           <% else %>
             <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
@@ -165,7 +165,7 @@
           <% first_comment = sorted_comments.first %>
           <div class="card-item-comment" style="display: flex; align-items: flex-start; margin-top: 10px">
             <%= link_to user_path(first_comment.user), style: "text-decoration: none; display: flex; align-items: center;" do %>
-              <%= image_tag url_for(first_comment.user.get_profile_image(24, 24)), alt: "プロフィール画像", class: "rounded-circle", style: "width: 24px; height: 24px; object-fit: cover; margin-right: 10px;" %>
+              <%= image_tag url_for(first_comment.user.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 24px; height: 24px; object-fit: cover; margin-right: 10px;" %>
               <strong style="font-size: 13px; font-style: normal;"><%= first_comment.user.nickname %></strong>
             <% end %>
             <%= link_to card_collection_path(card_collection), style: "text-decoration: none; color: inherit; margin-left: 10px; font-size: 11px;" do %>

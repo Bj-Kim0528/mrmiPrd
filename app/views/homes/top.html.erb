@@ -90,40 +90,86 @@
 <section class="theme-catalog" style="max-width: 100%; margin: 30px 0; padding: 0;">
   <h2 class="d-block d-lg-none" style="font-size: 24px;">こんなものはいかがですか？</h2>
   <h2 class="d-none d-lg-block">こんなものはいかがですか？</h2>
-  <!-- Grid 레이아웃: 한 줄에 3개 -->
-  <div class="catalog-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 0;">
 
-
-  <% @random_themes.each do |theme| %>
-    <% 
-      # 해당 테마의 카드콜렉션 중, 하나 이상의 카드 이미지에 첨부된 이미지가 있는 경우만 조회
-      card_collection = theme.card_collections
+  <!-- xs (<576px) 전용: 140×140px 정사각형, 가로 스크롤 -->
+  <div class="d-flex d-sm-none overflow-auto  scroll-on-hover" style="gap: 20px; padding: 0;">
+    <% @random_themes.each do |theme| %>
+      <% card_collection = theme.card_collections
                              .joins(card_images: { image_attachment: :blob })
                              .distinct
                              .to_a
                              .shuffle
-                             .first 
-    %>
-    <% if card_collection %>
-      <div class="catalog-item">
-        <div class="gallery-item" style="flex: 0 0 174px; position: relative;">
-          <%= link_to card_collection_path(card_collection), style: "text-decoration: none;" do %>
+                             .first %>
+      <% if card_collection %>
+        <div style="flex: 0 0 140px; aspect-ratio: 1 / 1; position: relative;">
+          <%= link_to card_collection_path(card_collection),
+                      class: "d-block w-100 h-100 text-decoration-none" do %>
             <%= image_tag url_for(card_collection.card_images.first.image),
                           alt: "投稿写真",
-                          class: "catalog-img",
-                          style: "width: 100%; height: 220px; object-fit: cover; border-radius: 10px;" %>
+                          class: "rounded w-100 h-100",
+                          style: "object-fit: cover;" %>
           <% end %>
-        </div>
-        <div class="catalog-info">
-          <span class="catalog-title" style="margin-top: 10px; font-weight: bold; text-align: center;">
+          <div class="text-center mt-1" style="font-size: 13px; font-weight: bold;">
             <%= theme.name %>
-          </span>
+          </div>
         </div>
-      </div>
+      <% end %>
     <% end %>
-  <% end %>
   </div>
+
+
+  <div class="d-none d-sm-flex d-md-none flex-nowrap overflow-auto  scroll-on-hover" style="gap: 20px; padding: 0;">
+    <% @random_themes.each do |theme| %>
+      <% card_collection = theme.card_collections
+                              .joins(card_images: { image_attachment: :blob })
+                              .distinct
+                              .to_a
+                              .shuffle
+                              .first %>
+      <% if card_collection %>
+        <div style="flex: 0 0 160px; aspect-ratio: 1 / 1; position: relative;">
+          <%= link_to card_collection_path(card_collection),
+                      class: "d-block w-100 h-100 text-decoration-none" do %>
+            <%= image_tag url_for(card_collection.card_images.first.image),
+                          alt: "投稿写真",
+                          class: "rounded w-100 h-100",
+                          style: "object-fit: cover;" %>
+          <% end %>
+          <div class="text-center mt-1" style="font-size: 13px; font-weight: bold;">
+            <%= theme.name %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="d-none d-md-flex flex-nowrap overflow-auto  scroll-on-hover" style="gap: 25px; padding: 0;">
+    <% @random_themes.each do |theme| %>
+      <% card_collection = theme.card_collections
+                              .joins(card_images: { image_attachment: :blob })
+                              .distinct
+                              .to_a
+                              .shuffle
+                              .first %>
+      <% if card_collection %>
+        <div style="flex: 0 0 300px; aspect-ratio: 1 / 0.7; position: relative;">
+          <%= link_to card_collection_path(card_collection),
+                      class: "d-block w-100 h-100 text-decoration-none" do %>
+            <%= image_tag url_for(card_collection.card_images.first.image),
+                          alt: "投稿写真",
+                          class: "w-100 h-100",
+                          style: "object-fit: cover; border-radius: 10px;" %>
+          <% end %>
+          <div class="text-center mt-1" style="font-size: 13px; font-weight: bold;">
+            <%= theme.name %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
 </section>
+
 
 
 <script>

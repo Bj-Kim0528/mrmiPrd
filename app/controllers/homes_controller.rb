@@ -11,9 +11,9 @@ class HomesController < ApplicationController
                            cc.view_count
       -total_interactions  # 내림차순 정렬을 위해 음수값 반환
     end
-    themes = Theme.where.not(name: ["お部屋写真", "その他"])
+    @random_themes = Theme.where.not(name: ["お部屋写真", "その他"])
     # Ruby Array 로 변환 후 shuffle & sample
-    @random_themes = themes.to_a.shuffle.take(3)
+    
   end
 
   def about
