@@ -92,7 +92,7 @@
   <h2 class="d-none d-lg-block">こんなものはいかがですか？</h2>
 
   <!-- xs (<576px) 전용: 140×140px 정사각형, 가로 스크롤 -->
-  <div class="d-flex d-sm-none overflow-auto  scroll-on-hover" style="gap: 20px; padding: 0;">
+  <div class="d-flex d-sm-none  scroll-on-hover" style="gap: 20px; padding: 0; overflow-x: auto;">
     <% @random_themes.each do |theme| %>
       <% card_collection = theme.card_collections
                              .joins(card_images: { image_attachment: :blob })
