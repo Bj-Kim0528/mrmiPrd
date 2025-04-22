@@ -1,37 +1,25 @@
 <div style="margin-top: 32px;  position: relative;">
-  <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between;">
+  <div class="d-flex align-items-center" style=" justify-content: space-between;">
     <div style="display: flex; font-size: 24px; line-height: 28px; font-weight: 700; padding: 0px; margin: 0px; -webkit-box-align: center; align-items: center;">
       検索結果: <%= @query %>
     </div>
     <%= link_to "検索に戻る", searchs_path(query: @query),
-                              class: "btn",
-                              style: "margin: 0px;
-                                      border: none;
-                                      background: none rgb(10, 165, 255);
-                                      font-style: inherit;
-                                      font-variant: inherit;
-                                      font-stretch: inherit;
-                                      font-family: inherit;
-                                      font-optical-sizing: inherit;
-                                      font-size-adjust: inherit;
-                                      font-kerning: inherit;
-                                      font-feature-settings: inherit;
-                                      font-variation-settings: inherit;
-                                      font-size: 14px;
-                                      line-height: 18px;
-                                      display: inline-flex;
-                                      -webkit-box-pack: center;
-                                      justify-content: center;
-                                      -webkit-box-align: center;
-                                      align-items: center;
-                                      height: 40px;
-                                      border-radius: 4px;
-                                      padding: 0px 16px;
-                                      box-sizing: border-box;
-                                      text-align: center;
-                                      color: rgb(255, 255, 255);
-                                      font-weight: 700;
-                                      width: 110px;" %>
+                            class: "btn d-none d-md-flex",
+                            style: "margin: 0px;
+                                    border: none;
+                                    font-size: 14px;
+                                    line-height: 18px;
+                                    display: inline-flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    height: 40px;
+                                    border-radius: 4px;
+                                    padding: 0px 16px;
+                                    box-sizing: border-box;
+                                    text-align: center;
+                                    color: rgb(10, 165, 255);
+                                    font-weight: 700;
+                                    width: 100px;"%>
   </div>
 </div>
 
@@ -47,46 +35,44 @@
 
   <div style="margin-top: 10px;">
     <% if @hashtag_results.any? %>
-      <div style="display: flex; flex-wrap: wrap; gap: 10px; width: 100%;">
+      <div class="row g-2">
         <% @hashtag_results.each do |hashtag| %>
-          <div class="rounded" style="padding: 10px; text-align: center; width: calc(50% - 5px); height: 257px; box-sizing: border-box; padding: 0; border: 1px solid rgba(0, 0, 0, 0.1);">
-            <div style="padding: 10px 10px 10px 18px; width: 100%;">
+          <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="padding-bottom: 15px;">
+            <div class="rounded h-100 border">
+              <div class="p-3">
+
               <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between;">
                 <%= link_to hashtag_path(hashtag) do %>
                   <h1 style="display: flex; font-size: 20px; line-height: 28px; font-weight: 700; padding: 0px; margin: 0px; -webkit-box-align: center; align-items: center; color: #000000;">#<%= hashtag.name %></h1>
                   <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= Bookmark.where(bookmarkable_type: "Hashtag", bookmarkable_id: hashtag.id).count %>名が活動中</span>
                   <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148); display: inline-block; margin: 0px 4px; vertical-align: middle;">・</span>
-                  <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= hashtag.card_collections.count %>件のコンテンツ</span>              
-                <% end %>
-                <%= link_to hashtag_path(hashtag) do %>
-                  <i class="fa-solid fa-arrow-right"></i>
-                <% end %>
-              </div>
-
-              <!-- このハッシュタグに関連するカードコレクションを表示 -->
-              <% if hashtag.card_collections.any? %>
-                <div class="d-flex flex-wrap" style="width: 100%; justify-content: flex-start; gap: 8px;">
-                  <% posts = hashtag.card_collections.limit(4) %>
-                  <% posts.each_with_index do |post, index| %>
-                    <div style="width: calc(25% - 8px); position: relative; aspect-ratio: 2/3;">
-                      <%= link_to card_collection_path(post), style: "text-decoration: none;" do %>
-                        <% if post.card_images.any? && post.card_images.first.image.attached? %>
-                          <%= image_tag url_for(post.card_images.first.image), 
-                                        alt: "投稿写真", 
-                                        class: "rounded", 
-                                        style: "width: 100%; height: 100%; object-fit: cover; border-radius: 4px;" %>
-                        <% else %>
-                          <div class="rounded" style="width: 100%; height: 100%; background-color: #f0f0f0; border-radius: 4px;"></div>
-                        <% end %>
-                      <% end %>
-                    </div>
+                    <span style="margin: 0px; font-weight: 500; font-size: 13px; line-height: 18px; color: rgb(130, 140, 148);"><%= hashtag.card_collections.count %>件のコンテンツ</span>              
+                  <% end %>
+                  <%= link_to hashtag_path(hashtag) do %>
+                    <i class="fa-solid fa-arrow-right"></i>
                   <% end %>
                 </div>
-              <% else %>
-                <div class="gallery-item" style="flex: 0 0 calc(25% - 8px); position: relative; height: 183px; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; border-radius: 4px;">
-                  <p style="margin: 0; color: #999; font-size: 14px;">このハッシュタグに該当する投稿はありません。</p>
-                </div>
-              <% end %>
+
+                <% if hashtag.card_collections.any? %>
+                  <div class="row g-1">
+                    <% hashtag.card_collections.limit(4).each do |post| %>
+                      <div class="col-3" style="padding:8px;">
+                        <%= link_to card_collection_path(post), class: "d-block" do %>
+                          <% if img = post.card_images.first&.image %>
+                            <%= image_tag img, class: "img-fluid rounded", style: "width:100%; height:120px; object-fit: cover;" %>
+                          <% else %>
+                            <div class="bg-light rounded" style="aspect-ratio:2/3;"></div>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                <% else %>
+                  <div class="d-flex justify-content-center align-items-center bg-light rounded" style="height:120px;">
+                    <small class="text-muted">このハッシュタグに該当する投稿はありません。</small>
+                  </div>
+                <% end %>
+              </div>
             </div>
           </div>
         <% end %>
