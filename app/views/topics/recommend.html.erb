@@ -95,7 +95,7 @@
             <div style="display: flex; align-items: center;">
               <div class="card-item-writer__header" style="align-items: center;">
                 <%= link_to user_path(card_collection.user), class: "card-item-writer__link", style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
-                  <%= image_tag url_for(card_collection.user.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 18px; height: 18px; object-fit: cover; margin-right: 10px;" %>
+                  <%= image_tag url_for(card_collection.user.get_profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 18px; height: 18px; object-fit: cover; margin-right: 10px;" %>
                 <% end %>
               </div>
 
@@ -226,7 +226,7 @@
             <div style="display: flex; align-items: center;">
               <div class="card-item-writer__header" style="align-items: center;">
                 <%= link_to user_path(card_collection.user), class: "card-item-writer__link", style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
-                  <%= image_tag url_for(card_collection.user.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 18px; height: 18px; object-fit: cover; margin-right: 10px;" %>
+                  <%= image_tag url_for(card_collection.user.get_profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 18px; height: 18px; object-fit: cover; margin-right: 10px;" %>
                 <% end %>
               </div>
 

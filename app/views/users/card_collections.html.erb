@@ -11,7 +11,7 @@
 
             <div style=" padding: 0px;min-height: 120px;     position: relative; margin: 0px 0px 20px"><!-- プロフィール～設定 -->
                 <div style="width: 120px; height: 120px; position: relative; margin: 0px auto 24px; top: 0px; left: 0px; border-radius: 100%; background-color: rgb(237, 237, 237); overflow: hidden;">
-                  <%= image_tag url_for(@userinfo.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 120px; height: 120px; object-fit: cover; border: 1px solid rgba(0, 0, 0, 0.1);" %>
+                  <%= image_tag url_for(@userinfo.get_profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 120px; height: 120px; object-fit: cover; border: 1px solid rgba(0, 0, 0, 0.1);" %>
                 </div>
 
                 <div style="text-align: center;"><!-- その他 -->
@@ -206,7 +206,7 @@
               <address style="margin: 0; display: flex;">
                 <div class="card-item-writer__header" style="display: flex; align-items: center;">
                   <%= link_to user_path(card_collection.user), class: "card-item-writer__link", style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
-                    <%= image_tag url_for(card_collection.user.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover; margin-right: 10px;" %>
+                    <%= image_tag url_for(card_collection.user.get_profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover; margin-right: 10px;" %>
                   <% end %>
                 </div>
 
@@ -330,7 +330,7 @@
               <% first_comment = sorted_comments.first %>
               <div class="card-item-comment" style="display: flex; align-items: flex-start; margin: 5px 0px; padding: 0; margin-left: 10px;">
                 <%= link_to user_path(first_comment.user), style: "text-decoration: none; display: flex; align-items: center;" do %>
-                  <%= image_tag url_for(first_comment.user.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 24px; height: 24px; object-fit: cover; margin-right: 10px;" %>
+                  <%= image_tag url_for(first_comment.user.get_profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 24px; height: 24px; object-fit: cover; margin-right: 10px;" %>
                   <strong style="font-size: 12px; font-style: normal;"><%= first_comment.user.nickname %></strong>
                   <%= simple_format(
                                       truncate(first_comment.comment, length: 25, omission: '...'),
@@ -363,7 +363,7 @@
           <div class="d-flex justify-content-between" style=" padding: 0px;min-height: 120px; position: relative; margin: 0px 0px 50px"><!-- プロフィール～設定 -->
             <div class="d-flex">
               <div style="position: relative; overflow: hidden;">
-                <%= image_tag url_for(@userinfo.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 120px; height: 120px; object-fit: cover; border: 1px solid rgba(0, 0, 0, 0.1);" %>
+                <%= image_tag url_for(@userinfo.get_profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 120px; height: 120px; object-fit: cover; border: 1px solid rgba(0, 0, 0, 0.1);" %>
               </div>
 
               <div class="pt-2" style="text-align: center; margin-left: 20px"><!-- その他 -->
@@ -559,7 +559,7 @@
               <address style="margin: 0; display: flex;">
                 <div class="card-item-writer__header" style="display: flex; align-items: center;">
                   <%= link_to user_path(card_collection.user), class: "card-item-writer__link", style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
-                    <%= image_tag url_for(card_collection.user.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover; margin-right: 10px;" %>
+                    <%= image_tag url_for(card_collection.user.get_profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover; margin-right: 10px;" %>
                   <% end %>
                 </div>
 
@@ -683,7 +683,7 @@
               <% first_comment = sorted_comments.first %>
               <div class="card-item-comment" style="display: flex; align-items: flex-start; margin: 5px 0px; padding: 0; margin-left: 10px;">
                 <%= link_to user_path(first_comment.user), style: "text-decoration: none; display: flex; align-items: center;" do %>
-                  <%= image_tag url_for(first_comment.user.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 24px; height: 24px; object-fit: cover; margin-right: 10px;" %>
+                  <%= image_tag url_for(first_comment.user.get_profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 24px; height: 24px; object-fit: cover; margin-right: 10px;" %>
                   <strong style="font-size: 12px; font-style: normal;"><%= first_comment.user.nickname %></strong>
                   <%= simple_format(
                                       truncate(first_comment.comment, length: 25, omission: '...'),
@@ -715,7 +715,7 @@
           <div style=" padding: 0px;min-height: 120px; position: relative; margin: 0px 0px 20px"><!-- プロフィール～設定 -->
             
               <div style="text-align: center; position: relative; overflow: hidden;">
-                <%= image_tag url_for(@userinfo.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 100px; height: 100px; object-fit: cover; border: 1px solid rgba(0, 0, 0, 0.1);" %>
+                <%= image_tag url_for(@userinfo.get_profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 100px; height: 100px; object-fit: cover; border: 1px solid rgba(0, 0, 0, 0.1);" %>
               </div>
 
               <div class="pt-2" style="text-align: center;"><!-- その他 -->
@@ -911,7 +911,7 @@
               <address style="margin: 0; display: flex;">
                 <div class="card-item-writer__header" style="display: flex; align-items: center;">
                   <%= link_to user_path(card_collection.user), class: "card-item-writer__link", style: "display: flex; align-items: center; text-decoration: none; color: inherit;" do %>
-                    <%= image_tag url_for(card_collection.user.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover; margin-right: 10px;" %>
+                    <%= image_tag url_for(card_collection.user.get_profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover; margin-right: 10px;" %>
                   <% end %>
                 </div>
 
@@ -1035,7 +1035,7 @@
               <% first_comment = sorted_comments.first %>
               <div class="card-item-comment" style="display: flex; align-items: flex-start; margin: 5px 0px; padding: 0; margin-left: 10px;">
                 <%= link_to user_path(first_comment.user), style: "text-decoration: none; display: flex; align-items: center;" do %>
-                  <%= image_tag url_for(first_comment.user.profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 24px; height: 24px; object-fit: cover; margin-right: 10px;" %>
+                  <%= image_tag url_for(first_comment.user.get_profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 24px; height: 24px; object-fit: cover; margin-right: 10px;" %>
                   <strong style="font-size: 12px; font-style: normal;"><%= first_comment.user.nickname %></strong>
                   <%= simple_format(
                                       truncate(first_comment.comment, length: 25, omission: '...'),

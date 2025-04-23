@@ -1,5 +1,6 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :clear_omniauth_data, only: [:new]
 
 
 
@@ -62,8 +63,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
         end
       else
         clean_up_passwords resource
-        set_minimum_password_length
-        respond_with resource
+        flash[:alert] = resource.errors.full_messages
+        redirect_to sns_sign_up_path
       end
     else
       super
@@ -72,12 +73,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
 
 
+
+
   protected
 
   # 회원가입 후, 사용자가 아직 확인되지 않았으므로
   # after_inactive_sign_up_path_for를 재정의하여 인증번호 입력 페이지로 리다이렉트합니다.
   def after_inactive_sign_up_path_for(resource)
-    new_user_confirmation_path  # 아래에서 설정할 이메일 인증번호 입력 페이지의 라우트
+    # 이메일 인증 페이지 접근 허용 플래그
+    session[:allow_confirmation] = true
+    # 이메일 인증번호 입력 폼(new) 경로
+    new_user_confirmation_path
   end
 
   def configure_permitted_parameters
@@ -91,6 +97,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def sign_up_params
     params.require(:user).permit(:email, :email_local, :email_domain, :nickname, :password, :password_confirmation, :terms_of_service, :privacy_policy)
+  end
+
+  private
+
+  def clear_omniauth_data
+    session.delete("devise.google_data")
   end
   
 end

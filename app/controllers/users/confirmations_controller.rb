@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class Users::ConfirmationsController < Devise::ConfirmationsController
+  before_action :ensure_confirmation_allowed, only: [:new]
   def new
+    super
   end
 
   # 사용자가 입력한 인증번호를 검증하는 액션
@@ -50,7 +52,17 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
       redirect_to root_path
     else
       flash.now[:alert] = "입력한 정보가 올바르지 않습니다. 다시 시도해주세요."
-      render :new
+      redirect_to certification_path(resource_name)
     end
   end
+
+  private
+
+  def ensure_confirmation_allowed
+    # 세션 플래그가 없으면 접근 차단
+    unless session.delete(:allow_confirmation)
+      redirect_to root_path, alert: '無効なページです。'
+    end
+  end
+
 end

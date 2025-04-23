@@ -1,0 +1,32 @@
+ja:
+  # 전체 에러 메시지 포맷
+  errors:
+    format: "%{message}"
+    messages:
+      blank: "%{attribute}を入力してください"
+      invalid: "%{attribute}の形式が正しくありません"
+      too_short: "%{attribute}は%{count}文字以上で入力してください"
+      too_long: "%{attribute}は%{count}文字以内で入力してください"
+      not_saved:
+        one:   "1件のエラーにより %{resource} の保存に失敗しました:"
+        other: "%{count}件のエラーにより %{resource} の保存に失敗しました:"
+
+  activerecord:
+    models:
+      user: "ユーザー"
+
+    # 모델·속성별 에러 메시지 커스터마이징
+    errors:
+      models:
+        user:
+          attributes:
+            password_confirmation:
+              confirmation: "パスワードとパスワード確認が一致しません"
+
+    # 속성 이름 일본어 번역
+    attributes:
+      user:
+        email:                  "メールアドレス"
+        password:               "パスワード"
+        password_confirmation:  "パスワード確認"
+        current_password:       "現在のパスワード" 

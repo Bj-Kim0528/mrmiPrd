@@ -1,3 +1,16 @@
+<% if resource.errors.any? %>
+  <div class="alert alert-danger" role="alert" style="padding: 16px; margin-bottom: 24px; border-radius: 4px;">
+    <h4 class="alert-heading" style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">
+      入力内容に問題があります
+    </h4>
+    <ul style="margin:0; padding-left: 20px;">
+      <% resource.errors.full_messages.each do |message| %>
+        <li style="font-size: 14px; line-height: 1.6; margin-bottom: 4px;"><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
 <div style="width: 360px; margin: 0 auto; padding: 60px 0; text-align: center; box-sizing: border-box;">
   <!-- 페이지 타이틀 -->
   <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 16px;">
@@ -11,7 +24,7 @@
   <!-- Devise의 비밀번호 재설정 폼 -->
   <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
     <!-- 에러 메시지 (공통) -->
-    <%= render "devise/shared/error_messages", resource: resource %>
+
 
     <!-- 이메일 입력 필드 (이메일 아이디) -->
     <div style="max-width: 343px; margin: 0 auto; padding: 0 30px; text-align: left; box-sizing: border-box;">

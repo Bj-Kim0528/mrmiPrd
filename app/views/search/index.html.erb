@@ -140,7 +140,7 @@
                   <div style="display: flex; -webkit-box-pack: justify; justify-content: space-between; margin-bottom: 10px;">
                     <%= link_to user_path(user) do %>
                       <div class="d-flex align-items-center">
-                        <%= image_tag url_for(user.profile_image), 
+                        <%= image_tag url_for(user.get_profile_image), 
                                 alt: "プロフィール画像", 
                                 class: "rounded-circle", 
                                 style: "width: 35px; height: 35px; object-fit: cover; margin-bottom: 3px; margin-right: 5px;" %>

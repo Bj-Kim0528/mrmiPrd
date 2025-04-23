@@ -1,16 +1,16 @@
 <% if @card_collection.errors.any? || @card_collection.card_images.any? { |ci| ci.errors.any? } %>
-  <div id="error_explanation" style="border: 1px solid red; padding: 10px; margin-bottom: 20px;">
-    <h2>
-      <%= pluralize(@card_collection.errors.count + @card_collection.card_images.map { |ci| ci.errors.count }.sum, "error") %> prohibited this card collection from being saved:
-    </h2>
-    <ul>
-      <% @card_collection.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      <% @card_collection.card_images.each do |ci| %>
-        <% ci.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
+  <div class="alert alert-danger" role="alert" style="padding: 16px; margin-bottom: 24px; border-radius: 4px;">
+    <h4 class="alert-heading" style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">
+      入力内容に問題があります
+    </h4>
+    <ul style="margin: 0; padding-left: 20px;">
+      <% 
+        # 카테고리/이미지 에러 메시지를 하나의 배열로 합치기
+        messages = @card_collection.errors.full_messages +
+                   @card_collection.card_images.flat_map { |ci| ci.errors.full_messages }
+      %>
+      <% messages.each do |message| %>
+        <li style="font-size: 14px; line-height: 1.6; margin-bottom: 4px;"><%= message %></li>
       <% end %>
     </ul>
   </div>
