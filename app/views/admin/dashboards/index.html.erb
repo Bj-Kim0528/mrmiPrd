@@ -40,7 +40,7 @@
               <div class="d-flex">
                 <div class="p-2">
                   <%= link_to admin_user_card_collection_comments_path(follower) do %>
-                    <%= image_tag(url_for(follower.get_profile_image(36, 36)), alt: "プロフィール画像", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover;") %>
+                    <%= image_tag(url_for(follower.get_profile_image), alt: "プロフィール画像", class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover;") %>
                   <% end %>
                 </div>
                 <!-- 닉네임 및 소개 -->
