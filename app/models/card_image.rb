@@ -2,6 +2,9 @@ class CardImage < ApplicationRecord
   belongs_to :card_collection, inverse_of: :card_images
   has_one_attached :image
 
+  has_many   :tags, dependent: :destroy
+  accepts_nested_attributes_for :tags, allow_destroy: true
+
   before_save :normalize_blank_values
 
   private

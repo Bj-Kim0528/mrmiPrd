@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  get 'rakuten_searches/index'
   devise_for :admin, skip: [:registrations, :password], controllers: {
     sessions: 'admin/sessions'
   }
@@ -78,6 +79,9 @@ Rails.application.routes.draw do
   resources :bookmarks, only: [:create, :destroy]
 
   resources :relationships, only: [:create, :destroy]
+
+
+  resources :rakuten_searches, only: [:index]
 
   root to: "homes#top"
   get '/about' => 'homes#about'

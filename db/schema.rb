@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_04_13_173742) do
+ActiveRecord::Schema.define(version: 2025_05_02_062106) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -142,6 +142,15 @@ ActiveRecord::Schema.define(version: 2025_04_13_173742) do
     t.index ["follower_id"], name: "index_relationships_on_follower_id"
   end
 
+  create_table "tags", force: :cascade do |t|
+    t.string "name"
+    t.string "url"
+    t.integer "card_image_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["card_image_id"], name: "index_tags_on_card_image_id"
+  end
+
   create_table "themes", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -188,4 +197,5 @@ ActiveRecord::Schema.define(version: 2025_04_13_173742) do
   add_foreign_key "card_collections", "users"
   add_foreign_key "card_images", "card_collections"
   add_foreign_key "likes", "users"
+  add_foreign_key "tags", "card_images"
 end

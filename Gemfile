@@ -79,3 +79,6 @@ gem 'omniauth-rails_csrf_protection'
 gem 'whenever', require: false
 
 gem 'rails-i18n', '~> 7.0'
+
+
+gem 'rakuten_web_service'
