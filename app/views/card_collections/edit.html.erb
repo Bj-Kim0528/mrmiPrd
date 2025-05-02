@@ -21,7 +21,7 @@
 
     <%= form_with model: @card_collection, local: true, html: { multipart: true } do |f| %>
       
-      <div class="d-flex justify-content-start" style="width: 100%; position: relative; margin-bottom:30px; margin-top:40px;">
+      <div class="d-flex justify-content-start" style="width: 100%; position: relative; margin-bottom:10px; margin-top:40px;">
         <!-- 기본 속성 입력 -->
         <div class="row g-3">
           <!-- 레이아웃 -->
@@ -55,75 +55,129 @@
 
       <!-- CardImage 입력 영역 (nested fields) -->
       <div id="card_images_container" >
-        <%= f.fields_for :card_images do |ci| %>
-          <div class="card-image-field" data-index="<%= ci.index %>" style="width: 100%; max-width: 1003px; position: relative;">
-            <div style="align-items: flex-start; gap: 10px;">
-              <!-- 파일 업로드 컨테이너 -->
-
-              <div id="custom-file-<%= ci.index %>" class="custom-file-upload rounded" style="width: 100%; height: <%= ci.object.image.attached? ? 'auto' : '400px' %>; <%= ci.object.image.attached? ? '' : 'background-color: #ccc;' %> display: flex; align-items: center; justify-content: center; position: relative;">
-                <% if ci.object.image.attached? %>
-                  <%= image_tag(ci.object.image, style: "width: 100%; height: auto; cursor: pointer; z-index: 1;") %>
-                <% else %>
-                  <!-- 이미지가 없을 경우 업로드 안내 라벨 표시 -->
-                  <label for="file_input_<%= ci.index %>" id="file-label-<%= ci.index %>" style="cursor: pointer; font-weight: bold; color: #fff;">
-                    PCからアップロードする
-                  </label>
-                <% end %>
-                <!-- 파일 입력 필드를 항상 렌더링 (숨김 처리) -->
-                <%= ci.file_field :image, accept: "image/*", id: "file_input_#{ci.index}", onchange: "previewImage(this, 'custom-file-#{ci.index}')" , style: "position: absolute; width: 100%; height: auto; opacity: 0; cursor: pointer; z-index: 1;" %>
-                <div style="position: absolute; bottom: 10px; right: 10px; z-index: 3;">
-                  <button type="button" onclick="document.getElementById('file_input_<%= ci.index %>').click();" style="margin-right: 20px; padding: 0; border: none; background: none;">
-                    <i class="fa-solid fa-rotate" style="font-size: 20px; color: white;"></i>
-                  </button>
-                  <% unless ci.object.image.attached? %>
-                    <button type="button" onclick="deletePreview(<%= ci.index %>);" style="margin-right: 10px; padding: 0; border: none; background: none;">
-                      <i class="fa-solid fa-trash" style="font-size: 20px; color: white;"></i>
-                    </button>
-                  <% end %>
-                </div>
-              </div>
-
-              <div class="mt-3" style="width: 100%;">
-                <div style="position: relative;">
-                  <!-- 텍스트 영역 (너비 100%로 설정) -->
-                  <div style="flex: 1;">
-                    <%= ci.text_area :content, placeholder: "どんな写真かを簡単に紹介しましょう。
-                    様々な#タグも追加できます。", style: "
-                          width: 100%;
-                          box-sizing: border-box;
-                          min-height: 152px;
-                          padding: 16px;
-                          display: inline-block;
-                          overflow-wrap: break-word;
-                          white-space: pre-line;
-                          font-size: 14px;
-                          line-height: 20px;
-                          z-index: 2;
-                          border: 1px solid rgb(230, 230, 230);
-                          border-radius: 4px;" %>
-                  </div>
-                </div>
-                <% if ci.object.image.attached? %>
-                  <div class="d-flex justify-content-start card-image-deletion mb-5">
-                    <%= link_to "削除", clear_card_image_path(ci.object),
-                          method: :delete,
-                          remote: true,
-                          data: { confirm: "本当に削除しますか？（削除すると元に戻せません）" },
-                          class: "btn",
-                          style: "margin: 0; background: none; font-size: 14px; display: inline-flex; justify-content: center; align-items: center; height: 40px; border-radius: 4px; padding: 0 16px; font-weight: 400; box-sizing: border-box; text-align: center; color: rgb(47,52,56); border: 1px solid #e6e6e6; width: 80px;" %>
-                  </div>
-                <% end %>
-              </div>
-            </div>
-          </div>
-        <% end %>
         <!-- + 버튼과 - 버튼 (오른쪽 정렬) -->
-        <div style="margin-bottom: 30px; display: flex; justify-content: flex-end;">
+        <div style="margin-bottom: 10px; display: flex; justify-content: flex-end;">
           <button type="button" id="add_field_button" style="margin-right: 10px; padding: 0; border: none; background: none; font-weight: bold; width:30px; border: 1px solid rgb(230, 230, 230);
                       border-radius: 4px;">+</button>
           <button type="button" id="remove_field_button" style=" padding: 0; border: none; background: none; font-weight: bold; width:30px; border: 1px solid rgb(230, 230, 230);
                       border-radius: 4px;">−</button>
         </div>
+
+        <% f.object.card_images.each_with_index do |card_image, idx| %>
+          <%= f.fields_for :card_images, card_image, child_index: idx do |ci| %>
+            <div class="card-image-field" data-index="<%= idx %>"
+                 style="width:100%; max-width:1003px; position:relative; margin-bottom:30px;">
+              
+              <!-- 파일 업로드 영역 -->
+              <div style="display:flex; align-items:flex-start; gap:10px;">
+                <% height = ci.object.image.attached? ? 'auto' : '400px' %>
+                <% bg     = ci.object.image.attached? ? ''     : 'background-color:#ccc;' %>
+                
+                <div id="custom-file-<%= idx %>" class="custom-file-upload rounded"
+                    style="
+                      width:100%;
+                      height:<%= height %>;
+                      <%= bg %>
+                      display:flex;
+                      align-items:center;
+                      justify-content:center;
+                      position:relative;
+                    ">
+                  
+                  <% if ci.object.image.attached? %>
+                    <%= image_tag ci.object.image,
+                          style: "width:100%; height:auto; cursor:pointer; z-index:1;" %>
+                  <% else %>
+                    <label for="file_input_<%= idx %>" id="file-label-<%= idx %>"
+                           style="cursor:pointer; font-weight:bold; color:#fff;">
+                      PCからアップロードする
+                    </label>
+                  <% end %>
+                  
+                  <%= ci.file_field :image, accept: "image/*",
+                        id: "file_input_#{idx}",
+                        onchange: "previewImage(this,'custom-file-#{idx}')",
+                        style: "position:absolute; top:0; left:0;
+                                width:100%; height:100%; opacity:0;
+                                cursor:pointer; z-index:2;" %>
+                  
+                  <div style="position:absolute; bottom:10px; right:10px; z-index:3;">
+                    <button type="button"
+                            onclick="document.getElementById('file_input_<%= idx %>').click()"
+                            style="border:none; background:none;">
+                      <i class="fa-solid fa-rotate" style="font-size:20px; color:white;"></i>
+                    </button>
+                    <% unless ci.object.image.attached? %>
+                      <button type="button" onclick="deletePreview(<%= idx %>)"
+                              style="border:none; background:none;">
+                        <i class="fa-solid fa-trash" style="font-size:20px; color:white;"></i>
+                      </button>
+                    <% end %>
+                  </div>
+        
+                  <button type="button"
+                          class="btn btn-sm btn-outline-light"
+                          style="position:absolute; bottom:10px; left:10px; z-index:3;"
+                          onclick="toggleTagModal(<%= idx %>)">
+                    태그 추가
+                  </button>
+                </div>
+        
+
+              </div>
+
+              <!-- 태그가 렌더될 영역 -->
+              <div class="tag-list" style="display:flex; gap:8px; margin-top:8px;">
+                <% ci.object.tags.each_with_index do |tag, t_idx| %>
+                  <%= ci.fields_for :tags, tag, child_index: t_idx do |ti| %>
+                    <div class="tag-item" data-tag-index="<%= t_idx %>" style="position:relative; margin:4px;">
+                      <%#—이미지—%>
+                      <%= image_tag (
+                          tag.image.attached? ? url_for(tag.image) :
+                          tag.image_url.present?   ? tag.image_url :
+                                                    'placeholder.png'
+                        ),
+                        alt: tag.name,
+                        style: "width:80px;height:80px;object-fit:cover;border-radius:10px;" %>
+              
+                      <%#—삭제 아이콘—%>
+                      <i class="fa-solid fa-circle-xmark"
+                        style="position:absolute; top:2px; right:2px; cursor:pointer; z-index:5;"
+                        onclick="removeTag(this)"></i>
+              
+                      <%#—Rails nested _destroy & id 히든필드—%>
+                      <%= ti.hidden_field :id %>
+                      <%= ti.hidden_field :_destroy, value: false, class: "tag-destroy-field" %>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+            
+
+              <!-- content 텍스트 -->
+              <div class="mt-3">
+                <%= ci.text_area :content,
+                      placeholder: "どんな写真かを簡単に紹介しましょう。\n様々な#タグも追加できます。",
+                      style: "width:100%; box-sizing:border-box;
+                              min-height:152px; padding:16px;
+                              border:1px solid #e6e6e6; border-radius:4px;
+                              line-height:1.4;" %>
+              </div>
+        
+              <% if ci.object.image.attached? %>
+                <div class="d-flex justify-content-start mb-5">
+                  <%= link_to "削除", clear_card_image_path(ci.object),
+                        method: :delete, remote: true,
+                        data: { confirm: "本当に削除しますか？" },
+                        class: "btn",
+                        style: "margin: 0; background: none; font-size: 14px; display: inline-flex; justify-content: center; align-items: center; height: 40px; border-radius: 4px; padding: 0 16px; font-weight: 400; box-sizing: border-box; text-align: center; color: rgb(47,52,56); border: 1px solid #e6e6e6; width: 80px;" %>
+                </div>
+              <% end %>
+        
+            </div>
+          <% end %>
+        <% end %>
+
       </div>
 
       <div class="actions" style="width: 100%; margin-bottom: 20px;">
@@ -187,7 +241,153 @@
   </div>
 </div>
 
+
+<div id="rakuten-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:1000;">
+  <!-- 백드롭 -->
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:#000; opacity:0.6;"
+       onclick="toggleTagModal()"></div>
+
+  <!-- 모달 내용 박스 -->
+  <div style="position:relative; width:600px; max-width:90%; margin:100px auto; background:#fff; padding:20px; border-radius:4px; z-index:1001; overflow-y:auto; max-height:80%;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h2 style="margin:0; font-size:18px;">태그 검색</h2>
+      <button type="button" onclick="toggleTagModal()" style="font-size:18px; background:none; border:none;">×</button>
+    </div>
+    <input id="rakuten-search-input" type="text" placeholder="상품 입력" style="width:100%; padding:8px; margin-bottom:12px; box-sizing:border-box;">
+    <div id="rakuten-search-results"></div>
+
+    
+  </div>
+</div>
+
 <script>
+  function removeTag(icon) {
+    const tagItem = icon.closest('.tag-item');
+    // Rails nested attribute 의 _destroy 필드가 있으면 '삭제' 처리
+    const destroyField = tagItem.querySelector('.tag-destroy-field');
+    if (destroyField) {
+      destroyField.value = '1';
+      tagItem.style.display = 'none';
+    } else {
+      // 신규 태그라면 그냥 DOM에서 제거
+      tagItem.remove();
+    }
+  }
+
+  function debounce(fn, delay) {
+    let timer = null;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn(...args), delay);
+    };
+  }
+
+  let currentCardIndex = null;
+
+  function toggleTagModal(idx = null) {
+    currentCardIndex = idx;
+    const m     = document.getElementById('rakuten-modal');
+    const input = document.getElementById('rakuten-search-input');
+
+    // 모달 토글
+    m.style.display = m.style.display === 'none' ? 'block' : 'none';
+
+    if (m.style.display === 'block') {
+      input.value = '';
+      document.getElementById('rakuten-search-results').innerHTML = '';
+
+      if (!input._bound) {
+        input.addEventListener('input', doRakutenSearch);
+        input._bound = true;
+      }
+
+      input.focus();
+    }
+  }
+  window.toggleTagModal = toggleTagModal;
+
+  function doRakutenSearch() {
+    const q = document.getElementById('rakuten-search-input').value.trim();
+    if (!q) return;
+    fetch(`/rakuten_searches.json?keyword=${encodeURIComponent(q)}`)
+      .then(res => res.json())
+      .then(items => {
+        const container = document.getElementById('rakuten-search-results');
+        container.innerHTML = items.map(item => `
+          <div class="rakuten-item" style="display:flex; align-items:center; margin-bottom:8px;">
+            <img src="${item.image}" width="48" height="48" style="object-fit:cover; margin-right:8px;">
+            <div style="flex:1; font-size:14px; line-height:1.2;">${item.name}</div>
+            <button type="button"
+                    class="rakuten-select-button"
+                    data-index="${currentCardIndex}"
+                    data-name="${item.name}"
+                    data-url="${item.url}"
+                    data-image="${item.image}"
+                    style="margin-left:8px;">
+              선택
+            </button>
+          </div>
+        `).join('');
+      });
+  }
+  window.doRakutenSearch = debounce(doRakutenSearch, 300);
+
+  function addTag(cardIndex, name, url, imageUrl) {
+    // 태그 컨테이너 (뷰에서 쓴 클래스명에 맞춰 수정하세요)
+    const tagList = document.querySelector(
+      `.card-image-field[data-index="${cardIndex}"] .tag-list`
+    );
+    const newIdx = tagList.querySelectorAll('.tag-item').length;
+  
+    // .tag-item 구조로 감싸기
+    const wrapper = document.createElement('div');
+    wrapper.className = 'tag-item';
+    wrapper.setAttribute('data-tag-index', newIdx);
+    wrapper.style = 'position:relative; margin:4px;';
+  
+    wrapper.innerHTML = `
+      <img src="${imageUrl}"
+           style="width:80px; height:80px; object-fit:cover; border-radius:10px;"
+           alt="${name}">
+      <i class="fa-solid fa-circle-xmark"
+         style="position:absolute; top:2px; right:2px; cursor:pointer; z-index:5;"
+         onclick="removeTag(this)"></i>
+      <input type="hidden"
+             name="card_collection[card_images_attributes][${cardIndex}][tags_attributes][${newIdx}][name]"
+             value="${name}">
+      <input type="hidden"
+             name="card_collection[card_images_attributes][${cardIndex}][tags_attributes][${newIdx}][url]"
+             value="${url}">
+      <input type="hidden"
+             name="card_collection[card_images_attributes][${cardIndex}][tags_attributes][${newIdx}][image_url]"
+             value="${imageUrl}">
+    `;
+  
+    tagList.appendChild(wrapper);
+    toggleTagModal();  // 모달 닫기
+  }
+  
+
+  document.addEventListener('turbolinks:load', () => {
+    const results = document.getElementById('rakuten-search-results');
+    if (!results) return;
+    results.addEventListener('click', (e) => {
+      const btn = e.target.closest('.rakuten-select-button');
+      if (!btn) return;
+      const idx   = btn.dataset.index;
+      const name  = btn.dataset.name;
+      const url   = btn.dataset.url;
+      const image = btn.dataset.image;
+      addTag(idx, name, url, image);
+    });
+  });
+
+
+
+
+
+
+  
   // 전역 플래그를 사용하여 중복 등록 방지
   if (window.addFieldHandlerRegistered !== true) {
     document.addEventListener("turbolinks:load", function() {

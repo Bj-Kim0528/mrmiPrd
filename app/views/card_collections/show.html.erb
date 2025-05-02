@@ -28,13 +28,58 @@
     
     <% if @card_collection.card_images.where.not(position: nil).any? %>
       <% @card_collection.card_images.where.not(position: nil).order(:position).each do |card_image| %>
-        <div class="container" style="max-width: 720px; margin: 0 auto 40px; padding: 0; display: flex; flex-direction: column; gap: 24px; text-align: center;">
+        <div class="container"
+            style="max-width: 720px; margin: 0 auto 40px; padding: 0; display: flex; flex-direction: column; gap: 24px; text-align: center;">
+
           <% if card_image.image.attached? %>
             <%= image_tag url_for(card_image.image),
-                  alt: "投稿写真", 
-                  class: "img-fluid", 
+                  alt: "投稿写真",
+                  class: "img-fluid",
                   style: "max-width: 720px; width: 100%; height: auto;" %>
           <% end %>
+
+          <!-- ここからタグ一覧を表示 -->
+          <div class="tag-list" style="display:flex; gap:8px; margin:8px 0;">
+            <% card_image.tags.each do |tag| %>
+              <div class="tag-item" style="position:relative; margin:4px;">
+                <%# URLが存在する場合のみリンクを付与する例 %>
+                <% if tag.url.present? %>
+                  <%= link_to tag.url, target: "_blank", rel: "noopener" do %>
+                    <% if tag.image.attached? %>
+                      <%= image_tag url_for(tag.image),
+                            alt: tag.name,
+                            style: "width:80px; height:80px; object-fit:cover; border-radius:10px;" %>
+                    <% elsif tag.image_url.present? %>
+                      <%= image_tag tag.image_url,
+                            alt: tag.name,
+                            style: "width:80px; height:80px; object-fit:cover; border-radius:10px;" %>
+                    <% else %>
+                      <%= image_tag 'placeholder.png',
+                            alt: 'No image',
+                            size: '80x' %>
+                    <% end %>
+                  <% end %>
+                <% else %>
+                  <%# URLがないときはそのまま画像のみ %>
+                  <% if tag.image.attached? %>
+                    <%= image_tag url_for(tag.image),
+                          alt: tag.name,
+                          style: "width:80px; height:80px; object-fit:cover; border-radius:10px;" %>
+                  <% elsif tag.image_url.present? %>
+                    <%= image_tag tag.image_url,
+                          alt: tag.name,
+                          style: "width:80px; height:80px; object-fit:cover; border-radius:10px;" %>
+                  <% else %>
+                    <%= image_tag 'placeholder.png',
+                          alt: 'No image',
+                          size: '80x' %>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+          <!-- ここまでタグ一覧 -->
+
           <div style="text-align: left; margin-bottom: 40px;">
             <%= simple_format(link_hashtags(card_image.content.to_s.strip)) %>
           </div>

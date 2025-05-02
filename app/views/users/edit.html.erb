@@ -131,10 +131,17 @@
 <script>
 // 이미지 미리보기 함수 (프로필 이미지 전용)
 function previewImage(input, containerId) {
+  // ① 삭제 플래그를 초기화
+  var removeField = document.getElementById('remove_profile_image');
+  if (removeField) {
+    removeField.value = "false";
+  }
+
   var container = document.getElementById(containerId);
-  // 기존 이미지 제거
+  // ② 기존 프리뷰 이미지 제거
   var existingImg = container.querySelector("img");
   if (existingImg) { existingImg.remove(); }
+
   if (input.files && input.files[0]) {
     var reader = new FileReader();
     reader.onload = function(e) {
@@ -144,10 +151,7 @@ function previewImage(input, containerId) {
       img.style.height = "100%";
       img.style.objectFit = "cover";
       img.style.borderRadius = "50%";
-      var label = container.querySelector("label");
-      if (label) { label.style.display = "none"; }
       container.appendChild(img);
-      // container의 높이는 고정(86px)으로 유지
       container.style.height = "86px";
     };
     reader.readAsDataURL(input.files[0]);

@@ -127,8 +127,33 @@
               </div>
 
               <!-- 태그가 렌더될 영역 -->
-              <div class="d-flex tag-list" style="margin:8px 0;"></div>
-        
+              <div class="tag-list" style="display:flex; gap:8px; margin-top:8px;">
+                <% ci.object.tags.each_with_index do |tag, t_idx| %>
+                  <%= ci.fields_for :tags, tag, child_index: t_idx do |ti| %>
+                    <div class="tag-item" data-tag-index="<%= t_idx %>" style="position:relative; margin:4px;">
+                      <%#—이미지—%>
+                      <%= image_tag (
+                          tag.image.attached? ? url_for(tag.image) :
+                          tag.image_url.present?   ? tag.image_url :
+                                                    'placeholder.png'
+                        ),
+                        alt: tag.name,
+                        style: "width:80px;height:80px;object-fit:cover;border-radius:10px;" %>
+              
+                      <%#—삭제 아이콘—%>
+                      <i class="fa-solid fa-circle-xmark"
+                        style="position:absolute; top:2px; right:2px; cursor:pointer; z-index:5;"
+                        onclick="removeTag(this)"></i>
+              
+                      <%#—Rails nested _destroy & id 히든필드—%>
+                      <%= ti.hidden_field :id %>
+                      <%= ti.hidden_field :_destroy, value: false, class: "tag-destroy-field" %>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+            
+
               <!-- content 텍스트 -->
               <div class="mt-3">
                 <%= ci.text_area :content,
@@ -145,8 +170,7 @@
                         method: :delete, remote: true,
                         data: { confirm: "本当に削除しますか？" },
                         class: "btn",
-                        style: "border:1px solid #e6e6e6; padding:0 16px;
-                                height:40px; font-size:14px;" %>
+                        style: "margin: 0; background: none; font-size: 14px; display: inline-flex; justify-content: center; align-items: center; height: 40px; border-radius: 4px; padding: 0 16px; font-weight: 400; box-sizing: border-box; text-align: center; color: rgb(47,52,56); border: 1px solid #e6e6e6; width: 80px;" %>
                 </div>
               <% end %>
         
@@ -226,10 +250,10 @@
   <!-- 모달 내용 박스 -->
   <div style="position:relative; width:600px; max-width:90%; margin:100px auto; background:#fff; padding:20px; border-radius:4px; z-index:1001; overflow-y:auto; max-height:80%;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <h2 style="margin:0; font-size:18px;">상품 검색</h2>
+      <h2 style="margin:0; font-size:18px;">태그 검색</h2>
       <button type="button" onclick="toggleTagModal()" style="font-size:18px; background:none; border:none;">×</button>
     </div>
-    <input id="rakuten-search-input" type="text" placeholder="검색어 입력" style="width:100%; padding:8px; margin-bottom:12px; box-sizing:border-box;">
+    <input id="rakuten-search-input" type="text" placeholder="상품 입력" style="width:100%; padding:8px; margin-bottom:12px; box-sizing:border-box;">
     <div id="rakuten-search-results"></div>
 
     
@@ -237,6 +261,19 @@
 </div>
 
 <script>
+  function removeTag(icon) {
+    const tagItem = icon.closest('.tag-item');
+    // Rails nested attribute 의 _destroy 필드가 있으면 '삭제' 처리
+    const destroyField = tagItem.querySelector('.tag-destroy-field');
+    if (destroyField) {
+      destroyField.value = '1';
+      tagItem.style.display = 'none';
+    } else {
+      // 신규 태그라면 그냥 DOM에서 제거
+      tagItem.remove();
+    }
+  }
+
   function debounce(fn, delay) {
     let timer = null;
     return (...args) => {
@@ -296,27 +333,40 @@
   window.doRakutenSearch = debounce(doRakutenSearch, 300);
 
   function addTag(cardIndex, name, url, imageUrl) {
+    // 태그 컨테이너 (뷰에서 쓴 클래스명에 맞춰 수정하세요)
     const tagList = document.querySelector(
       `.card-image-field[data-index="${cardIndex}"] .tag-list`
     );
-    const newIdx = tagList.querySelectorAll('[data-role="tag"]').length;
+    const newIdx = tagList.querySelectorAll('.tag-item').length;
+  
+    // .tag-item 구조로 감싸기
     const wrapper = document.createElement('div');
-    wrapper.setAttribute('data-role','tag');
+    wrapper.className = 'tag-item';
+    wrapper.setAttribute('data-tag-index', newIdx);
+    wrapper.style = 'position:relative; margin:4px;';
+  
     wrapper.innerHTML = `
       <img src="${imageUrl}"
-           style="width:80px; height:80px; object-fit:cover; margin:4px; border-radius:10px;"
-           data-url="${url}"
-      >
+           style="width:80px; height:80px; object-fit:cover; border-radius:10px;"
+           alt="${name}">
+      <i class="fa-solid fa-circle-xmark"
+         style="position:absolute; top:2px; right:2px; cursor:pointer; z-index:5;"
+         onclick="removeTag(this)"></i>
       <input type="hidden"
              name="card_collection[card_images_attributes][${cardIndex}][tags_attributes][${newIdx}][name]"
              value="${name}">
       <input type="hidden"
              name="card_collection[card_images_attributes][${cardIndex}][tags_attributes][${newIdx}][url]"
              value="${url}">
+      <input type="hidden"
+             name="card_collection[card_images_attributes][${cardIndex}][tags_attributes][${newIdx}][image_url]"
+             value="${imageUrl}">
     `;
+  
     tagList.appendChild(wrapper);
-    toggleTagModal();
+    toggleTagModal();  // 모달 닫기
   }
+  
 
   document.addEventListener('turbolinks:load', () => {
     const results = document.getElementById('rakuten-search-results');
