@@ -1,0 +1,29 @@
+<h1>채팅 목록</h1>
+
+
+<%= turbo_stream_from "conversations_#{current_user.id}" %>
+
+<ul id="conversations_<%= current_user.id %>" class="conversation-list"
+    data-user-id="<%= current_user.id %>">
+  <% @conversations.each do |conversation| %>
+    <%= render partial: "conversations/conversation_preview",
+               locals: { conversation: conversation, viewer: current_user } %>
+  <% end %>
+</ul>
+
+
+<hr>
+
+
+<h2>유저 목록</h2>
+<ul class="user-list">
+  <% User.where.not(id: current_user.id).each do |user| %>
+    <li class="user-item">
+      <span><%= user.nickname %></span>
+      <%= button_to "채팅 시작",
+                    conversations_path(user_id: user.id),
+                    method: :post,
+                    form_class: "start-chat-form" %>           
+    </li>
+  <% end %>
+</ul>

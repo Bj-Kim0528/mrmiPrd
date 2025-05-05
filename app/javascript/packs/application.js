@@ -18,3 +18,13 @@ import "../stylesheets/custom.scss";
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
+
+
+document.addEventListener("turbolinks:load", () => {
+  const form = document.getElementById("new_message_form")
+  if (!form) return
+
+  form.addEventListener("ajax:success", () => {
+    form.reset()
+  })
+})

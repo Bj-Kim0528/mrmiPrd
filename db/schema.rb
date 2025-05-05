@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_02_104354) do
+ActiveRecord::Schema.define(version: 2025_05_05_114637) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -114,6 +114,21 @@ ActiveRecord::Schema.define(version: 2025_05_02_104354) do
     t.index ["card_collection_id"], name: "index_card_images_on_card_collection_id"
   end
 
+  create_table "conversation_memberships", force: :cascade do |t|
+    t.integer "conversation_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["conversation_id", "user_id"], name: "index_conversation_memberships_on_conversation_id_and_user_id", unique: true
+    t.index ["conversation_id"], name: "index_conversation_memberships_on_conversation_id"
+    t.index ["user_id"], name: "index_conversation_memberships_on_user_id"
+  end
+
+  create_table "conversations", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "hashtags", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -130,6 +145,17 @@ ActiveRecord::Schema.define(version: 2025_05_02_104354) do
     t.index ["likeable_type", "likeable_id"], name: "index_likes_on_likeable"
     t.index ["user_id", "likeable_type", "likeable_id"], name: "index_likes_on_user_id_and_likeable_type_and_likeable_id", unique: true
     t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.integer "conversation_id", null: false
+    t.integer "user_id", null: false
+    t.text "content", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["created_at"], name: "index_messages_on_created_at"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "relationships", force: :cascade do |t|
@@ -197,6 +223,10 @@ ActiveRecord::Schema.define(version: 2025_05_02_104354) do
   add_foreign_key "card_collections", "themes"
   add_foreign_key "card_collections", "users"
   add_foreign_key "card_images", "card_collections"
+  add_foreign_key "conversation_memberships", "conversations"
+  add_foreign_key "conversation_memberships", "users"
   add_foreign_key "likes", "users"
+  add_foreign_key "messages", "conversations"
+  add_foreign_key "messages", "users"
   add_foreign_key "tags", "card_images"
 end

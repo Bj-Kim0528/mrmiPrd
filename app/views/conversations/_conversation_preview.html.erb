@@ -1,0 +1,23 @@
+
+<% last_message = conversation.messages.last %>
+
+<li id="<%= dom_id(conversation) %>" class="conversation-item">
+  <%# 상대 찾기 %>
+  <% other = conversation.users.find { |u| u != viewer } %>
+  <%= link_to other.nickname, conversation_path(conversation) %>
+
+  <% if last_message %>
+    <% sender = last_message.user == viewer ? "나" : last_message.user.nickname %>
+    <p class="preview">
+      <strong><%= sender %>:</strong>
+      <%= last_message.content.truncate(20) %>
+    </p>
+  <% else %>
+    <p class="preview"><em>아직 메시지가 없습니다</em></p>
+  <% end %>
+
+  <%= link_to "나가기",
+              conversation_path(conversation),
+              method: :delete,
+              data: { confirm: "나가시겠습니까?" } %>
+</li>

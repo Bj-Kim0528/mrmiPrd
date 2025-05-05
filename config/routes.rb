@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+
   get 'rakuten_searches/index'
   devise_for :admin, skip: [:registrations, :password], controllers: {
     sessions: 'admin/sessions'
@@ -20,6 +21,10 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :conversations, only: [:index, :show, :create, :destroy] do
+    resources :messages, only: [:create]
+  end
+  mount ActionCable.server => '/cable'
 
   
   devise_for :users, controllers: {
@@ -29,6 +34,7 @@ Rails.application.routes.draw do
   sessions: 'users/sessions',
   omniauth_callbacks: 'users/omniauth_callbacks'
 }
+
   devise_scope :user do
     # 기존의 새 확인 이메일 요청 폼은 그대로 두고,
     # 새롭게 커스터마이즈한 인증 페이지 경로를 추가합니다.
@@ -49,6 +55,7 @@ Rails.application.routes.draw do
 
     get 'users/sns_sign_up', to: 'users/registrations#sns_sign_up', as: :sns_sign_up
   end
+
 
   resources :card_collections do
     resources :card_collection_comments, only: [:create, :destroy] do

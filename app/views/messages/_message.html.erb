@@ -1,0 +1,6 @@
+<!-- app/views/messages/_message.html.erb -->
+<div class="message">
+  <strong><%= message.user.email %>:</strong>
+  <span><%= message.content %></span>
+  <small><%= message.created_at.strftime('%H:%M') %></small>
+</div>

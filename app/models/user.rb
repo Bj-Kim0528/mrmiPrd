@@ -67,6 +67,9 @@ class User < ApplicationRecord
                                    dependent: :destroy
   has_many :followers, through: :passive_relationships, source: :follower
 
+  has_many :conversation_memberships, dependent: :destroy
+  has_many :conversations, through: :conversation_memberships
+
   def get_profile_image
     unless profile_image.attached?
       file_path = if guest?
