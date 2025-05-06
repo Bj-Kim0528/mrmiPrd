@@ -3,6 +3,8 @@ class Message < ApplicationRecord
   belongs_to :conversation
   belongs_to :user
 
+  has_one_attached :image 
+
   validates :content, presence: true
 
   # 실시간 채팅창 브로드캐스트

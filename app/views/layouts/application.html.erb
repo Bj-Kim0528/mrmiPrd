@@ -166,6 +166,7 @@
                           <hr class="dropdown-divider">
                         </li>
                         <!-- 기존 로그아웃/마이페이지 항목 -->
+                        <li><%= link_to "ダイレクトメッセージ", conversations_path, class: "dropdown-item" %></li>
                         <li><%= link_to "マイページ", user_path(current_user), class: "dropdown-item" %></li>
                         <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
                       </ul>
@@ -389,6 +390,7 @@
                                   <hr class="dropdown-divider">
                                 </li>
                                 <!-- 기존 로그아웃/마이페이지 항목 -->
+                                <li><%= link_to "ダイレクトメッセージ", conversations_path, class: "dropdown-item" %></li>
                                 <li><%= link_to "マイページ", user_path(current_user), class: "dropdown-item" %></li>
                                 <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
                               </ul>
@@ -607,6 +609,7 @@
                               <hr class="dropdown-divider">
                             </li>
                             <!-- 기존 로그아웃/마이페이지 항목 -->
+                            <li><%= link_to "ダイレクトメッセージ", conversations_path, class: "dropdown-item" %></li>
                             <li><%= link_to "マイページ", user_path(current_user), class: "dropdown-item" %></li>
                             <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
                           </ul>
@@ -701,6 +704,7 @@
                             <hr class="dropdown-divider">
                           </li>
                           <!-- 기존 로그아웃/마이페이지 항목 -->
+                          <li><%= link_to "ダイレクトメッセージ", conversations_path, class: "dropdown-item" %></li>
                           <li><%= link_to "マイページ", user_path(current_user), class: "dropdown-item" %></li>
                           <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
                         </ul>

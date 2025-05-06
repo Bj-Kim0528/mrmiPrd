@@ -8,7 +8,9 @@
 <hr>
 
 
-<div id="messages" data-conversation-id="<%= @conversation.id %>">
+<div id="messages"
+     data-conversation-id="<%= @conversation.id %>"
+     data-current-user-nickname="<%= current_user.nickname %>">
   <%= render @messages %>
 </div>
 

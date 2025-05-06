@@ -1,35 +1,56 @@
-// app/javascript/channels/chat_channel.js
 import consumer from "./consumer"
+
+function styleMessage(el, currentNickname) {
+  // 1) 보낸 사람 닉네임
+  const sender = el.querySelector(".nickname").innerText.trim()
+  const me     = sender === currentNickname
+
+  // 2) avatar, nickname 숨김/표시
+  const avatarEl   = el.querySelector("img.avatar")
+  const nameEl     = el.querySelector(".nickname")
+  if (avatarEl) avatarEl.style.display = me ? "none" : "block"
+  nameEl.style.display = me ? "none" : "block"
+
+  // 3) 전체 float (내꺼 = 오른쪽, 상대 = 왼쪽)
+  el.style.float = me ? "right" : "left"
+
+  // 4) 말풍선 배경 & text-color & 꼬리
+  const bubble = el.querySelector(".bubble")
+  if (me) {
+    bubble.style.backgroundColor = "#ffea00"  // 노란
+    bubble.style.color           = "#000"
+    bubble.style.borderRadius    = "12px 12px 0 12px"
+    // 꼬리
+    bubble.style.marginLeft      = "20px"
+  } else {
+    bubble.style.backgroundColor = "#2f2f2f"  // 검은
+    bubble.style.color           = "#fff"
+    bubble.style.borderRadius    = "12px 12px 12px 0"
+    bubble.style.marginRight     = "20px"
+  }
+}
 
 document.addEventListener("turbolinks:load", () => {
   const container = document.getElementById("messages")
   if (!container) return
 
+  const currentNickname = container.dataset.currentUserNickname
+
+  // 초기 로드된 메시지들
+  container.querySelectorAll(".message").forEach(el =>
+    styleMessage(el, currentNickname)
+  )
+
+  // 실시간 수신
   const convId = container.dataset.conversationId
   consumer.subscriptions.create(
     { channel: "ChatChannel", conversation_id: convId },
     {
-      received(data) {
-        // 만약 JSON 객체라면(유저 나감 이벤트)
-        if (typeof data === 'object' && data.type === 'user_left') {
-          // 1) 시스템 메시지 추가
-          const sys = document.createElement("div")
-          sys.classList.add("message", "system-message")
-          sys.innerHTML = `<em>${data.user_name}님이 나갔습니다.</em>`
-          container.appendChild(sys)
-          container.scrollTop = container.scrollHeight
-
-          // 2) 입력 폼 제거
-          const formWrapper = document.getElementById("new_message_form_wrapper")
-          if (formWrapper) formWrapper.remove()
-        } else {
-          // 일반 메시지 HTML
-          container.insertAdjacentHTML("beforeend", data)
-          container.scrollTop = container.scrollHeight
-        }
+      received(html) {
+        container.insertAdjacentHTML("beforeend", html)
+        styleMessage(container.lastElementChild, currentNickname)
+        container.scrollTop = container.scrollHeight
       }
     }
   )
 })
-
-

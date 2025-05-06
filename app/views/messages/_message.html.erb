@@ -1,6 +1,49 @@
 <!-- app/views/messages/_message.html.erb -->
-<div class="message">
-  <strong><%= message.user.email %>:</strong>
-  <span><%= message.content %></span>
-  <small><%= message.created_at.strftime('%H:%M') %></small>
+<div
+  class="message"
+  data-user-id="<%= message.user_id %>"
+  style="clear: both; margin-bottom: 12px; position: relative; max-width: none"  
+  >
+  <%# ① avatar (처음엔 숨김) %>
+  <% if message.user.profile_image.attached? %>
+    <%= image_tag(
+          url_for(message.user.profile_image.variant(resize_to_fill: [32,32])),
+          class: "avatar",
+          style: "display:none; width:32px; height:32px; border-radius:50%; margin-right:8px; float:left;"
+        ) %>
+  <% end %>
+
+  <div class="d-flex flex-column">
+    <%# ② 닉네임 (strong 태그) %>
+    <strong class="nickname"
+            style="
+              display: inline-block;
+              margin-bottom: 4px;
+              white-space: nowrap;
+            ">
+      <%= message.user.nickname %>
+    </strong>
+
+    <%# ③ 말풍선 %>
+    <div class="bubble" style="
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 12px;
+      max-width: none;
+      word-break: break-word;
+      position: relative;
+      ">
+      <%= message.content %>
+    </div>
+  </div>
+
+  <%# ④ 타임스탬프 %>
+  <small class="timestamp d-flex justify-content-end" style="
+    display: block;
+    margin-top: 4px;
+    font-size: 10px;
+    color: #999;
+    ">
+    <%= message.created_at.strftime("%H:%M") %>
+  </small>
 </div>
