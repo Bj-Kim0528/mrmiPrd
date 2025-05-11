@@ -87,5 +87,6 @@ class CardCollectionsController < ApplicationController
       card_images_attributes: [:id, :content, :image, :position, :_destroy, 
       tags_attributes: [:id, :name, :url, :image_url, :_destroy]]
     )
+    
   end
 end
