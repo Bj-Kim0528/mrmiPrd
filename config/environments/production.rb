@@ -130,4 +130,8 @@ Rails.application.configure do
     authentication:       'plain',
     enable_starttls_auto: true
   }
+
+
+  config.action_cable.url = ENV.fetch("ACTION_CABLE_URL", "wss://mrmizukuri.com/cable")
+  config.action_cable.allowed_request_origins = [ "https://mrmizukuri.com" ]
 end
