@@ -15,6 +15,7 @@ class BookmarksController < ApplicationController
     bookmark = current_user.bookmarks.find(params[:id])
     bookmark.destroy
     redirect_back fallback_location: root_path
+    
   end
 
   private
