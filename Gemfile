@@ -84,3 +84,5 @@ gem 'rails-i18n', '~> 7.0'
 gem 'rakuten_web_service'
 
 gem 'turbo-rails'
+
+gem "aws-sdk-s3", require: false
