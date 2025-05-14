@@ -45,6 +45,8 @@
     font-size: 10px;
     color: #999;
     ">
-    <%= message.created_at.strftime("%H:%M") %>
+    <%= message.created_at
+    .in_time_zone("Asia/Tokyo")
+    .strftime("%H:%M") %>
   </small>
 </div>
