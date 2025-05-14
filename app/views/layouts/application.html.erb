@@ -39,7 +39,7 @@
                             style="text-decoration: none; color: inherit; font-weight: 700; margin-left: 0px;">
                       <i class="fa-solid fa-bars" style="font-size: 20px"></i>
                     </div>
-                      ul class="dropdown-menu" aria-labelledby="xsMenuDropdown">
+                    <ul class="dropdown-menu" aria-labelledby="xsMenuDropdown">
                       <% unless (controller_name == "card_collections" && %w[new edit].include?(action_name)) || controller_name == "conversations" %>
                         <%= link_to "About", about_path, 
                         class: "d-flex align-items-center dropdown-item", 
