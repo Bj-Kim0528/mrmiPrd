@@ -5,12 +5,12 @@
   class="d-flex justify-content-between"
   style="
     position: sticky;
-    top: 123px;                  /* ナビゲーションバーの下に固定 */
+    top: 81px;
     z-index: 1000;               /* 他のコンテンツの上に表示 */
     background: #fff;            /* 背景色を白に */
     align-items: center;
     padding: 10px 0;
-    margin-bottom: 10px;
+    padding-bottom: 10px;
     border-bottom: 1px solid #ddd;
   "
 >
@@ -48,7 +48,7 @@
     scrollbar-width: none;        /* Firefox */
     -ms-overflow-style: none;     /* IE 10+ */
     height: calc(100vh - 120px);
-    padding: 0 10px 100px;        /* 下部に入力フォーム領域を確保 */
+    padding: 30px 10px 80px;        /* 下部に入力フォーム領域を確保 */
   "
 >
   <%= render @messages %>

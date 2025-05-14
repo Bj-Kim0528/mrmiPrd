@@ -38,8 +38,8 @@
                             style="text-decoration: none; color: inherit; font-weight: 700; margin-left: 0px;">
                       <i class="fa-solid fa-bars" style="font-size: 20px"></i>
                     </div>
-                            <ul class="dropdown-menu" aria-labelledby="xsMenuDropdown">
-                      <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+                      ul class="dropdown-menu" aria-labelledby="xsMenuDropdown">
+                      <% unless (controller_name == "card_collections" && %w[new edit].include?(action_name)) || controller_name == "conversations" %>
                         <%= link_to "About", about_path, 
                         class: "d-flex align-items-center dropdown-item", 
                         style: ";color: #2F3438;" %>
@@ -82,7 +82,7 @@
                 <%= link_to "MRMI", root_path, class: "navbar-brand", style: "color: inherit; font-weight: bold; margin-right: 50px;" %>
               </div>
 
-              <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+              <% unless (controller_name == "card_collections" && %w[new edit].include?(action_name)) || controller_name == "conversations"%>
                 <%= link_to "About", about_path,
                             class: "navbar-brand fw-bold d-none d-md-inline-block",
                             style: "color: inherit; font-weight: bold;" %>
@@ -90,7 +90,7 @@
             </div>
             
               
-            <% unless (controller_name == "card_collections" && (action_name == "new" || action_name == "edit")) %>
+            <% unless (controller_name == "card_collections" && (action_name == "new" || action_name == "edit")) || controller_name == "conversations"%>
               <div class="d-flex align-items-center">
                 <% if user_signed_in? %>
                   <div class="d-none d-sm-flex" style="margin-right: 20px;">
@@ -118,7 +118,7 @@
                     <% if current_user.email == "guest@example.com" %>
                       <ul class="dropdown-menu dropdown-menu-end">
                         <!-- xs 에만 보이는 About -->
-                        <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+                        <% unless (controller_name == "card_collections" && %w[new edit].include?(action_name)) || controller_name == "conversations" %>
                           <li class="d-block d-md-none">
                             <%= link_to "About", about_path, class: "dropdown-item" %>
                           </li>
@@ -146,7 +146,7 @@
                     <% else %>
                       <ul class="dropdown-menu dropdown-menu-end">
                         <!-- xs 에만 보이는 About -->
-                        <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+                        <% unless (controller_name == "card_collections" && %w[new edit].include?(action_name)) || controller_name == "conversations" %>
                           <li class="d-block d-md-none">
                             <%= link_to "About", about_path, class: "dropdown-item" %>
                           </li>
@@ -278,7 +278,7 @@
 
 
       <% if user_signed_in?%>
-        <% unless (controller_name == "card_collections" && (action_name == "new" || action_name == "edit")) %>
+        <% unless (controller_name == "card_collections" && (action_name == "new" || action_name == "edit")) || controller_name == "conversations" %>
           <% unless controller_name == 'users' && action_name == 'show' && params[:id] != current_user.id.to_s %>
             <nav class="border-bottom">
               <div class="container">
@@ -342,7 +342,7 @@
                             <% if current_user.email == "guest@example.com" %>
                               <ul class="dropdown-menu dropdown-menu-end">
                                 <!-- xs 에만 보이는 About -->
-                                <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+                                <% unless (controller_name == "card_collections" && %w[new edit].include?(action_name)) || controller_name == "conversations" %>
                                   <li class="d-block d-md-none">
                                     <%= link_to "About", about_path, class: "dropdown-item" %>
                                   </li>
@@ -370,7 +370,7 @@
                             <% else %>
                               <ul class="dropdown-menu dropdown-menu-end">
                                 <!-- xs 에만 보이는 About -->
-                                <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+                                <% unless (controller_name == "card_collections" && %w[new edit].include?(action_name)) || controller_name == "conversations" %>
                                   <li class="d-block d-md-none">
                                     <%= link_to "About", about_path, class: "dropdown-item" %>
                                   </li>
@@ -561,7 +561,7 @@
                         <% if current_user.email == "guest@example.com" %>
                           <ul class="dropdown-menu dropdown-menu-end">
                             <!-- xs 에만 보이는 About -->
-                            <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+                            <% unless (controller_name == "card_collections" && %w[new edit].include?(action_name)) || controller_name == "conversations" %>
                               <li class="d-block d-md-none">
                                 <%= link_to "About", about_path, class: "dropdown-item" %>
                               </li>
@@ -589,7 +589,7 @@
                         <% else %>
                           <ul class="dropdown-menu dropdown-menu-end">
                             <!-- xs 에만 보이는 About -->
-                            <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+                            <% unless (controller_name == "card_collections" && %w[new edit].include?(action_name)) || controller_name == "conversations" %>
                               <li class="d-block d-md-none">
                                 <%= link_to "About", about_path, class: "dropdown-item" %>
                               </li>
@@ -656,7 +656,7 @@
                       <% if current_user.email == "guest@example.com" %>
                         <ul class="dropdown-menu dropdown-menu-end">
                           <!-- xs 에만 보이는 About -->
-                          <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+                          <% unless (controller_name == "card_collections" && %w[new edit].include?(action_name)) || controller_name == "conversations" %>
                             <li class="d-block d-md-none">
                               <%= link_to "About", about_path, class: "dropdown-item" %>
                             </li>
@@ -684,7 +684,7 @@
                       <% else %>
                         <ul class="dropdown-menu dropdown-menu-end">
                           <!-- xs 에만 보이는 About -->
-                          <% unless controller_name == "card_collections" && %w[new edit].include?(action_name) %>
+                          <% unless (controller_name == "card_collections" && %w[new edit].include?(action_name)) || controller_name == "conversations" %>
                             <li class="d-block d-md-none">
                               <%= link_to "About", about_path, class: "dropdown-item" %>
                             </li>
