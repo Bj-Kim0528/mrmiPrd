@@ -18,6 +18,7 @@
   </head>
   
   <body class= "d-flex flex-column justify-content-center" style="min-height: 100vh; margin: 0;">
+  <% unless controller_name == "conversations"%>
     <header style="position: sticky; top: 0; z-index: 999; background-color: #fff;">
       <nav style="border-bottom: 1px solid #ddd;">
         <div class="container d-flex align-items-center" style="margin: 0 auto; height: 80px;">
@@ -793,6 +794,7 @@
         <% end %>
       <% end %>
     </header>
+  <% end %>
     
     <main style="flex: 1;">
       <div class="container">
