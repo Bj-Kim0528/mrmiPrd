@@ -49,17 +49,25 @@
   data-conversation-id="<%= @conversation.id %>"
   data-current-user-nickname="<%= current_user.nickname %>"
   style="
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw;
+    height: 80vh;
+    max-width: 1136px;
+    max-height: calc(100vh - 120px);  /* ヘッダー + フッター分を引いた高さ */
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch; /* ← ここを追加 */
-    scrollbar-width: none;        /* Firefox */
-    -ms-overflow-style: none;     /* IE 10+ */
-    padding-top: 100px;
-    height: calc(100vh - 80px);
-
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    box-sizing: border-box;
   "
 >
   <%= render @messages %>
 </div>
+
+
 
 <!-- 入力フォーム: 画面下部に固定 -->
 <div
