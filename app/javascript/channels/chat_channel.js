@@ -17,15 +17,15 @@ function styleMessage(el, currentNickname) {
   // 4) 말풍선 배경 & text-color & 꼬리
   const bubble = el.querySelector(".bubble")
   if (me) {
-    bubble.style.backgroundColor = "#ffea00"  // 노란
-    bubble.style.color           = "#000"
-    bubble.style.borderRadius    = "12px 12px 0 12px"
+    bubble.style.backgroundColor = "#0AA5FF"  
+    bubble.style.color           = "#fff"
+    bubble.style.borderRadius    = "12px 12px 12px 12px"
     // 꼬리
     bubble.style.marginLeft      = "20px"
   } else {
-    bubble.style.backgroundColor = "#2f2f2f"  // 검은
+    bubble.style.backgroundColor = "#262626"  // 검은
     bubble.style.color           = "#fff"
-    bubble.style.borderRadius    = "12px 12px 12px 0"
+    bubble.style.borderRadius    = "12px 12px 12px 12px"
     bubble.style.marginRight     = "20px"
   }
 }

@@ -1,26 +1,129 @@
-<h2>채팅 <%= @other&.nickname %></h2>
-<%= link_to "채팅방 나가기",
-            conversation_path(@conversation),
-            method: :delete,
-            data: { confirm: "정말 나가시겠습니까?" },
-            class: "leave-chat-link" %>
+<!-- app/views/conversations/show.html.erb -->
 
-<hr>
+<!-- ヘッダー: ネビゲーション下に固定 -->
+<div
+  class="d-flex justify-content-between"
+  style="
+    position: sticky;
+    top: 123px;                  /* ナビゲーションバーの下に固定 */
+    z-index: 1000;               /* 他のコンテンツの上に表示 */
+    background: #fff;            /* 背景色を白に */
+    align-items: center;
+    padding: 10px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+  "
+>
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <%# ① @other が存在し、profile_image が添付されていれば表示 %>
+    <% if @other&.profile_image&.attached? %>
+      <%= image_tag(
+            url_for(@other.profile_image.variant(resize_to_fill: [32,32])),
+            class: "avatar",
+            style: "width:44px; height:44px; border-radius:50%;"
+          ) %>
+    <% end %>
 
+    <%# ② ニックネーム %>
+    <span style="font-size: 1em; font-weight: bold;">
+      <%= @other&.nickname || "チャット相手なし" %>
+    </span>
+  </div>
 
-<div id="messages"
-     data-conversation-id="<%= @conversation.id %>"
-     data-current-user-nickname="<%= current_user.nickname %>">
+  <%= link_to conversation_path(@conversation),
+              method: :delete,
+              data:   { confirm: "本当にチャットを退出しますか？" },
+              class:  "leave-chat-link" do %>
+    <i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 25px;"></i>
+  <% end %>
+</div>
+
+<!-- メッセージリスト: ヘッダーと入力フォームを除く領域だけスクロール -->
+<div
+  id="messages"
+  data-conversation-id="<%= @conversation.id %>"
+  data-current-user-nickname="<%= current_user.nickname %>"
+  style="
+    overflow-y: auto;
+    scrollbar-width: none;        /* Firefox */
+    -ms-overflow-style: none;     /* IE 10+ */
+    height: calc(100vh - 120px);
+    padding: 0 10px 100px;        /* 下部に入力フォーム領域を確保 */
+  "
+>
   <%= render @messages %>
 </div>
 
+<!-- 入力フォーム: 画面下部に固定 -->
+<div
+  id="new_message_form_wrapper"
+  style="
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    box-sizing: border-box;
+    z-index: 1000;
+  "
+>
+  <div
+    style="
+      max-width: 1136px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    "
+  >
+    <!-- 戻るアイコン -->
+    <%= link_to conversations_path,
+                style: "
+                  background: none;
+                  border: none;
+                  padding: 0;
+                  cursor: pointer;
+                " do %>
+      <i class="fa-solid fa-arrow-left" style="font-size: 20px; color: #555;"></i>
+    <% end %>
 
+    <!-- ② メッセージ入力フォーム -->
+    <%= form_with model: [@conversation, Message.new],
+                  local: false,
+                  html: {
+                    id:    "new_message_form",
+                    style: "flex:1; display:flex; align-items:center; gap:8px;"
+                  } do |f| %>
+      <%= f.text_field :content,
+            placeholder: "メッセージを入力...",
+            autocomplete: "off",
+            style: "
+              flex:1;
+              border: 1px solid #ccc;
+              border-radius: 20px;
+              padding: 8px 12px;
+              box-sizing: border-box;
+            " %>
 
-<div id="new_message_form_wrapper">
-  <%= form_with model: [@conversation, Message.new],
-                local: false,
-                html: { id: "new_message_form" } do |f| %>
-    <%= f.text_field :content, placeholder: "메시지 입력...", autocomplete: "off" %>
-    <%= f.submit "전송" %>
-  <% end %>
+      <!-- ③ 右側の送信ボタン -->
+      <%= f.submit "送信",
+            style: "
+              background: #007bff;
+              color: #fff;
+              border: none;
+              border-radius: 20px;
+              padding: 8px 16px;
+              white-space: nowrap;
+              cursor: pointer;
+            " %>
+    <% end %>
+  </div>
 </div>
+
+<!-- WebKit 系ブラウザのスクロールバーを非表示 -->
+<style>
+  #messages::-webkit-scrollbar { display: none; }
+  html, body { margin: 0; height: 100vh; overflow: hidden; }
+</style>
