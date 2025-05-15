@@ -1,29 +1,272 @@
-<h1>채팅 목록</h1>
+<div class="d-flex align-items-center justify-content-center" style="width: 100%; border-bottom: 1px solid #ddd;">
+  <div>
+    <%= link_to "MRMI", root_path, class: "navbar-brand m-0", style: "color: inherit; font-weight: bold; font-size: 24px;" %>
+  </div>
+</div>
+
+<div class="d-flex" style="width:100%">
+<div
+  style="
+    width: 70%;
+    height: 100vh;
+    background: #fff;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #ddd;
+  "
+>
+  <!-- 상단 네비게이션 바 (라이트 모드) -->
+  <header
+    style="
+      flex: 0 0 auto;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fafafa;
+      border-bottom: 1px solid #eee;
+    "
+  >
+    <h2 style="margin: 0; font-size: 14px; font-weight: bold;">メッセージ</h2>
+  </header>
+
+  <!-- 대화 목록 -->
+  <ul
+    style="
+      flex: 1 1 auto;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      overflow-y: auto;
+    "
+  >
+    <% @conversations.each do |conversation| %>
+      <% other = conversation.users.find { |u| u != current_user } %>
+      <% last = conversation.messages.last %>
+      <li
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 12px 16px;
+          border-bottom: 1px solid #eee;
+        "
+      >
+        <div
+          onclick="window.location='<%= conversation_path(conversation) %>'"
+          style="flex:1; display:flex; align-items:center; gap:12px; cursor:pointer;"
+        >
+          <!-- 프로필 아바타 -->
+          <%= image_tag(
+                url_for(other.profile_image.variant(resize_to_fill: [48,48])),
+                style: "width:48px; height:48px; border-radius:50%; object-fit:cover;"
+              ) %>
+
+          <!-- 닉네임 + 마지막 메시지 -->
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <span style="font-size:10px; font-weight:bold; color:#000;">
+              <%= other.nickname %>
+            </span>
+            <span style="font-size:10px; color:#555;">
+              <% if last %>
+                <% sender = (last.user == current_user ? "私:" : "#{last.user.nickname}:") %>
+                <%= sender %> <%= last.content.truncate(20) %>
+              <% else %>
+                아직 메시지가 없습니다
+              <% end %>
+            </span>
+          </div>
+        </div>
+
+        <!-- 오른쪽: 시간 + 나가기 버튼 -->
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+          <% if last %>
+            <time style="font-size:10px; color:#888;">
+              <%= time_ago_in_words(last.created_at.in_time_zone("Asia/Tokyo")) %> 前
+            </time>
+          <% end %>
+          <%= link_to "退出",
+                      conversation_path(conversation),
+                      method: :delete,
+                      data: { confirm: "정말 나가시겠습니까?" },
+                      style: "
+                        background: none;
+                        border: none;
+                        color: #dc3545;
+                        font-size: 12px;
+                        cursor: pointer;
+                        padding: 0;
+                      " %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
 
 
-<%= turbo_stream_from "conversations_#{current_user.id}" %>
 
-<ul id="conversations_<%= current_user.id %>" class="conversation-list"
-    data-user-id="<%= current_user.id %>">
-  <% @conversations.each do |conversation| %>
-    <%= render partial: "conversations/conversation_preview",
-               locals: { conversation: conversation, viewer: current_user } %>
-  <% end %>
-</ul>
+<div
+  class="d-none d-sm-flex"
+  style="
+    width: 30%;
+    height: 100vh;
+    background: #fff;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+  "
+>
+  <!-- 상단 제목 -->
+  <header
+    style="
+      flex: 0 0 auto;
+      padding: 12px 16px;
+      border-bottom: 1px solid #eee;
+      background: #fafafa;
+    "
+  >
+    <h2 style="margin: 0; font-size: 14px; font-weight: bold;">フォロ中</h2>
+  </header>
+
+  <!-- 사용자 목록 -->
+  <ul
+    style="
+      flex: 1 1 auto;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      overflow-y: auto;
+    "
+  >
+    <% current_user.following.each do |user| %>
+      <li
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 12px 16px;
+        "
+      >
+        <!-- 프로필 + 닉네임/이름 -->
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <%= image_tag(
+                (user.profile_image.attached? ? url_for(user.profile_image.variant(resize_to_fill: [48,48])) : 'placeholder.png'),
+                style: "width:38px; height:38px; border-radius:50%; object-fit:cover;"
+              ) %>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size:10px; font-weight:bold; color:#000;">
+              <%= user.nickname %>
+            </span>
+            <%= button_to "チャット",
+            conversations_path(user_id: user.id),
+            method: :post,
+            form: { style: "margin:0;" },
+            style: "
+              background: #ddd;
+              color: #000;
+              border: none;
+              border-radius: 4px;
+              padding: 0px 3px;
+              font-size: 10px;
+              cursor: pointer;
+            " %>
+          </div>
+        </div>
+
+        <!-- 채팅 시작 버튼 -->
+
+      </li>
+    <% end %>
+  </ul>
+</div>
 
 
-<hr>
+<div
+  class="d-flex d-sm-none"
+  style="
+    width: 30%;
+    height: 100vh;
+    background: #fff;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+  "
+>
+  <!-- 상단 제목 -->
+<header
+  style="
+    display: flex;            /* flex 컨테이너로 */
+    justify-content: center;  /* 가로축 중앙 정렬 */
+    align-items: center;      /* 세로축 중앙 정렬(필요 시) */
+    flex: 0 0 auto;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    background: #fafafa;
+  "
+>
+  <h2 style="margin: 0; font-size: 14px; font-weight: bold;">
+    フォロ中
+  </h2>
+</header>
+
+  <!-- 사용자 목록 -->
+  <ul
+    style="
+      flex: 1 1 auto;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      overflow-y: auto;
+    "
+  >
+    <% current_user.following.each do |user| %>
+      <li
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 12px 16px;
+        "
+      >
+        <!-- 프로필 + 닉네임/이름 -->
+        <div style="display: flex; align-items: center; gap: 12px;">
+
+          <div style="display: flex; flex-direction: column;  gap: 2px;">
+
+            <%= link_to conversations_path(user_id: user.id),
+                        method: :post,
+                        form:   { style: "margin:0; padding:0; background:none; border:none;" },
+                        style:  "display:inline-block; background:none; border:none; padding:0; cursor:pointer;" do %>
+              <% if user.profile_image.attached? %>
+                <%= image_tag(
+                      url_for(user.profile_image.variant(resize_to_fill: [48,48])),
+                      alt: user.nickname,
+                      style: "width:38px; height:38px; border-radius:50%; object-fit:cover; display:block;"
+                    ) %>
+              <% else %>
+                <%= image_tag(
+                      "placeholder.png",
+                      alt: "No image",
+                      style: "width:38px; height:38px; border-radius:50%; object-fit:cover; display:block;"
+                    ) %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- 채팅 시작 버튼 -->
+
+      </li>
+    <% end %>
+  </ul>
+</div>
 
 
-<h2>유저 목록</h2>
-<ul class="user-list">
-  <% User.where.not(id: current_user.id).each do |user| %>
-    <li class="user-item">
-      <span><%= user.nickname %></span>
-      <%= button_to "채팅 시작",
-                    conversations_path(user_id: user.id),
-                    method: :post,
-                    form_class: "start-chat-form" %>           
-    </li>
-  <% end %>
-</ul>
+
+
+</div>

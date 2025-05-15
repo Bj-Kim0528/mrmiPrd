@@ -842,7 +842,13 @@
                         width: 100px;"%>
               </div>
             <% else %>
-              <div class="ms-auto">
+              <div style="
+                  display: flex;
+                  justify-content: center;  /* ← 横方向中央寄せ */
+                  align-items: center;
+                  width: 100%;              /* ← 親要素を行いっぱいに */
+                  padding-top: 8px;         /* ← 必要に応じて余白調整 */
+                ">
                 <% if user_signed_in? %>
                   <% unless current_user.email == "guest@example.com" %>
                     <% if current_user.following.include?(@userinfo) %>
