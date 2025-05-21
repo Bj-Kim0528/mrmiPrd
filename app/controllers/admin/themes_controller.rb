@@ -16,7 +16,7 @@ class Admin::ThemesController < ApplicationController
     if @theme.save
       redirect_to admin_themes_path, notice: "테마가 성공적으로 추가되었습니다."
     else
-      render :new
+      redirect_to admin_themes_path
     end
   end
 
