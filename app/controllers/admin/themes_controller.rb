@@ -40,6 +40,7 @@ class Admin::ThemesController < ApplicationController
 
   private
   
+  
 
   def set_theme
     @theme = Theme.find(params[:id])
